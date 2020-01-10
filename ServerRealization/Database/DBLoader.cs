@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ServerRealization.Database
 {
-    class DBLoader
+    public class DBLoader
     {
         string connectionString = "server=localhost;user=root;database=diaries;password=password";
         MySqlConnection connection;
@@ -14,52 +14,75 @@ namespace ServerRealization.Database
             connection = new MySqlConnection(connectionString);
         }
 
-        public List<IDBObject> Load(string tableName)
+        public object Load(string tableName)
         {
-            List<IDBObject> objs = null;
-
             connection.Open();
 
             MySqlCommand cmd = new MySqlCommand("select * from " + tableName, connection);
             MySqlDataReader result = cmd.ExecuteReader();
-            objs = ParseValuesFromDB(tableName, result);
-
+            List<IDBObject> loadedResult = ParseValuesFromDB(tableName, result);
             connection.Close();
 
-            return objs;
+            return ConvertToType(loadedResult, tableName);
         }
 
-        private List<IDBObject> ParseValuesFromDB(string tableName, MySqlDataReader dataReader)
+        private List<IDBObject> ParseValuesFromDB(string tableName, MySqlDataReader dr)
         {
-            List<IDBObject> objects = new List<IDBObject>();
+            List<IDBObject> result = new List<IDBObject>();
 
-            while (dataReader.Read())
+            while (dr.Read())
             {
-                switch (tableName)
+                switch(tableName.ToLower())
                 {
-                    case "time_span": 
-                        objects.Add(new TimeSpan(dataReader.GetInt32(0), dataReader.GetDateTime(1), dataReader.GetDateTime(2))); break;
-                    case "names_and_comments": 
-                        objects.Add(new NameAndComment(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.GetString(2))); break;
-                    case "names":
-                        objects.Add(new Name(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetString(3))); break;
-                    case "progress": 
-                        objects.Add(new Progress(dataReader.GetInt32(0), dataReader.GetDouble(1), dataReader.GetDouble(2), dataReader.GetDouble(3))); break;
-                    case "users": 
-                        objects.Add(new User(dataReader.GetInt32(0), dataReader.GetInt32(1), dataReader.GetString(2), dataReader.GetString(3), dataReader.GetDateTime(4))); break;
-                    case "missions":
-                        objects.Add(new Mission(dataReader.GetInt32(0), dataReader.GetInt32(1), dataReader.GetInt32(2))); break;
-                    case "action": 
-                        objects.Add(new Action(dataReader.GetInt32(0), dataReader.GetInt32(1), dataReader.GetInt32(2), dataReader.GetInt32(3))); break;
-                    case "records": 
-                        objects.Add(new Record(dataReader.GetInt32(0), dataReader.GetInt32(1), dataReader.GetDouble(2))); break;
-                    case "calculated_actions":
-                        objects.Add(new CalculatedAction(dataReader.GetInt32(0), dataReader.GetInt32(1), dataReader.GetString(2), dataReader.GetInt32(3))); break;
+                    default: throw new System.ArgumentException("Unknown table name");
+                    case "images":              result.Add(new Image(dr.GetInt32(           0), (byte[])dr.GetValue(1), dr.GetInt32(    2), dr.GetInt32(    3))); break;
+                    case "progresses":          result.Add(new Progress(dr.GetInt32(        0), dr.GetInt32(        1), dr.GetInt32(    2), dr.GetInt32(    3))); break;
+                    case "collections":         result.Add(new Collection(dr.GetInt32(      0), dr.GetInt32(        1))); break;
+                    case "users":               result.Add(new User(dr.GetInt32(            0), dr.GetString(       1), dr.GetString(   2), dr.GetString(   3), dr.GetDateTime( 4))); break;
+                    case "labels":              result.Add(new Label(dr.GetInt32(           0), dr.GetInt32(        1), dr.GetString(   2))); break;
+                    case "points":              result.Add(new Point(dr.GetInt32(           0), dr.GetInt32(        1), dr.GetString(   2), dr.GetBoolean(  3))); break;
+                    case "notes":               result.Add(new Note(dr.GetInt32(            0), dr.GetInt32(        1), dr.GetInt32(    2), dr.GetString(   3), dr.GetString(   4), dr.GetDateTime(5), dr.GetDateTime(6))); break;
+                    case "progressnotes":       result.Add(new ProgressNote(dr.GetInt32(    0), dr.GetInt32(        1), dr.GetInt32(    2), dr.GetInt32(    3))); break;
+                    case "actions":             result.Add(new Action(dr.GetInt32(          0), dr.GetInt32(        1), dr.GetDateTime( 2), dr.GetDateTime( 3))); break;
+                    case "missions":            result.Add(new Mission(dr.GetInt32(         0), dr.GetInt32(        1), dr.GetBoolean(  2), dr.GetInt32(    3))); break;
+                    case "labelcollections":    result.Add(new LabelCollection(dr.GetInt32( 0), dr.GetInt32(        1), dr.GetInt32(    2))); break;
                 }
             }
-            dataReader.Close();
+            dr.Close();
+            return result;
+        }
 
-            return objects;
+        private object ConvertToType(List<IDBObject> result, string tableName)
+        {
+            object res = null;
+            for(int i = -1; i < result.Count; ++ i)
+                switch(tableName.ToLower())
+                {
+                    default: throw new System.ArgumentException("Unknown table name");
+                    case "images":              if(i == -1) res = new List<Image>();else
+                        ((List<Image>)res).Add((Image)result[i]); break;
+                    case "progresses":          if(i == -1) res = new List<Progress>();else
+                        ((List<Progress>)res).Add((Progress)result[i]);break;
+                    case "collections":         if(i == -1) res = new List<Collection>();else
+                        ((List<Collection>)res).Add((Collection)result[i]);break;
+                    case "users":               if(i == -1) res = new List<User>();else
+                        ((List<User>)res).Add((User)result[i]);break;
+                    case "labels":              if(i == -1) res = new List<Label>();else
+                        ((List<Label>)res).Add((Label)result[i]);break;
+                    case "points":              if(i == -1) res = new List<Point>();else
+                        ((List<Point>)res).Add((Point)result[i]);break;
+                    case "notes":               if(i == -1) res = new List<Note>();else
+                        ((List<Note>)res).Add((Note)result[i]);break;
+                    case "progressnotes":       if(i == -1) res = new List<ProgressNote>();else
+                        ((List<ProgressNote>)res).Add((ProgressNote)result[i]);break;
+                    case "actions":             if(i == -1) res = new List<Action>();else
+                        ((List<Action>)res).Add((Action)result[i]);break;
+                    case "missions":            if(i == -1) res = new List<Mission>();else
+                        ((List<Mission>)res).Add((Mission)result[i]);break;
+                    case "labelcollections":    if(i == -1) res = new List<LabelCollection>();else
+                        ((List<LabelCollection>)res).Add((LabelCollection)result[i]);break;
+                }
+            return res;
         }
     }
 }

@@ -71,13 +71,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\Context\Action.cs" />
-    <Compile Include="Database\Context\CalculatedAction.cs" />
+    <Compile Include="Database\Context\LabelCollection.cs" />
+    <Compile Include="Database\Context\Collection.cs" />
+    <Compile Include="Database\Context\Image.cs" />
     <Compile Include="Database\Context\Mission.cs" />
-    <Compile Include="Database\Context\Name.cs" />
-    <Compile Include="Database\Context\NameAndComment.cs" />
+    <Compile Include="Database\Context\Label.cs" />
+    <Compile Include="Database\Context\Note.cs" />
     <Compile Include="Database\Context\Progress.cs" />
-    <Compile Include="Database\Context\Record.cs" />
-    <Compile Include="Database\Context\TimeSpan.cs" />
+    <Compile Include="Database\Context\ProgressNote.cs" />
+    <Compile Include="Database\Context\Point.cs" />
     <Compile Include="Database\Context\User.cs" />
     <Compile Include="Database\DBContext.cs" />
     <Compile Include="Database\DBLoader.cs" />
