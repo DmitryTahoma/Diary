@@ -19,5 +19,16 @@ namespace ServerRealization.Database.Context
         public int Start { set; get; }
         public int Current { set; get; }
         public int End { set; get; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Progress))
+                return false;
+            Progress other = (Progress)obj;
+            return this.Id == other.Id
+                && this.Start == other.Start
+                && this.Current == other.Current
+                && this.End == other.End;
+        }
     }
 }

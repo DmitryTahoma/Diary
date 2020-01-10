@@ -15,5 +15,14 @@ namespace ServerRealization.Database.Context
 
         public int Id { private set; get; }
         public int Count { set; get; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Collection))
+                return false;
+            Collection other = (Collection)obj;
+            return this.Id == other.Id
+                && this.Count == other.Count;
+        }
     }
 }

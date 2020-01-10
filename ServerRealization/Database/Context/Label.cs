@@ -25,5 +25,15 @@ namespace ServerRealization.Database.Context
         public string Name { set; get; }
 
         public Image Image { private set; get; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Label))
+                return false;
+            Label other = (Label)obj;
+            return this.Id == other.Id
+                && this.Name == other.Name
+                && this.Image.Equals(other.Image);
+        }
     }
 }

@@ -30,5 +30,16 @@ namespace ServerRealization.Database.Context
 
         public Note Note { private set; get; }
         public Progress Progress { private set; get; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ProgressNote))
+                return false;
+            ProgressNote other = (ProgressNote)obj;
+            return this.Id == other.Id
+                && this.Size == other.Size
+                && this.Note.Equals(other.Note)
+                && this.Progress.Equals(other.Progress);
+        }
     }
 }

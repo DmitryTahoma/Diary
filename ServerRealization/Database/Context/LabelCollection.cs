@@ -28,5 +28,15 @@ namespace ServerRealization.Database.Context
 
         public Label Label { private set; get; }
         public Collection Stereotype { private set; get; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is LabelCollection))
+                return false;
+            LabelCollection other = (LabelCollection)obj;
+            return this.Id == other.Id
+                && this.Label.Equals(other.Label)
+                && this.Stereotype.Equals(other.Stereotype);
+        }
     }
 }

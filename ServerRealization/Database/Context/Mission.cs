@@ -30,5 +30,16 @@ namespace ServerRealization.Database.Context
 
         public Action Action { private set; get; }
         public IDBObject Context { private set; get; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Mission))
+                return false;
+            Mission other = (Mission)obj;
+            return this.Id == other.Id
+                && this.IsProgressType == other.IsProgressType
+                && this.Action.Equals(other.Action)
+                && this.Context.Equals(other.Context);
+        }
     }
 }

@@ -28,5 +28,16 @@ namespace ServerRealization.Database.Context
         public DateTime End { set; get; }
 
         public Note Note { private set; get; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Action))
+                return false;
+            Action other = (Action)obj;
+            return this.Id == other.Id
+                && this.Start.Equals(other.Start)
+                && this.End.Equals(other.End)
+                && this.Note.Equals(other.Note);
+        }
     }
 }

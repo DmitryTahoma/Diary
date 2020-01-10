@@ -36,5 +36,17 @@ namespace ServerRealization.Database.Context
 
         public User User { private set; get; }
         public Collection Stereotype { private set; get; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Note))
+                return false;
+            Note other = (Note)obj;
+            return this.Id == other.Id
+                && this.Name == other.Name
+                && this.Text == other.Text
+                && this.User.Equals(other.User)
+                && this.Stereotype.Equals(other.Stereotype);
+        }
     }
 }

@@ -10,10 +10,6 @@ namespace ServerRealization.Database.Context
 
         public User(int id, string name, string login, string password, DateTime registration)
         {
-            if (DBContext.Users
-                .Where(x => x.Login == login)
-                .Count() != 0)
-                throw new ArgumentException("Login must be unique");
             Id = id;
             Name = name;
             Login = login;
@@ -26,5 +22,17 @@ namespace ServerRealization.Database.Context
         public string Login { set; get; }
         public string Password { set; get; }
         public DateTime Registration { set; get; }
+
+        public override bool Equals(object obj)
+        {
+            if(!(obj is User))
+                return false;
+            User other = (User)obj;
+            return this.Id == other.Id
+                && this.Name == other.Name
+                && this.Login == other.Login
+                && this.Password == other.Password
+                && this.Registration.Equals(other.Registration);
+        }
     }
 }

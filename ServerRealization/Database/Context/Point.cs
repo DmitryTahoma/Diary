@@ -28,5 +28,16 @@ namespace ServerRealization.Database.Context
         public bool IsChecked { set; get; }
 
         public Collection Paragraph { private set; get; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Point))
+                return false;
+            Point other = (Point)obj;
+            return this.Id == other.Id
+                && this.Name == other.Name
+                && this.IsChecked == other.IsChecked
+                && this.Paragraph.Equals(other.Paragraph);
+        }
     }
 }
