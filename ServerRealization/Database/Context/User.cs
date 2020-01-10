@@ -5,16 +5,10 @@ namespace ServerRealization.Database.Context
 {
     public class User : IDBObject
     {
-        public User(int nameId, string login, string password, DateTime registration)
-            : this(DBContext.Names.Max(x => x.Id) + 1, nameId, login, password, registration) { }
+        public User(string name, string login, string password, DateTime registration)
+            : this(DBContext.Users.Max(x => x.Id) + 1, name, login, password, registration) { }
 
-        public User(Name name, string login, string password, DateTime registration)
-            : this(DBContext.Names.Max(x => x.Id) + 1, name, login, password, registration) { }
-
-        public User(int id, int nameId, string login, string password, DateTime registration)
-            : this(id, DBContext.Names.Where(x => x.Id == nameId).First(), login, password, registration) { }
-
-        public User(int id, Name name, string login, string password, DateTime registration)
+        public User(int id, string name, string login, string password, DateTime registration)
         {
             if (DBContext.Users
                 .Where(x => x.Login == login)
@@ -28,11 +22,9 @@ namespace ServerRealization.Database.Context
         }
 
         public int Id { private set; get; }
-        public int NameId { get => Name.Id; }
+        public string Name { set; get; }
         public string Login { set; get; }
         public string Password { set; get; }
         public DateTime Registration { set; get; }
-
-        public Name Name { private set; get; }
     }
 }

@@ -1,38 +1,32 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace ServerRealization.Database.Context
 {
     public class Action : IDBObject
     {
-        public Action(User user, NameAndComment nac, TimeSpan timeSpan)
-            : this(DBContext.Actions.Max(x => x.Id) + 1, user, nac, timeSpan) { }
+        public Action(int noteId, DateTime start, DateTime end)
+            : this(DBContext.Notes.Where(x => x.Id == noteId).First(), start, end) { }
 
-        public Action(int userId, int nacId, int timeSpanId)
-            : this(DBContext.Actions.Max(x => x.Id) + 1, userId, nacId, timeSpanId) { }
+        public Action(Note note, DateTime start, DateTime end)
+            : this(DBContext.Actions.Max(x => x.Id) + 1, note, start, end) { }
 
-        public Action(int id, int userId, int nacId, int timeSpanId)
+        public Action(int id, int noteId, DateTime start, DateTime end)
+            : this(id, DBContext.Notes.Where(x => x.Id == noteId).First(), start, end) { }
+
+        public Action(int id, Note note, DateTime start, DateTime end)
         {
             Id = id;
-            User = DBContext.Users.Where(x => x.Id == userId).First();
-            NameAndComment = DBContext.NamesAndComments.Where(x => x.Id == nacId).First();
-            TimeSpan = DBContext.TimeSpans.Where(x => x.Id == timeSpanId).First();
-        }
-
-        public Action(int id, User user, NameAndComment nac, TimeSpan timeSpan)
-        {
-            Id = id;
-            User = user;
-            NameAndComment = nac;
-            TimeSpan = timeSpan;
+            Note = note;
+            Start = start;
+            End = end;
         }
 
         public int Id { private set; get; }
-        public int UserId { get => User.Id; }
-        public int NacId { get => NameAndComment.Id; }
-        public int TimeSpanId { get => TimeSpan.Id; }
+        public int NoteId { get => Note.Id; }
+        public DateTime Start { set; get; }
+        public DateTime End { set; get; }
 
-        public User User { private set; get; }
-        public NameAndComment NameAndComment { private set; get; }
-        public TimeSpan TimeSpan { private set; get; }
+        public Note Note { private set; get; }
     }
 }

@@ -4,28 +4,31 @@ namespace ServerRealization.Database.Context
 {
     public class Mission : IDBObject
     {
-        public Mission(int progressId, int nacId)
-            : this(DBContext.Missions.Max(x => x.Id) + 1, progressId, nacId) { }
+        public Mission(int actionId, bool isProgressType, int contextId)
+            : this(DBContext.Missions.Max(x => x.Id) + 1, actionId, isProgressType, contextId) { }
 
-        public Mission(Progress progress, NameAndComment nac)
-            : this(DBContext.Missions.Max(x => x.Id) + 1, progress, nac) { }
+        public Mission(Action action, bool isProgressType, IDBObject context)
+            : this(DBContext.Missions.Max(x => x.Id) + 1, action, isProgressType, context) { }
 
-        public Mission(int id, int progressId, int nacId)
-            : this(id, DBContext.Progresses.Where(x => x.Id == progressId).First(), DBContext.NamesAndComments.Where(x => x.Id == nacId).First()) { }
-        
+        public Mission(int id, int actionId, bool isProgressType, int contextId)
+            : this(id, DBContext.Actions.Where(x => x.Id == actionId).First(), isProgressType,
+                  (isProgressType ? DBContext.Progresses.ToList<IDBObject>() : DBContext.Collections.ToList<IDBObject>())
+                    .Where(x => x.Id == contextId).First()) { }
 
-        public Mission(int id, Progress progress, NameAndComment nac)
+        public Mission(int id, Action action, bool isProgressType, IDBObject context)
         {
             Id = id;
-            Progress = progress;
-            NameAndComment = nac;
+            Action = action;
+            IsProgressType = isProgressType;
+            Context = context;
         }
 
         public int Id { private set; get; }
-        public int ProgressId { get => Progress.Id; }
-        public int NacId { get => NameAndComment.Id; }
+        public int ActionId { get => Action.Id; }
+        public bool IsProgressType { set; get; }
+        public int ContextId { get => Context.Id; }
 
-        public Progress Progress { private set; get; }
-        public NameAndComment NameAndComment { private set; get; }
+        public Action Action { private set; get; }
+        public IDBObject Context { private set; get; }
     }
 }
