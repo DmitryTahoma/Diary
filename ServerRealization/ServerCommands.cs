@@ -18,11 +18,15 @@ namespace ServerRealization
 
         private string CheckLoginPassword(string[] args)
         {
-            return 
-                (DBContext.Users
-                .Where((x) => x.Login == args[0] && x.Password == args[1])
-                .Count()
-                == 1).ToString();
+            if(args != null)
+                if(args.Length > 1)
+                    if(args[0] != "" && args[1] != "")
+                        return 
+                            (DBContext.Users
+                            .Where((x) => x.Login == args[0] && x.Password == args[1])
+                            .Count()
+                            == 1).ToString();
+            return "ae";
         }
     }
 }
