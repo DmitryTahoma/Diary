@@ -1,7 +1,6 @@
 ﻿using ClientCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ServerRealization.Test
 {
@@ -63,22 +62,17 @@ namespace ServerRealization.Test
 
         /*
         Before running test, I have next values ​​in the tables of the test database
-        table 'names'
-        id  name        surname         patronymic
-        1 	TempName 	TempSurname 	TempPatronymic
-	    2 	TestName 	TestSurname 	TestPatronymic
         table 'users'
-        id  name_id     login           password            registration
-        1 	1 	        TempLogin 	    temppassword 	    2020-01-01 18:52:23
-	    2 	2 	        TestLogin 	    testpassword 	    2020-01-01 18:52:23
+        id | name | login  | password | registration       
+        1  | Alex | Alex92 | pass1234 | 2020-01-10 21:33:11
         */
         [DataTestMethod]
         [DataRow("192.168.0.106", 11001, 11002, "clp", new string[] { "nick", "name" }, "False")]
-        [DataRow("192.168.0.106", 11003, 11004, "clp", new string[] { "TempName", "temppassword" }, "False")]
-        [DataRow("192.168.192.2", 11005, 11006, "clp", new string[] { "TempLogin", "temppassword" }, "True")]
-        [DataRow("192.168.192.2", 11007, 11008, "clp", new string[] { "TestLogin", "temppassword" }, "False")]
-        [DataRow("127.0.0.1", 11009, 11010, "clp", new string[] { "TestLogin", "testpassword" }, "True")]
-        [DataRow("127.0.0.1", 11011, 11012, "clp", new string[] { "TempSurname", "TestPatronymic" }, "False")]
+        [DataRow("192.168.0.106", 11003, 11004, "clp", new string[] { "Alex92", "temppassword" }, "False")]
+        [DataRow("192.168.192.2", 11005, 11006, "clp", new string[] { "TempLogin", "pass1234" }, "False")]
+        [DataRow("192.168.192.2", 11007, 11008, "clp", new string[] { "Alex92", "pass1234" }, "True")]
+        [DataRow("127.0.0.1", 11009, 11010, "clp", new string[] { "TestLogin", "testpassword" }, "False")]
+        [DataRow("127.0.0.1", 11011, 11012, "clp", new string[] { "Alex", "pass1234" }, "False")]
         public void ExecuteCommandTest(string ip, int port, int clientPort, string command, string[] args, string expectedResult)
         {
             ServerProgram server = new ServerProgram(ip, port, new int[] { clientPort }, 1000);
