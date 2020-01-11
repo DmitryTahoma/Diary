@@ -5,48 +5,20 @@
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <Style x:Key="WhitePristina" 
+            <Style x:Key="HeaderBlock" 
                    TargetType="TextBlock">
-                <Setter Property="Control.Foreground" Value="White"/>
+                <Setter Property="Control.Foreground" Value="Black"/>
                 <Setter Property="Control.HorizontalAlignment" Value="Center"/>
-                <Setter Property="Control.Effect">
-                    <Setter.Value>
-                        <DropShadowEffect ShadowDepth="0" BlurRadius="10" Color="Black"/>
-                    </Setter.Value>
-                </Setter>
             </Style>
             <Style x:Key="TransparentInput">
                 <Setter Property="Control.Background" Value="Transparent"/>
-                <Setter Property="Control.Foreground" Value="FloralWhite"/>
+                <Setter Property="Control.Foreground" Value="Black"/>
                 <Setter Property="Control.HorizontalAlignment" Value="Center"/>
                 <Setter Property="Control.MinWidth" Value="100"/>
-                <Setter Property="Control.BorderThickness" Value="0"/>
-                <Setter Property="Control.Effect">
+                <Setter Property="Control.BorderThickness" Value="0, 0, 0, 3"/>
+                <Setter Property="Control.BorderBrush">
                     <Setter.Value>
-                        <DropShadowEffect ShadowDepth="0" BlurRadius="10" Color="Black"/>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-            <Style x:Key="BgLoginPageGrid"
-                   TargetType="Grid">
-                <Setter Property="Background">
-                    <Setter.Value>
-                        <VisualBrush Stretch="UniformToFill">
-                            <VisualBrush.Transform>
-                                <TransformGroup>
-                                    <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
-                                    <TranslateTransform X="-10" Y="-10"/>
-                                </TransformGroup>
-                            </VisualBrush.Transform>
-                            <VisualBrush.Visual>
-                                <Image Source="pack://application:,,,/Resources/Images/loginPageBackground.jpg">
-                                    <Image.BitmapEffect>
-                                        <BlurBitmapEffect KernelType="Gaussian"
-                                              Radius="20"/>
-                                    </Image.BitmapEffect>
-                                </Image>
-                            </VisualBrush.Visual>
-                        </VisualBrush>
+                        <SolidColorBrush Color="Black"/>
                     </Setter.Value>
                 </Setter>
             </Style>

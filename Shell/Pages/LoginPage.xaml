@@ -11,26 +11,11 @@
       d:DesignHeight="300" d:DesignWidth="300"
       Title="LoginPage"
       MinHeight="300px"
-      MinWidth="300px"
-      x:Name="loginPage">
+      MinWidth="300px">
     <Page.DataContext>
         <view:LoginPageViewModel/>
     </Page.DataContext>
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="SizeChanged">
-            <catel:EventToCommand Command="{Binding UpdateFontSize}"
-                                  CommandParameter="{Binding ElementName=loginPage}"
-                                  PassEventArgsToCommand="False"
-                                  DisableAssociatedObjectOnCannotExecute="False"/>
-        </i:EventTrigger>
-        <i:EventTrigger EventName="Loaded">
-            <catel:EventToCommand Command="{Binding UpdateFontSize}"
-                                  CommandParameter="{Binding ElementName=loginPage}"
-                                  PassEventArgsToCommand="False"
-                                  DisableAssociatedObjectOnCannotExecute="False"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
-    <Grid Style="{StaticResource BgLoginPageGrid}">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.1*"/>
             <ColumnDefinition/>
@@ -42,17 +27,16 @@
         </Grid.RowDefinitions>
         <Grid VerticalAlignment="Center" 
               Grid.Column="1"
-              Grid.Row="0">
+              Grid.Row="0" 
+              FocusManager.FocusedElement="{Binding ElementName=LoginInput}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
-                <RowDefinition Height="3px"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
-                <RowDefinition Height="3px"/>
             </Grid.RowDefinitions>
             <TextBlock x:Name="LoginText"
-                       Style="{StaticResource WhitePristina}"
+                       Style="{StaticResource HeaderBlock}"
                        FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
                        Text="{Binding LoginText}"/>
             <TextBox x:Name="LoginInput"
@@ -60,23 +44,30 @@
                      FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
                      Grid.Row="1" 
                      MaxLength="32"
-                     Text="{Binding Login}"/>
-            <Canvas Grid.Row="2"
-                HorizontalAlignment="Center"
-                Width="{Binding ActualWidth, ElementName=LoginInput}">
-                <Rectangle Fill="White"
-                       Height="3" 
-                       Width="{Binding ActualWidth, ElementName=LoginInput}"/>
-            </Canvas>
+                     Text="{Binding Login}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="KeyDown">
+                        <catel:EventToCommand Command="{Binding LoginInputKeyDown}"
+                                              PassEventArgsToCommand="True"
+                                              DisableAssociatedObjectOnCannotExecute="False"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="KeyUp">
+                        <catel:EventToCommand Command="{Binding LoginInputKeyUp}"
+                                              CommandParameter="{Binding ElementName=PasswordInput}"
+                                              PassEventArgsToCommand="False"
+                                              DisableAssociatedObjectOnCannotExecute="False"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBox>
             <TextBlock x:Name="PasswordText"
-                       Grid.Row="3"
-                       Style="{StaticResource ResourceKey=WhitePristina}"
+                       Grid.Row="2"
+                       Style="{StaticResource ResourceKey=HeaderBlock}"
                        FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
                        Text="{Binding PasswordText}"/>
             <PasswordBox x:Name="PasswordInput"
                      Style="{StaticResource TransparentInput}"
                      FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
-                     Grid.Row="4">
+                     Grid.Row="3">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PasswordChanged">
                         <catel:EventToCommand Command="{Binding UpdatePassword}"
@@ -86,13 +77,6 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </PasswordBox>
-            <Canvas Grid.Row="5"
-                    HorizontalAlignment="Center"
-                    Width="{Binding ActualWidth, ElementName=PasswordInput}">
-                <Rectangle Fill="White"
-                           Height="3"
-                           Width="{Binding ActualWidth, ElementName=PasswordInput}"/>
-            </Canvas>
         </Grid>
     </Grid>
 </Page>

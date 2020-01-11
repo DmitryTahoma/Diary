@@ -4,6 +4,7 @@
     using Catel.MVVM;
     using Shell.Models.Helpers;
     using System.Windows.Controls;
+    using System.Windows.Input;
 
     public class LoginPageViewModel : ViewModelBase
     {
@@ -11,8 +12,10 @@
 
         public LoginPageViewModel()
         {
-            UpdateFontSize = new Command<Page>(OnUpdateFontSizeExecute);
             UpdatePassword = new Command<PasswordBox>(OnUpdatePasswordExecute);
+            LoginInputKeyDown = new Command<KeyEventArgs>(OnLoginInputKeyDownExecute);
+            LoginInputKeyUp = new Command<PasswordBox>(OnLoginInputKeyUpExecute);
+            PageFontSize = 40;
         }
 
         #region Properties
@@ -49,21 +52,24 @@
 
         #region Commands
 
-        public Command<Page> UpdateFontSize { get; private set; }
-        private void OnUpdateFontSizeExecute(Page loginPage)
-        {
-            if (LoginPageScaleHelper.IsEmpty())
-                LoginPageScaleHelper.FindAllControls(loginPage);
-
-            double newSize = loginPage.ActualHeight / 10 + 10;
-            PageFontSize = newSize;
-            LoginPageScaleHelper.SetFontSize(newSize);
-        }
-
         public Command<PasswordBox> UpdatePassword { get; private set; }
         private void OnUpdatePasswordExecute(PasswordBox passwordBox)
         {
             password = passwordBox.Password;
+        }
+
+        public Command<KeyEventArgs> LoginInputKeyDown { get; private set; }
+        private void OnLoginInputKeyDownExecute(KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                isEnter = true;
+        }
+        private bool isEnter = false;
+        public Command<PasswordBox> LoginInputKeyUp { get; private set; }
+        private void OnLoginInputKeyUpExecute(PasswordBox passwordBox)
+        {
+            if(isEnter)
+                passwordBox.Focus();
         }
 
         #endregion
