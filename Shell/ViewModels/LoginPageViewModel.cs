@@ -2,7 +2,6 @@
 {
     using Catel.Data;
     using Catel.MVVM;
-    using Shell.Models.Helpers;
     using System.Windows.Controls;
     using System.Windows.Input;
 
