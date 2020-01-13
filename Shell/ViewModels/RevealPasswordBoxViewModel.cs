@@ -12,13 +12,17 @@
         public delegate void OnEnterKeyUpContainer();
         public event OnEnterKeyUpContainer OnEnterKeyUp;
 
+        private TextBox textBox;
+        private PasswordBox passwordBox;
         private string password = "";
+        private bool isUpdating = false;
         public RevealPasswordBoxViewModel()
         {
-            UpdatePassword = new Command<FrameworkElement>(OnUpdatePasswordExecute);
-            UpdateBoxesData = new Command<FrameworkElement>(OnUpdateBoxesDataExecute);
-            ClickCheckBox = new Command<FrameworkElement>(OnClickCheckBoxExecute);
+            UpdatePassword = new Command(OnUpdatePasswordExecute);
+            ClickCheckBox = new Command(OnClickCheckBoxExecute);
             BoxKeyUp = new Command<KeyEventArgs>(OnBoxKeyUpExecute);
+            MyGotFocus = new Command(OnMyGotFocusExecute);
+            FindBoxes = new Command<Grid>(OnFindBoxesExecute);
         }
 
         #region Properties
@@ -62,46 +66,64 @@
 
         #region Commands
 
-        public Command<FrameworkElement> UpdatePassword { get; private set; }
-        private void OnUpdatePasswordExecute(FrameworkElement sender)
+        public Command UpdatePassword { get; private set; }
+        private void OnUpdatePasswordExecute()
         {
-            if (IsShown && sender is TextBox)
-                password = ((TextBox)sender).Text;
-            else if (!IsShown && sender is PasswordBox)
-                password = ((PasswordBox)sender).Password;
-        }
-
-        public Command<FrameworkElement> UpdateBoxesData { get; private set; }
-        private void OnUpdateBoxesDataExecute(FrameworkElement element)
-        {
-            if (IsShown && element is PasswordBox)
-                ((PasswordBox)element).Password = password;
-            else if(!IsShown && element is TextBox)
-                ((TextBox)element).Text = password;
-        }
-
-        public Command<FrameworkElement> ClickCheckBox { get; private set; }
-        private void OnClickCheckBoxExecute(FrameworkElement element)
-        {
-            if (IsShown && element is TextBox)
+            if (!isUpdating)
             {
-                ((TextBox)element).Focus();
-                ((TextBox)element).SelectionStart = ((TextBox)element).Text.Length;
+                isUpdating = true;
+                if (IsShown)
+                {
+                    password = textBox.Text;
+                    passwordBox.Password = password;
+                }
+                else
+                {
+                    password = passwordBox.Password;
+                    textBox.Text = password;
+                }
+                isUpdating = false;
             }
-            else if (!IsShown && element is PasswordBox)
+        }
+
+        public Command ClickCheckBox { get; private set; }
+        private void OnClickCheckBoxExecute()
+        {
+            if (IsShown)
             {
-                ((PasswordBox)element).Focus();
-                ((PasswordBox)element).GetType()
+                textBox.Focus();
+                textBox.SelectionStart = textBox.Text.Length;
+            }
+            else
+            {
+                passwordBox.Focus();
+                passwordBox.GetType()
                     .GetMethod("Select", BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Invoke((PasswordBox)element, new object[] { ((PasswordBox)element).Password.Length, 0 });
+                    .Invoke(passwordBox, new object[] { passwordBox.Password.Length, 0 });
             }
         }
 
         public Command<KeyEventArgs> BoxKeyUp { get; private set; }
         private void OnBoxKeyUpExecute(KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key == Key.Enter && OnEnterKeyUp != null)
                 OnEnterKeyUp();
+        }
+
+        public Command MyGotFocus { get; private set; }
+        private void OnMyGotFocusExecute()
+        {
+            if (IsShown)
+                textBox.Focus();
+            else
+                passwordBox.Focus();
+        }
+
+        public Command<Grid> FindBoxes { private set; get; }
+        private void OnFindBoxesExecute(Grid content)
+        {
+            passwordBox = (PasswordBox)content.Children[0];
+            textBox = (TextBox)content.Children[1];
         }
 
         #endregion
