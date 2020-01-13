@@ -2,18 +2,17 @@
 {
     using Catel.Data;
     using Catel.MVVM;
+    using Shell.Controls;
     using System.Windows.Controls;
     using System.Windows.Input;
 
     public class LoginPageViewModel : ViewModelBase
     {
-        private string password;
-
         public LoginPageViewModel()
         {
-            UpdatePassword = new Command<PasswordBox>(OnUpdatePasswordExecute);
             LoginInputKeyDown = new Command<KeyEventArgs>(OnLoginInputKeyDownExecute);
-            LoginInputKeyUp = new Command<PasswordBox>(OnLoginInputKeyUpExecute);
+            LoginInputKeyUp = new Command<RevealPasswordBox>(OnLoginInputKeyUpExecute);
+            PasswordBoxContext.PasswordFontSize = 40;
             PageFontSize = 40;
         }
 
@@ -47,25 +46,25 @@
         }
         public static readonly PropertyData PageFontSizeProperty = RegisterProperty(nameof(PageFontSize), typeof(double), 40);
 
+        public RevealPasswordBoxViewModel PasswordBoxContext
+        {
+            get { return GetValue<RevealPasswordBoxViewModel>(PasswordBoxContextProperty); }
+            set { SetValue(PasswordBoxContextProperty, value); }
+        }
+        public static readonly PropertyData PasswordBoxContextProperty = RegisterProperty(nameof(PasswordBoxContext), typeof(RevealPasswordBoxViewModel), new RevealPasswordBoxViewModel());
+
         #endregion
 
         #region Commands
 
-        public Command<PasswordBox> UpdatePassword { get; private set; }
-        private void OnUpdatePasswordExecute(PasswordBox passwordBox)
-        {
-            password = passwordBox.Password;
-        }
-
         public Command<KeyEventArgs> LoginInputKeyDown { get; private set; }
         private void OnLoginInputKeyDownExecute(KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-                isEnter = true;
+            isEnter = e.Key == Key.Enter;
         }
         private bool isEnter = false;
-        public Command<PasswordBox> LoginInputKeyUp { get; private set; }
-        private void OnLoginInputKeyUpExecute(PasswordBox passwordBox)
+        public Command<RevealPasswordBox> LoginInputKeyUp { get; private set; }
+        private void OnLoginInputKeyUpExecute(RevealPasswordBox passwordBox)
         {
             if(isEnter)
                 passwordBox.Focus();

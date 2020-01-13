@@ -7,6 +7,7 @@
       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
       xmlns:catel="http://schemas.catelproject.com"
       xmlns:view="clr-namespace:Shell.ViewModels"
+      xmlns:controls="clr-namespace:Shell.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="LoginPage"
@@ -64,19 +65,9 @@
                        Style="{StaticResource ResourceKey=HeaderBlock}"
                        FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
                        Text="{Binding PasswordText}"/>
-            <PasswordBox x:Name="PasswordInput"
-                     Style="{StaticResource TransparentInput}"
-                     FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
-                     Grid.Row="3">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="PasswordChanged">
-                        <catel:EventToCommand Command="{Binding UpdatePassword}"
-                                              CommandParameter="{Binding ElementName=PasswordInput, UpdateSourceTrigger=PropertyChanged}"
-                                              PassEventArgsToCommand="False"
-                                              DisableAssociatedObjectOnCannotExecute="False"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </PasswordBox>
+            <controls:RevealPasswordBox Grid.Row="3"
+                                        x:Name="PasswordInput"
+                                        DataContext="{Binding PasswordBoxContext}"/>
         </Grid>
     </Grid>
 </Page>
