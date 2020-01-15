@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
 
 namespace Shell.Controls
 {
@@ -20,9 +7,13 @@ namespace Shell.Controls
     /// </summary>
     public partial class RevealPasswordBox : UserControl
     {
+        public delegate void OnEnterKeyUpContainer();
+        public event OnEnterKeyUpContainer OnEnterKeyUp;
+
         public RevealPasswordBox()
         {
             InitializeComponent();
+            DataContext.OnEnterKeyUp += () => { OnEnterKeyUp?.Invoke(); };
         }
     }
 }
