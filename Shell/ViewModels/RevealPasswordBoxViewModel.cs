@@ -19,10 +19,12 @@
         public RevealPasswordBoxViewModel()
         {
             UpdatePassword = new Command(OnUpdatePasswordExecute);
-            ClickCheckBox = new Command(OnClickCheckBoxExecute);
             BoxKeyUp = new Command<KeyEventArgs>(OnBoxKeyUpExecute);
             MyGotFocus = new Command(OnMyGotFocusExecute);
             FindBoxes = new Command<Grid>(OnFindBoxesExecute);
+            MouseEnter = new Command<Image>(OnMouseEnterExecute);
+            MouseLeave = new Command<Image>(OnMouseLeaveExecute);
+            Click = new Command<Image>(OnClickExecute);
         }
 
         #region Properties
@@ -48,19 +50,12 @@
         }
         public static readonly PropertyData PasswordBoxVisibilityProperty = RegisterProperty(nameof(PasswordBoxVisibility), typeof(Visibility), Visibility.Visible);
 
-        public double PasswordFontSize
+        public double Size
         {
-            get { return GetValue<double>(PasswordFontSizeProperty); }
-            set { SetValue(PasswordFontSizeProperty, value); }
+            get { return GetValue<double>(SizeProperty); }
+            set { SetValue(SizeProperty, value); }
         }
-        public static readonly PropertyData PasswordFontSizeProperty = RegisterProperty(nameof(PasswordFontSize), typeof(double));
-        
-        public double HintFontSize
-        {
-            get { return GetValue<double>(HintFontSizeProperty); }
-            set { SetValue(HintFontSizeProperty, value); }
-        }
-        public static readonly PropertyData HintFontSizeProperty = RegisterProperty(nameof(HintFontSize), typeof(double));
+        public static readonly PropertyData SizeProperty = RegisterProperty(nameof(Size), typeof(double));
 
         #endregion
 
@@ -86,23 +81,6 @@
             }
         }
 
-        public Command ClickCheckBox { get; private set; }
-        private void OnClickCheckBoxExecute()
-        {
-            if (IsShown)
-            {
-                textBox.Focus();
-                textBox.SelectionStart = textBox.Text.Length;
-            }
-            else
-            {
-                passwordBox.Focus();
-                passwordBox.GetType()
-                    .GetMethod("Select", BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Invoke(passwordBox, new object[] { passwordBox.Password.Length, 0 });
-            }
-        }
-
         public Command<KeyEventArgs> BoxKeyUp { get; private set; }
         private void OnBoxKeyUpExecute(KeyEventArgs e)
         {
@@ -124,6 +102,43 @@
         {
             passwordBox = (PasswordBox)content.Children[0];
             textBox = (TextBox)content.Children[1];
+        }
+
+        public Command<Image> MouseEnter { private set; get; }
+        private void OnMouseEnterExecute(Image sender)
+        {
+            if (!IsShown)
+                sender.Source = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("pack://application:,,,/Resources/Icons/RPBbgEntered.png"));
+            else
+                sender.Source = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("pack://application:,,,/Resources/Icons/RPBbgCheckedEntered.png"));
+        }
+
+        public Command<Image> MouseLeave { private set; get; }
+        private void OnMouseLeaveExecute(Image sender)
+        {
+            if (!IsShown)
+                sender.Source = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("pack://application:,,,/Resources/Icons/RPBbg.png"));
+            else
+                sender.Source = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("pack://application:,,,/Resources/Icons/RPBbgChecked.png"));
+        }
+
+        public Command<Image> Click { private set; get; }
+        private void OnClickExecute(Image sender)
+        {
+            IsShown = !IsShown;
+            OnMouseEnterExecute(sender);
+            if (IsShown)
+            {
+                textBox.Focus();
+                textBox.SelectionStart = textBox.Text.Length;
+            }
+            else
+            {
+                passwordBox.Focus();
+                passwordBox.GetType()
+                    .GetMethod("Select", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(passwordBox, new object[] { passwordBox.Password.Length, 0 });
+            }
         }
 
         #endregion
