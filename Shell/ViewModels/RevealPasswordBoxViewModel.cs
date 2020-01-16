@@ -108,18 +108,18 @@
         private void OnMouseEnterExecute(Image sender)
         {
             if (!IsShown)
-                sender.Source = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("pack://application:,,,/Resources/Icons/RPBbgEntered.png"));
+                sender.Source = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("pack://application:,,,/Resources/Images/RPBbgEntered.png"));
             else
-                sender.Source = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("pack://application:,,,/Resources/Icons/RPBbgCheckedEntered.png"));
+                sender.Source = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("pack://application:,,,/Resources/Images/RPBbgCheckedEntered.png"));
         }
 
         public Command<Image> MouseLeave { private set; get; }
         private void OnMouseLeaveExecute(Image sender)
         {
             if (!IsShown)
-                sender.Source = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("pack://application:,,,/Resources/Icons/RPBbg.png"));
+                sender.Source = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("pack://application:,,,/Resources/Images/RPBbg.png"));
             else
-                sender.Source = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("pack://application:,,,/Resources/Icons/RPBbgChecked.png"));
+                sender.Source = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("pack://application:,,,/Resources/Images/RPBbgChecked.png"));
         }
 
         public Command<Image> Click { private set; get; }
