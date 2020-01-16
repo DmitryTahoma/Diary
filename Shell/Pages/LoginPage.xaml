@@ -12,9 +12,10 @@
       d:DesignHeight="300" d:DesignWidth="300"
       Title="LoginPage"
       MinHeight="300px"
-      MinWidth="300px">
+      MinWidth="300px"
+      Background="White">
     <Page.DataContext>
-        <view:LoginPageViewModel/>
+        <view:LoginPageViewModel x:Name="DataContext"/>
     </Page.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -34,6 +35,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBlock x:Name="LoginText"
@@ -68,6 +70,26 @@
             <controls:RevealPasswordBox Grid.Row="3"
                                         x:Name="PasswordInput"
                                         DataContext="{Binding PasswordBoxContext}"/>
+            <Grid Grid.Row="4"
+                  Margin="0, 10, 0, 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="0.5*"/>
+                </Grid.RowDefinitions>
+                <Button FontSize="{Binding HalfPageFontSize, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource ResourceKey=BlackWhiteBtn}">
+                    Enter
+                </Button>
+                <Button Grid.Row="1"
+                        Style="{StaticResource ResourceKey=TransparentBlueBtn}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding Register}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    Not registered?
+                </Button>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

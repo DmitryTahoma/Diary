@@ -45,8 +45,7 @@
 
         public void OnPageFontSizeSet()
         {
-            PasswordBoxContext.PasswordFontSize = PageFontSize;
-            ConfirmPasswordBoxContext.PasswordFontSize = PageFontSize;
+            PasswordBoxContext.Size = PageFontSize;
         }
     }
 }

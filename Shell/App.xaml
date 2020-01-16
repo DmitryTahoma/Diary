@@ -22,6 +22,20 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            <Style x:Key="TransparentBlueBtn"
+                   TargetType="Button">
+                <Setter Property="Button.HorizontalAlignment" Value="Center"/>
+                <Setter Property="Button.Foreground" Value="Blue"/>
+                <Setter Property="Button.Background" Value="Transparent"/>
+                <Setter Property="Button.BorderThickness" Value="0"/>
+                <Setter Property="Button.Padding" Value="20, 0"/>
+            </Style>
+            <Style x:Key="BlackWhiteBtn"
+                   TargetType="Button">
+                <Setter Property="Button.Foreground" Value="White"/>
+                <Setter Property="Button.Background" Value="Black"/>
+                <Setter Property="Button.BorderThickness" Value="0"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
