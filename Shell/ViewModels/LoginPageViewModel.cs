@@ -8,11 +8,15 @@
 
     public class LoginPageViewModel : ViewModelBase
     {
+        public delegate void NotRegisteredContainer();
+        public event NotRegisteredContainer IfNotRegistered;
+
         public LoginPageViewModel()
         {
             LoginInputKeyDown = new Command<KeyEventArgs>(OnLoginInputKeyDownExecute);
             LoginInputKeyUp = new Command<RevealPasswordBox>(OnLoginInputKeyUpExecute);
-            PasswordBoxContext.PasswordFontSize = 40;
+            Register = new Command(OnRegisterExecute);
+            PasswordBoxContext.Size = 40;
             PageFontSize = 40;
         }
 
@@ -53,6 +57,11 @@
         }
         public static readonly PropertyData PasswordBoxContextProperty = RegisterProperty(nameof(PasswordBoxContext), typeof(RevealPasswordBoxViewModel), new RevealPasswordBoxViewModel());
 
+        public double HalfPageFontSize
+        {
+            get { return PageFontSize / 2; }
+        }
+
         #endregion
 
         #region Commands
@@ -69,6 +78,9 @@
             if(isEnter)
                 passwordBox.Focus();
         }
+
+        public Command Register { get; private set; }
+        private void OnRegisterExecute() => IfNotRegistered?.Invoke();
 
         #endregion
     }
