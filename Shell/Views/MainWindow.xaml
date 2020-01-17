@@ -3,15 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Shell"
         xmlns:view="clr-namespace:Shell.ViewModels"
-        xmlns:pages="clr-namespace:Shell.Views"
+        xmlns:pages="clr-namespace:Shell.Pages"
         mc:Ignorable="d"
         Title="Title" Height="450" Width="800">
     <Window.DataContext>
         <view:MainWindowVewModel/>
     </Window.DataContext>
-    <Window.Content>
-        <pages:LoginPage/>
-    </Window.Content>
+    <Frame NavigationUIVisibility="Hidden"
+           Content="{Binding CurrentPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 </Window>
