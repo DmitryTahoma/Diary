@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Shell.Views
+namespace Shell.Pages
 {
     /// <summary>
     /// Логика взаимодействия для LoginPage.xaml
