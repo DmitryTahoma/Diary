@@ -2,20 +2,18 @@
 {
     using Catel.Data;
     using Catel.MVVM;
-    using Shell.Pages;
     using System.Windows.Controls;
 
     public class MainWindowVewModel : ViewModelBase
     {
         public MainWindowVewModel()
         {
-            CurrentPage = new LoginPage();
-            LoginPageContext = ((LoginPage)CurrentPage).DataContext;
+            LoginPageContext = new LoginPageViewModel();
+            RegistrationPageContext = new RegistrationPageViewModel();
             LoginPageContext.IfNotRegistered += () => 
             {
-                CurrentPage = new RegistrationPage();
+                SelectedTabItemId = 1;
             };
-            RegistrationPageContext = new RegistrationPageViewModel();
         }
 
         #region Properties
@@ -24,12 +22,12 @@
 
         public RegistrationPageViewModel RegistrationPageContext { set; get; }
 
-        public Page CurrentPage
+        public int SelectedTabItemId
         {
-            get { return GetValue<Page>(CurrentPageProperty); }
-            set { SetValue(CurrentPageProperty, value); }
+            get { return GetValue<int>(SelectedTabItemIdProperty); }
+            set { SetValue(SelectedTabItemIdProperty, value); }
         }
-        public static readonly PropertyData CurrentPageProperty = RegisterProperty(nameof(CurrentPage), typeof(Page));
+        public static readonly PropertyData SelectedTabItemIdProperty = RegisterProperty(nameof(SelectedTabItemId), typeof(int), 0);
 
         #endregion
 

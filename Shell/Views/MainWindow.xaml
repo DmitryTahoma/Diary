@@ -4,12 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:Shell.ViewModels"
-        xmlns:pages="clr-namespace:Shell.Pages"
+        xmlns:pages="clr-namespace:Shell.Controls.Pages"
         mc:Ignorable="d"
         Title="Title" Height="450" Width="800">
+    <TabControl SelectedIndex="{Binding SelectedTabItemId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <TabItem Visibility="Collapsed">
+            <pages:LoginPage DataContext="{Binding LoginPageContext, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </TabItem>
+        <TabItem Visibility="Collapsed">
+            <pages:RegistrationPage DataContext="{Binding RegistrationPageContext, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </TabItem>
+    </TabControl>
     <Window.DataContext>
         <view:MainWindowVewModel/>
     </Window.DataContext>
-    <Frame NavigationUIVisibility="Hidden"
-           Content="{Binding CurrentPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 </Window>
