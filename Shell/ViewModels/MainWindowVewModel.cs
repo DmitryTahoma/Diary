@@ -9,11 +9,10 @@
         public MainWindowVewModel()
         {
             LoginPageContext = new LoginPageViewModel();
+            LoginPageContext.IfNotRegistered += () =>  { SelectedTabItemId = 1; };
+
             RegistrationPageContext = new RegistrationPageViewModel();
-            LoginPageContext.IfNotRegistered += () => 
-            {
-                SelectedTabItemId = 1;
-            };
+            RegistrationPageContext.BackToSignIn += () => { SelectedTabItemId = 0; };
         }
 
         #region Properties

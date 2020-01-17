@@ -5,11 +5,15 @@
 
     public class RegistrationPageViewModel : ViewModelBase
     {
+        public delegate void BackToSignInContainer();
+        public event BackToSignInContainer BackToSignIn;
+
         public RegistrationPageViewModel()
         {
+            DoBack = new Command(OnDoBackExecute);
             PasswordBoxContext = new RevealPasswordBoxViewModel();
             ConfirmPasswordBoxContext = new RevealPasswordBoxViewModel();
-            PageFontSize = 40;
+            PageFontSize = 25;
         }
 
         #region Properties
@@ -39,13 +43,15 @@
 
         #region Commands
 
-
+        public Command DoBack { private set; get; }
+        private void OnDoBackExecute() => BackToSignIn?.Invoke();
 
         #endregion
 
         public void OnPageFontSizeSet()
         {
             PasswordBoxContext.Size = PageFontSize;
+            ConfirmPasswordBoxContext.Size = PageFontSize;
         }
     }
 }
