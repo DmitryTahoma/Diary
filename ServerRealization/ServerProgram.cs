@@ -33,5 +33,7 @@ namespace ServerRealization
         {
             return commands.ExecuteCommand(command, args);
         }
+
+        public Logger.Logger GetLogger() => server.GetLogger();
     }
 }

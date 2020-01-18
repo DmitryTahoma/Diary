@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellModel", "ShellModel\Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellModel.Test", "ShellModel.Test\ShellModel.Test.csproj", "{60228645-2B15-4D06-955B-DDB520C4D3EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleServer", "ConsoleServer\ConsoleServer.csproj", "{5E480E36-C79A-4B29-B8A7-35E79E98F876}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{60228645-2B15-4D06-955B-DDB520C4D3EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60228645-2B15-4D06-955B-DDB520C4D3EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60228645-2B15-4D06-955B-DDB520C4D3EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E480E36-C79A-4B29-B8A7-35E79E98F876}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E480E36-C79A-4B29-B8A7-35E79E98F876}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E480E36-C79A-4B29-B8A7-35E79E98F876}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E480E36-C79A-4B29-B8A7-35E79E98F876}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
