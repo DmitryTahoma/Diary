@@ -76,6 +76,11 @@
                 </Grid.RowDefinitions>
                 <Button FontSize="{Binding HalfPageFontSize, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource ResourceKey=BlackWhiteBtn}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding SignIn}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     Enter
                 </Button>
                 <Button Grid.Row="1"

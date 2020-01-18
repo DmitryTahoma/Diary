@@ -17,7 +17,18 @@
             RegistrationPageContext.BackToSignIn += () => { SelectedTabItemId = 0; };
 
             dbHelper = new DBHelper(new SocketSettings.SocketSettings("192.168.0.105", 11221, new int[] { 11222, 11224, 12550 }, 3000));
-            RegistrationPageContext.OnSignUp += (e, p, n) => { return dbHelper.Registration(e, p, n); };
+            LoginPageContext.OnSignIn += (e, p) => 
+            {
+                bool result = dbHelper.SignIn(e, p);
+                if (result)
+                    SelectedTabItemId = 2;
+                return result;
+            };
+            RegistrationPageContext.OnSignUp += (e, p, n) => 
+            {
+                SelectedTabItemId = 0;
+                return dbHelper.Registration(e, p, n);
+            };
         }
 
         #region Properties

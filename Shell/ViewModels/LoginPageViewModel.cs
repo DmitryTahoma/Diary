@@ -9,13 +9,17 @@
     public class LoginPageViewModel : ViewModelBase
     {
         public delegate void NotRegisteredContainer();
+        public delegate bool SignInContainer(string email, string password);
+
         public event NotRegisteredContainer IfNotRegistered;
+        public event SignInContainer OnSignIn;
 
         public LoginPageViewModel()
         {
             LoginInputKeyDown = new Command<KeyEventArgs>(OnLoginInputKeyDownExecute);
             LoginInputKeyUp = new Command<RevealPasswordBox>(OnLoginInputKeyUpExecute);
             Register = new Command(OnRegisterExecute);
+            SignIn = new Command(OnSignInExecute);
             PasswordBoxContext.Size = 40;
             PageFontSize = 40;
         }
@@ -81,6 +85,9 @@
 
         public Command Register { get; private set; }
         private void OnRegisterExecute() => IfNotRegistered?.Invoke();
+
+        public Command SignIn { get; private set; }
+        private void OnSignInExecute() => OnSignIn?.Invoke(Login, PasswordBoxContext.GetPassword());
 
         #endregion
     }

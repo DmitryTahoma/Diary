@@ -14,6 +14,9 @@
         <TabItem Visibility="Collapsed">
             <pages:RegistrationPage DataContext="{Binding RegistrationPageContext, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </TabItem>
+        <TabItem Visibility="Collapsed">
+            
+        </TabItem>
     </TabControl>
     <Window.DataContext>
         <view:MainWindowVewModel/>
