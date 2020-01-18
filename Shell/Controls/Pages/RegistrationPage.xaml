@@ -45,9 +45,8 @@
             </TextBlock>
             <TextBox Style="{StaticResource ResourceKey=TransparentInput}"
                      FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Grid.Row="1">
-
-            </TextBox>
+                     Grid.Row="1"
+                     Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Style="{StaticResource ResourceKey=HeaderBlock}"
                        FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        Grid.Row="2">
@@ -55,9 +54,8 @@
             </TextBlock>
             <TextBox Style="{StaticResource ResourceKey=TransparentInput}"
                      FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Grid.Row="3">
-
-            </TextBox>
+                     Grid.Row="3"
+                     Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Style="{StaticResource ResourceKey=HeaderBlock}"
                        FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        Grid.Row="4">
@@ -81,6 +79,11 @@
                         FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Padding="5"
                         Width="{Binding ElementName=BackBtn, Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding SignUp}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     Sign up
                 </Button>
                 <Button Style="{StaticResource BlackWhiteBtn}"

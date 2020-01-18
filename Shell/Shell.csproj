@@ -43,8 +43,17 @@
     <Reference Include="Catel.MVVM, Version=5.11.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Catel.MVVM.5.11.2\lib\net47\Catel.MVVM.dll</HintPath>
     </Reference>
+    <Reference Include="ClientCore">
+      <HintPath>..\ClientCore\bin\Debug\ClientCore.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="ShellModel">
+      <HintPath>..\ShellModel\bin\Debug\ShellModel.dll</HintPath>
+    </Reference>
+    <Reference Include="SocketSettings">
+      <HintPath>..\SocketSettings\bin\Debug\SocketSettings.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">

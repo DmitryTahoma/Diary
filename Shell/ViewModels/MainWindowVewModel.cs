@@ -2,10 +2,12 @@
 {
     using Catel.Data;
     using Catel.MVVM;
-    using System.Windows.Controls;
+    using Shell.Models;
 
     public class MainWindowVewModel : ViewModelBase
     {
+        DBHelper dbHelper;
+
         public MainWindowVewModel()
         {
             LoginPageContext = new LoginPageViewModel();
@@ -13,6 +15,9 @@
 
             RegistrationPageContext = new RegistrationPageViewModel();
             RegistrationPageContext.BackToSignIn += () => { SelectedTabItemId = 0; };
+
+            dbHelper = new DBHelper(new SocketSettings.SocketSettings("192.168.0.105", 11221, new int[] { 11222, 11224, 12550 }, 3000));
+            RegistrationPageContext.OnSignUp += (e, p, n) => { return dbHelper.Registration(e, p, n); };
         }
 
         #region Properties
