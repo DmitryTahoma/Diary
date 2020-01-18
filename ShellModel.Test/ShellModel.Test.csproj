@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C90754E5-A993-4DC8-ACAE-CA5448B2B8DA}</ProjectGuid>
+    <ProjectGuid>{60228645-2B15-4D06-955B-DDB520C4D3EC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Shell.Test</RootNamespace>
-    <AssemblyName>Shell.Test</AssemblyName>
+    <RootNamespace>ShellModel.Test</RootNamespace>
+    <AssemblyName>ShellModel.Test</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -29,7 +29,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,7 +37,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -51,7 +49,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DBHelper.cs" />
     <Compile Include="DBHelper.Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -63,13 +60,17 @@
       <Project>{55d240df-abcf-46e3-977f-28d5c8cf4b8d}</Project>
       <Name>ClientCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ServerCore\ServerCore.csproj">
+      <Project>{8e79b40b-8337-417d-aed7-359c8fa8f707}</Project>
+      <Name>ServerCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ServerRealization\ServerRealization.csproj">
       <Project>{035589d7-627d-4075-95e2-e27ae49be1dc}</Project>
       <Name>ServerRealization</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Shell\Shell.csproj">
-      <Project>{1d79f625-6917-4c87-9356-136416a83da2}</Project>
-      <Name>Shell</Name>
+    <ProjectReference Include="..\ShellModel\ShellModel.csproj">
+      <Project>{b22fb400-2dea-4d0e-8d35-d9895f4ed0b6}</Project>
+      <Name>ShellModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\SocketSettings\SocketSettings.csproj">
       <Project>{d6e16ff6-eaf9-4c29-b891-37be7165e135}</Project>
