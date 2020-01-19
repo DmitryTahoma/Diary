@@ -9,6 +9,14 @@ namespace ServerRealization
         ICommands commands;
         int mlsToStop;
 
+        public ServerProgram(string path)
+        {
+            commands = new ServerCommands();
+            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings(path);
+            mlsToStop = settings.MlsOfDelay;
+            server = new Server(commands, settings);
+        }
+
         public ServerProgram(string ip, int port, int[] defaultClientPorts, int mlsOfdelay)
         {
             commands = new ServerCommands();
