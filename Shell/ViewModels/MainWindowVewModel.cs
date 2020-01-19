@@ -16,7 +16,7 @@
             RegistrationPageContext = new RegistrationPageViewModel();
             RegistrationPageContext.BackToSignIn += () => { SelectedTabItemId = 0; };
 
-            dbHelper = new DBHelper(new SocketSettings.SocketSettings("192.168.0.105", 11221, new int[] { 11222, 11224, 12550 }, 3000));
+            dbHelper = new DBHelper(@"D:\Projects\Portfolio\Diary\packages\ss.bin");
             LoginPageContext.OnSignIn += (e, p) => 
             {
                 bool result = dbHelper.SignIn(e, p);

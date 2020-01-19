@@ -18,6 +18,13 @@ namespace Shell.Models
             delay = settings.MlsOfDelay;
         }
 
+        public DBHelper(string path)
+        {
+            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings(path);
+            delay = settings.MlsOfDelay;
+            client = new Client(settings);
+        }
+
         private object DoLockedProcess(ProcessAction action)
         {
             object result = null;
