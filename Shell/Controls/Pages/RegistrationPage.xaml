@@ -43,33 +43,61 @@
                        Grid.Row="0">
                 Enter your name
             </TextBlock>
-            <TextBox Style="{StaticResource ResourceKey=TransparentInput}"
-                     FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Grid.Row="1"
-                     Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="1"
+                        HorizontalAlignment="Center">
+                <TextBox Style="{StaticResource ResourceKey=TransparentInput}"
+                         FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="{Binding EtNameBeetween, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                           Foreground="Red"
+                           FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                           Visibility="{Binding EtNameBetweenVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
             <TextBlock Style="{StaticResource ResourceKey=HeaderBlock}"
                        FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        Grid.Row="2">
                 Enter your email
             </TextBlock>
-            <TextBox Style="{StaticResource ResourceKey=TransparentInput}"
-                     FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Grid.Row="3"
-                     Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="3"
+                        HorizontalAlignment="Center">
+                <TextBox Style="{StaticResource ResourceKey=TransparentInput}"
+                         FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Foreground="Red"
+                           Text="{Binding EtEmailWrong, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                           FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                           Visibility="{Binding EtEmailWrongVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
             <TextBlock Style="{StaticResource ResourceKey=HeaderBlock}"
                        FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        Grid.Row="4">
                 Enter your password
             </TextBlock>
-            <controls:RevealPasswordBox Grid.Row="5"
-                                        DataContext="{Binding PasswordBoxContext}" />
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="5"
+                        HorizontalAlignment="Center">
+                <controls:RevealPasswordBox DataContext="{Binding PasswordBoxContext}" />
+                <TextBlock Foreground="Red"
+                           Text="{Binding EtPasswordBetween, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                           FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                           Visibility="{Binding EtPasswordBetweenVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
             <TextBlock Style="{StaticResource ResourceKey=HeaderBlock}"
                        FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        Grid.Row="6">
                 Confirm your password
             </TextBlock>
-            <controls:RevealPasswordBox Grid.Row="7"
-                                        DataContext="{Binding ConfirmPasswordBoxContext}"/>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="7"
+                        HorizontalAlignment="Center">
+                <controls:RevealPasswordBox DataContext="{Binding ConfirmPasswordBoxContext}"/>
+                <TextBlock Foreground="Red"
+                           Text="{Binding EtPasswordConfirm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                           FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                           Visibility="{Binding EtPasswordConfirmVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
             <StackPanel HorizontalAlignment="Center"
                         Orientation="Horizontal"
                         Grid.Row="8"

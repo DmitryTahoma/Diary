@@ -2,6 +2,8 @@
 {
     using Catel.Data;
     using Catel.MVVM;
+    using System.Text.RegularExpressions;
+    using System.Windows;
 
     public class RegistrationPageViewModel : ViewModelBase
     {
@@ -57,6 +59,62 @@
         }
         public static readonly PropertyData EmailProperty = RegisterProperty(nameof(Email), typeof(string), "");
 
+        public string EtNameBeetween
+        {
+            get { return GetValue<string>(EtNameBeetweenProperty); }
+            set { SetValue(EtNameBeetweenProperty, value); }
+        }
+        public static readonly PropertyData EtNameBeetweenProperty = RegisterProperty(nameof(EtNameBeetween), typeof(string), "Name must be between 2 and 64");
+
+        public string EtEmailWrong
+        {
+            get { return GetValue<string>(EtEmailWrongProperty); }
+            set { SetValue(EtEmailWrongProperty, value); }
+        }
+        public static readonly PropertyData EtEmailWrongProperty = RegisterProperty(nameof(EtEmailWrong), typeof(string), "Invalid email adsress");
+
+        public string EtPasswordBetween
+        {
+            get { return GetValue<string>(EtPasswordBetweenProperty); }
+            set { SetValue(EtPasswordBetweenProperty, value); }
+        }
+        public static readonly PropertyData EtPasswordBetweenProperty = RegisterProperty(nameof(EtPasswordBetween), typeof(string), "Password must be between 8 and 64");
+
+        public string EtPasswordConfirm
+        {
+            get { return GetValue<string>(EtPasswordConfirmProperty); }
+            set { SetValue(EtPasswordConfirmProperty, value); }
+        }
+        public static readonly PropertyData EtPasswordConfirmProperty = RegisterProperty(nameof(EtPasswordConfirm), typeof(string), "Passwords do not match");
+
+        public Visibility EtNameBetweenVisibility
+        {
+            get { return GetValue<Visibility>(EtNameBetweenVisibilityProperty); }
+            set { SetValue(EtNameBetweenVisibilityProperty, value); }
+        }
+        public static readonly PropertyData EtNameBetweenVisibilityProperty = RegisterProperty(nameof(EtNameBetweenVisibility), typeof(Visibility), Visibility.Collapsed);
+
+        public Visibility EtEmailWrongVisibility
+        {
+            get { return GetValue<Visibility>(EtEmailWrongVisibilityProperty); }
+            set { SetValue(EtEmailWrongVisibilityProperty, value); }
+        }
+        public static readonly PropertyData EtEmailWrongVisibilityProperty = RegisterProperty(nameof(EtEmailWrongVisibility), typeof(Visibility), Visibility.Collapsed);
+
+        public Visibility EtPasswordBetweenVisibility
+        {
+            get { return GetValue<Visibility>(EtPasswordBetweenVisibilityProperty); }
+            set { SetValue(EtPasswordBetweenVisibilityProperty, value); }
+        }
+        public static readonly PropertyData EtPasswordBetweenVisibilityProperty = RegisterProperty(nameof(EtPasswordBetweenVisibility), typeof(Visibility), Visibility.Collapsed);
+
+        public Visibility EtPasswordConfirmVisibility
+        {
+            get { return GetValue<Visibility>(EtPasswordConfirmVisibilityProperty); }
+            set { SetValue(EtPasswordConfirmVisibilityProperty, value); }
+        }
+        public static readonly PropertyData EtPasswordConfirmVisibilityProperty = RegisterProperty(nameof(EtPasswordConfirmVisibility), typeof(Visibility), Visibility.Collapsed);
+
         #endregion
 
         #region Commands
@@ -65,7 +123,11 @@
         private void OnDoBackExecute() => BackToSignIn?.Invoke();
 
         public Command SignUp { private set; get; }
-        private void OnSignUpExecute() => OnSignUp?.Invoke(Email, PasswordBoxContext.GetPassword(), UserName);
+        private void OnSignUpExecute()
+        {
+            if(Validate())
+                OnSignUp?.Invoke(Email, PasswordBoxContext.GetPassword(), UserName);
+        }
 
         #endregion
 
@@ -73,6 +135,53 @@
         {
             PasswordBoxContext.Size = PageFontSize;
             ConfirmPasswordBoxContext.Size = PageFontSize;
+        }
+
+        public bool Validate()
+        {
+            bool result = UserName.Length > 1 && UserName.Length < 65;
+            if (!result)
+            {
+                EtNameBetweenVisibility = Visibility.Visible;
+            }
+            else
+            {
+                EtNameBetweenVisibility = Visibility.Collapsed;
+            }
+
+            string pattern = @"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$";
+            if(!Regex.IsMatch(Email, pattern))
+            {
+                EtEmailWrongVisibility = Visibility.Visible;
+                result = false;
+            }
+            else
+            {
+                EtEmailWrongVisibility = Visibility.Collapsed;
+            }
+
+            if (PasswordBoxContext.GetPassword().Length < 8 || PasswordBoxContext.GetPassword().Length > 64)
+            {
+                EtPasswordBetweenVisibility = Visibility.Visible;
+                result = false;
+            }
+            else
+            {
+                EtPasswordBetweenVisibility = Visibility.Collapsed;
+            }
+
+            if (PasswordBoxContext.GetPassword() != ConfirmPasswordBoxContext.GetPassword())
+            {
+                EtPasswordConfirmVisibility = Visibility.Visible;
+                result = false;
+            }
+            else
+            {
+                EtPasswordConfirmVisibility = Visibility.Collapsed;
+            }
+
+            return result;
         }
     }
 }
