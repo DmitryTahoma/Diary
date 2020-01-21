@@ -18,6 +18,12 @@ namespace ServerRealization.Test
         [DataRow("clp", new string[] { "Alex92", "pass1234" }, "True")]
         [DataRow("clp", new string[] { "Alex92", "pass1234", "hello" }, "True")]
         [DataRow("clp", new string[] { "", "Alex92", "pass1234", "" }, "ae")]
+        [DataRow("cnn", new string[] { "Alex92", "pass1234", "NameOfNote", "TextOfNote" }, "True")]
+        [DataRow("cnn", new string[] { "Alex92", "pass1234", "NameOfNote", "" }, "True")]
+        [DataRow("cnn", new string[] { "Alex92", "pass1234", "NameOfNote" }, "True")]
+        [DataRow("cnn", new string[] { "Alex92", "pass1234", "", "" }, "ae")]
+        [DataRow("cnn", new string[] { "", "", "", "TextOfNote" }, "ae")]
+        [DataRow("cnn", new string[] { "Alex93", "pass1234", "NameOfNote", "TextOfNote" }, "False")]
         public void SimpleTest(string commandName, string[] args, string expectedResult)
         {
             ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);

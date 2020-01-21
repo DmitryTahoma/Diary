@@ -16,6 +16,7 @@ namespace ServerRealization
                 case "cc": return "cs";
                 case "clp": return CheckLoginPassword(args);
                 case "rnu": return RegisterNewUser(args);
+                case "cnn": return CreateNewNote(args);
             }
         }
 
@@ -45,6 +46,30 @@ namespace ServerRealization
 
                         User user = new User(args[2], args[0], args[1], DateTime.Now);
                         DBContext.Users.Add(user);
+                        return "True";
+                    }
+            return "ae";
+        }
+
+        private string CreateNewNote(string[] args)
+        {
+            if(args != null)
+                if(args.Length > 2)
+                    if(args[0] != "" && args[1] != "" && args[2] != "")
+                    {
+                        if (DBContext.Users
+                            .Where(x => x.Login == args[0] && x.Password == args[1])
+                            .Count() != 1)
+                            return "False";
+
+                        string text = "";
+                        if (args.Length >= 4)
+                            text = args[3];
+
+                        Note note = new Note(DBContext.Users.Where(x => x.Login == args[0]).First(),
+                            DBContext.Collections.Where(x => x.Id == 1).First(),
+                            args[2], text, DateTime.Now, DateTime.Now);
+                        DBContext.Notes.Add(note);
                         return "True";
                     }
             return "ae";
