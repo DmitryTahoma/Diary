@@ -117,6 +117,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\SimpleNote.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -134,10 +138,15 @@
     <Compile Include="Controls\RevealPasswordBox.xaml.cs">
       <DependentUpon>RevealPasswordBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SimpleNote.xaml.cs">
+      <DependentUpon>SimpleNote.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Note.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowVewModel.cs" />
     <Compile Include="ViewModels\RegistrationPageViewModel.cs" />
     <Compile Include="ViewModels\RevealPasswordBoxViewModel.cs" />
+    <Compile Include="ViewModels\SimpleNoteViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -170,9 +179,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Images\RPBbg.png" />
     <Resource Include="Resources\Images\RPBbgChecked.png" />
