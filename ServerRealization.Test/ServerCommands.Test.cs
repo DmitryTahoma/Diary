@@ -63,7 +63,7 @@ namespace ServerRealization.Test
                 Assert.AreEqual(args[0], registeredUser.Login);
                 Assert.AreEqual(args[1], registeredUser.Password);
                 Assert.AreEqual(args[2], registeredUser.Name);
-                Assert.IsTrue(before < registeredUser.Registration && registeredUser.Registration < after);
+                Assert.IsTrue(before <= registeredUser.Registration && registeredUser.Registration <= after);
             }
         }
         

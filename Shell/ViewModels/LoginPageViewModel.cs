@@ -3,7 +3,6 @@
     using Catel.Data;
     using Catel.MVVM;
     using Shell.Controls;
-    using System.Windows.Controls;
     using System.Windows.Input;
 
     public class LoginPageViewModel : ViewModelBase

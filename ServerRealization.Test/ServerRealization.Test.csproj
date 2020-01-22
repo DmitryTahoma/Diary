@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ServerCommands.Test.cs" />
-    <Compile Include="ServerProgramTest.cs" />
+    <Compile Include="ServerProgram.Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
