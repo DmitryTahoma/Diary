@@ -67,8 +67,6 @@ namespace ServerCore
 
         public void Stop()
         {
-            if (!IsStarted)
-                return;
             IsStarted = false;
             listen = false;
             Thread.Sleep((int)settings.MlsOfDelay);
