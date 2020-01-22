@@ -66,11 +66,12 @@ namespace ServerRealization
                         if (args.Length >= 4)
                             text = args[3];
 
+                        DateTime created = DateTime.Now;
                         Note note = new Note(DBContext.Users.Where(x => x.Login == args[0]).First(),
                             DBContext.Collections.Where(x => x.Id == 1).First(),
-                            args[2], text, DateTime.Now, DateTime.Now);
+                            args[2], text, created, created);
                         DBContext.Notes.Add(note);
-                        return "True";
+                        return note.Id.ToString();
                     }
             return "ae";
         }
