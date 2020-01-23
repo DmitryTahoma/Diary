@@ -9,6 +9,8 @@ namespace ServerRealization.Test
     [TestClass]
     public class ServerCommandsTest
     {
+        private static string correctLogin = "Alex92", correctPassword = "pass1234";
+
         [DataTestMethod]
         [DataRow("clp", new string[] { }, "ae")]
         [DataRow("clp", new string[] { "", "", "", "" }, "ae")]
@@ -128,15 +130,38 @@ namespace ServerRealization.Test
         [DataRow("Alex93", "pass12345", "Name", "Hello, wor", "ld", "False")]
         public void AddTextToNoteTest(string login, string password, string name, string text, string addedText, string expectedResult)
         {
-            string correctLogin = "Alex92", correctPassword = "pass1234";
             ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
             string result = server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, name, text });
 
             Assert.IsTrue(int.TryParse(result, out int id));
             result = server.ExecuteCommand("attn", new string[] { login, password, result, addedText });
             Assert.AreEqual(expectedResult, result);
-            if(result == "True")
+            if(expectedResult == "True")
                 Assert.AreEqual(text + addedText, DBContext.Notes
+                    .Where(x => x.Id == id)
+                    .First().Text);
+        }
+
+        [DataTestMethod]
+        [DataRow("Alex92", "pass1234", "Name", "Hello, world!123", 3, "True")]
+        [DataRow("Alex92", "pass1234", "Name", "Hello, world!123", 10, "True")]
+        [DataRow("Alex92", "pass1234", "Name", "Hello, world!123", 13, "True")]
+        [DataRow("", "pass1234", "Name", "Hello, world!123", 3, "ae")]
+        [DataRow("Alex92", "", "Name", "Hello, world!123", 3, "ae")]
+        [DataRow("Alex92", "pass1234", "Name", "Hello, world!123", 0, "ae")]
+        [DataRow("Alex93", "pass1234", "Name", "Hello, world!123", 3, "False")]
+        [DataRow("Alex92", "pass12345", "Name", "Hello, world!123", 3, "False")]
+        [DataRow("Alex923", "pass12344", "Name", "Hello, world!123", 3, "False")]
+        public void RemoveTextFromNoteTest(string login, string password, string name, string text, int removeCount, string expectedResult)
+        {
+            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
+            string result = server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, name, text });
+
+            Assert.IsTrue(int.TryParse(result, out int id));
+            result = server.ExecuteCommand("rtfn", new string[] { login, password, result, removeCount.ToString() });
+            Assert.AreEqual(expectedResult, result);
+            if (expectedResult == "True")
+                Assert.AreEqual(text.Substring(0, text.Length - removeCount), DBContext.Notes
                     .Where(x => x.Id == id)
                     .First().Text);
         }

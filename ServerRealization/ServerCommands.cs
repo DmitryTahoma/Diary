@@ -18,6 +18,7 @@ namespace ServerRealization
                 case "rnu": return RegisterNewUser(args);
                 case "cnn": return CreateNewNote(args);
                 case "attn": return AddTextToNote(args);
+                case "rtfn": return RemoveTextFromNote(args);
             }
         }
 
@@ -87,6 +88,31 @@ namespace ServerRealization
                         .Where(x => x.Id == id).First().Text += args[3];
                     return "True";
                 }
+            return "False";
+        }
+
+        private string RemoveTextFromNote(string[] args)
+        {
+            if (!CheckArgs(args, 4))
+                return "ae";
+            if (!int.TryParse(args[2], out int id) || id < 1)
+                return "ae";
+            if (!int.TryParse(args[3], out int count) || count < 1)
+                return "ae";
+
+            if (DBContext.Users
+                .Where(x => x.Login == args[0] && x.Password == args[1])
+                .Count() != 1)
+                return "False";
+
+            if(DBContext.Notes
+                .Where(x => x.Id == id).Count() == 1)
+            {
+                Note note = DBContext.Notes
+                    .Where(x => x.Id == id).First();
+                note.Text = note.Text.Substring(0, note.Text.Length - count);
+                return "True";
+            }
             return "False";
         }
 
