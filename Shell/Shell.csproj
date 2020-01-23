@@ -105,6 +105,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\NoteCollection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Pages\LoginPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,6 +133,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\NoteCollection.xaml.cs">
+      <DependentUpon>NoteCollection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Pages\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
@@ -144,6 +151,7 @@
     <Compile Include="Models\Note.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowVewModel.cs" />
+    <Compile Include="ViewModels\NoteCollectionViewModel.cs" />
     <Compile Include="ViewModels\RegistrationPageViewModel.cs" />
     <Compile Include="ViewModels\RevealPasswordBoxViewModel.cs" />
     <Compile Include="ViewModels\SimpleNoteViewModel.cs" />

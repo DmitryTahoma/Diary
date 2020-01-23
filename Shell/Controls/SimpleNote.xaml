@@ -21,11 +21,17 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.ColumnSpan="3"
-                   Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="1"
-                   Grid.Column="1"
-                   Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.ColumnSpan="3"
+                 Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 AcceptsTab="True"
+                 TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Auto"/>
+        <TextBox Grid.Row="1"
+                 Grid.Column="1"
+                 Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 AcceptsTab="True"
+                 TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Auto"/>
         <StackPanel Grid.ColumnSpan="3"
                     Grid.Row="2"
                     HorizontalAlignment="Right"
