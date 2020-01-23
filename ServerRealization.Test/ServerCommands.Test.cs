@@ -165,5 +165,31 @@ namespace ServerRealization.Test
                     .Where(x => x.Id == id)
                     .First().Text);
         }
+
+        [DataTestMethod]
+        [DataRow("Alex92",  "pass1234",  "Name", "Hello, wordl!", 3,  "ld!", "True")]
+        [DataRow("Alex92",  "pass1234",  "Name", "Hello, wordl!", 8,  "ld!", "True")]
+        [DataRow("Alex92",  "pass1234",  "Name", "Hello, wordl!", 10, "ld!", "True")]
+        [DataRow("",        "pass1234",  "Name", "Hello, wordl!", 3,  "ld!", "ae")]
+        [DataRow("Alex92",  "",          "Name", "Hello, wordl!", 3,  "ld!", "ae")]
+        [DataRow("Alex92",  "pass1234",  "Name", "Hello, wordl!", 0,  "ld!", "ae")]
+        [DataRow("Alex92",  "pass1234",  "Name", "Hello, wordl!", -3, "ld!", "ae")]
+        [DataRow("Alex92",  "pass1234",  "Name", "Hello, wordl!", 28, "ld!", "ae")]
+        [DataRow("Alex932", "pass1234",  "Name", "Hello, wordl!", 3,  "ld!", "False")]
+        [DataRow("Alex92",  "pass12334", "Name", "Hello, wordl!", 3,  "ld!", "False")]
+        [DataRow("Alex392", "pass13234", "Name", "Hello, wordl!", 3,  "ld!", "False")]
+        public void InsertTextToNote(string login, string password, string name, string text, int removeCount, string addedText, string expectedResult)
+        {
+            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
+            string result = server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, name, text });
+
+            Assert.IsTrue(int.TryParse(result, out int id));
+            result = server.ExecuteCommand("ittn", new string[] { login, password, result, removeCount.ToString(), addedText });
+            Assert.AreEqual(expectedResult, result);
+            if (expectedResult == "True")
+                Assert.AreEqual(text.Substring(0, text.Length - removeCount) + addedText, DBContext.Notes
+                    .Where(x => x.Id == id)
+                    .First().Text);
+        }
     }
 }
