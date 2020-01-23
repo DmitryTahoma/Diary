@@ -111,6 +111,8 @@ namespace ServerRealization
             {
                 Note note = DBContext.Notes
                     .Where(x => x.Id == id).First();
+                if (note.Text.Length < count)
+                    return "ae";
                 note.Text = note.Text.Substring(0, note.Text.Length - count);
                 return "True";
             }

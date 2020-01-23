@@ -149,6 +149,7 @@ namespace ServerRealization.Test
         [DataRow("", "pass1234", "Name", "Hello, world!123", 3, "ae")]
         [DataRow("Alex92", "", "Name", "Hello, world!123", 3, "ae")]
         [DataRow("Alex92", "pass1234", "Name", "Hello, world!123", 0, "ae")]
+        [DataRow("Alex92", "pass1234", "Name", "Hello, world!123", 30, "ae")]
         [DataRow("Alex93", "pass1234", "Name", "Hello, world!123", 3, "False")]
         [DataRow("Alex92", "pass12345", "Name", "Hello, world!123", 3, "False")]
         [DataRow("Alex923", "pass12344", "Name", "Hello, world!123", 3, "False")]
@@ -178,7 +179,7 @@ namespace ServerRealization.Test
         [DataRow("Alex932", "pass1234",  "Name", "Hello, wordl!", 3,  "ld!", "False")]
         [DataRow("Alex92",  "pass12334", "Name", "Hello, wordl!", 3,  "ld!", "False")]
         [DataRow("Alex392", "pass13234", "Name", "Hello, wordl!", 3,  "ld!", "False")]
-        public void InsertTextToNote(string login, string password, string name, string text, int removeCount, string addedText, string expectedResult)
+        public void InsertTextToNoteTest(string login, string password, string name, string text, int removeCount, string addedText, string expectedResult)
         {
             ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
             string result = server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, name, text });
