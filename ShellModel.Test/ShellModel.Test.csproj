@@ -49,6 +49,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\Action.Test.cs" />
+    <Compile Include="Context\Note.Test.cs" />
     <Compile Include="DBHelper.Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

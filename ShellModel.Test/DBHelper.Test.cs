@@ -1,4 +1,4 @@
-﻿using Shell.Models;
+﻿using ShellModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ClientCore;
 using ServerRealization;
