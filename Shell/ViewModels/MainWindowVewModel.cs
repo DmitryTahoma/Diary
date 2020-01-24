@@ -2,7 +2,7 @@
 {
     using Catel.Data;
     using Catel.MVVM;
-    using Shell.Models;
+    using ShellModel;
 
     public class MainWindowVewModel : ViewModelBase
     {

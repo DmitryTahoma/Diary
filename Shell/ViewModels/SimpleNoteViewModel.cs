@@ -1,14 +1,14 @@
 ﻿namespace Shell.ViewModels
 {
     using Catel.MVVM;
-    using Shell.Models;
+    using ShellModel.Context;
     using System;
 
     public class SimpleNoteViewModel : ViewModelBase
     {
         public SimpleNoteViewModel()
         {
-            Note = new Note(0, 0, 0, "Note not loaded", "Note not loaded", DateTime.Now, DateTime.Now);
+            Note = new Note(0, 0, "Note not loaded", "Note not loaded", DateTime.Now, DateTime.Now);
         }
 
         #region Properties

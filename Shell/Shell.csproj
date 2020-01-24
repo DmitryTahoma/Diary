@@ -148,7 +148,6 @@
     <Compile Include="Controls\SimpleNote.xaml.cs">
       <DependentUpon>SimpleNote.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\Note.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowVewModel.cs" />
     <Compile Include="ViewModels\NoteCollectionViewModel.cs" />
@@ -187,7 +186,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\RPBbg.png" />
     <Resource Include="Resources\Images\RPBbgChecked.png" />

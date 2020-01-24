@@ -2,7 +2,7 @@
 using SocketSettings;
 using System.Threading;
 
-namespace Shell.Models
+namespace ShellModel
 {
     public class DBHelper
     {
