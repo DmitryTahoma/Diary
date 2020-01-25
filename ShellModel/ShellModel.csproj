@@ -42,6 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\Action.cs" />
+    <Compile Include="Context\IMission.cs" />
+    <Compile Include="Context\IMissionContext.cs" />
+    <Compile Include="Context\Mission.cs" />
+    <Compile Include="Context\MissionType.cs" />
     <Compile Include="Context\Note.cs" />
     <Compile Include="DBHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
