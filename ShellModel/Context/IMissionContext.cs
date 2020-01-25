@@ -3,6 +3,6 @@
     public interface IMissionContext
     {
         int Id { get; }
-        int Count { get; }
+        int Count { set; get; }
     }
 }
