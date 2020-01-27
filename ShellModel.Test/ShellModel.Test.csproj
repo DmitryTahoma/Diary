@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Context\Action.Test.cs" />
     <Compile Include="Context\Note.Test.cs" />
+    <Compile Include="Context\Paragraph.Test.cs" />
     <Compile Include="Context\Progress.Test.cs" />
     <Compile Include="Context\ProgressMission.Test.cs" />
     <Compile Include="DBHelper.Test.cs" />
