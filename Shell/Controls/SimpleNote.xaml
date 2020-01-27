@@ -39,7 +39,8 @@
             <TextBlock>
                 Last changed:
             </TextBlock>
-            <TextBlock Margin="5, 0, 0, 0"/>
+            <TextBlock Margin="5, 0, 0, 0"
+                       Text="{Binding LastChanged, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
     </Grid>
 </UserControl>

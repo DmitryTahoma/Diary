@@ -117,6 +117,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\ProgressMissionNote.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\RevealPasswordBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -142,6 +146,9 @@
     <Compile Include="Controls\Pages\RegistrationPage.xaml.cs">
       <DependentUpon>RegistrationPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ProgressMissionNote.xaml.cs">
+      <DependentUpon>ProgressMissionNote.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RevealPasswordBox.xaml.cs">
       <DependentUpon>RevealPasswordBox.xaml</DependentUpon>
     </Compile>
@@ -151,6 +158,7 @@
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowVewModel.cs" />
     <Compile Include="ViewModels\NoteCollectionViewModel.cs" />
+    <Compile Include="ViewModels\ProgressMissionNoteViewModel.cs" />
     <Compile Include="ViewModels\RegistrationPageViewModel.cs" />
     <Compile Include="ViewModels\RevealPasswordBoxViewModel.cs" />
     <Compile Include="ViewModels\SimpleNoteViewModel.cs" />

@@ -11,6 +11,11 @@
             Note = new Note(0, 0, "Note not loaded", "Note not loaded", DateTime.Now, DateTime.Now);
         }
 
+        public SimpleNoteViewModel(Note note)
+        {
+            Note = note;
+        }
+
         #region Properties
 
         public Note Note { set; get; }
