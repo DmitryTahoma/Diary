@@ -15,7 +15,8 @@
         <TabItem Visibility="Collapsed">
             <pages:RegistrationPage DataContext="{Binding RegistrationPageContext, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </TabItem>
-        <TabItem Visibility="Collapsed">
+        <TabItem Visibility="Visible" 
+                 Header="Development mode">
             <controls:NoteCollection/>
         </TabItem>
     </TabControl>
