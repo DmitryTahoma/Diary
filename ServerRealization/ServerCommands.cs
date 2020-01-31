@@ -82,6 +82,13 @@ namespace ServerRealization
                 return "False";
 
             if (int.TryParse(args[2], out int id))
+            {
+                if (DBContext.Users
+                    .Where(y => y.Login == args[0] && y.Password == args[1])
+                    .First().Id != DBContext.Notes
+                        .Where(y => y.Id == id)
+                        .First().UserId)
+                    return "ane";
                 if (DBContext.Notes
                     .Where(x => x.Id == id).Count() == 1)
                 {
@@ -89,6 +96,7 @@ namespace ServerRealization
                         .Where(x => x.Id == id).First().Text += args[3];
                     return "True";
                 }
+            }
             return "False";
         }
 
@@ -109,6 +117,13 @@ namespace ServerRealization
             if(DBContext.Notes
                 .Where(x => x.Id == id).Count() == 1)
             {
+                if (DBContext.Users
+                    .Where(y => y.Login == args[0] && y.Password == args[1])
+                    .First().Id != DBContext.Notes
+                        .Where(y => y.Id == id)
+                        .First().UserId)
+                    return "ane";
+
                 Note note = DBContext.Notes
                     .Where(x => x.Id == id).First();
                 if (note.Text.Length < count)
@@ -137,6 +152,13 @@ namespace ServerRealization
                 .Where(x => x.Id == id)
                 .Count() == 1)
             {
+                if (DBContext.Users
+                    .Where(y => y.Login == args[0] && y.Password == args[1])
+                    .First().Id != DBContext.Notes
+                        .Where(y => y.Id == id)
+                        .First().UserId)
+                    return "ane";
+
                 Note note = DBContext.Notes
                     .Where(x => x.Id == id).First();
                 if (note.Text.Length < count)

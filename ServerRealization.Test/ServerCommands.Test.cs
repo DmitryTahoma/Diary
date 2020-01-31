@@ -192,5 +192,31 @@ namespace ServerRealization.Test
                     .Where(x => x.Id == id)
                     .First().Text);
         }
+
+        [DataTestMethod]
+        [DataRow("Name", "Text", "NewText", 5, 3, "wYork")]
+        [DataRow("Some name", "Done projetc", "ccccccc", 4, 5, "ct")]
+        public void ChangeNoteByUserTest(string name, string text, string addText, int removeCount, int insertCount, string instertText)
+        {
+            string correctLogin2 = "Tahoma", correctPassword2 = "password";
+            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
+            string result = server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, name, text });
+            Assert.IsTrue(int.TryParse(result, out int id));
+
+            result = server.ExecuteCommand("attn", new string[] { correctLogin, correctPassword, result, addText });
+            Assert.AreNotEqual("ane", result);
+            result = server.ExecuteCommand("attn", new string[] { correctLogin2, correctPassword2, id.ToString(), addText });
+            Assert.AreEqual("ane", result);
+
+            result = server.ExecuteCommand("rtfn", new string[] { correctLogin, correctPassword, id.ToString(), removeCount.ToString() });
+            Assert.AreNotEqual("ane", result);
+            result = server.ExecuteCommand("rtfn", new string[] { correctLogin2, correctPassword2, id.ToString(), removeCount.ToString() });
+            Assert.AreEqual("ane", result);
+
+            result = server.ExecuteCommand("ittn", new string[] { correctLogin, correctPassword, id.ToString(), insertCount.ToString(), instertText });
+            Assert.AreNotEqual("ane", result);
+            result = server.ExecuteCommand("ittn", new string[] { correctLogin2, correctPassword2, id.ToString(), insertCount.ToString(), instertText });
+            Assert.AreEqual("ane", result);
+        }
     }
 }
