@@ -5,9 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:catel="http://schemas.catelproject.com"
+             xmlns:view="clr-namespace:Shell.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Background="White">
+    <UserControl.DataContext>
+        <view:DayOfWeekViewModel x:Name="DataContext" />
+    </UserControl.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="{Binding ElementName=Date, Path=Height}"/>
@@ -15,7 +19,11 @@
             <RowDefinition Height="{Binding ElementName=AddNoteBtn, Path=Height}"/>
         </Grid.RowDefinitions>
         <TextBlock x:Name="Date"
-                   Text="Date of DayOfWeek" />
+                   Text="{Binding DateString, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Text="today"
+                   Visibility="{Binding TodayTextVisibility, UpdateSourceTrigger=PropertyChanged}"
+                   HorizontalAlignment="Right"
+                   Foreground="Blue" />
         <StackPanel Grid.Row="1"
                     x:Name="Notes" />
         <Button x:Name="AddNoteBtn" Grid.Row="2"

@@ -38,7 +38,9 @@
         public Command<StackPanel> AddDow { get; private set; }
         private void OnAddDowExecute(StackPanel stackPanel)
         {
-            stackPanel.Children.Add(new Controls.DayOfWeek());
+            Controls.DayOfWeek dow = new Controls.DayOfWeek();
+            stackPanel.Children.Add(dow);
+            dow.DataContext.Date = DateTime.Now;
         }
 
         #endregion
