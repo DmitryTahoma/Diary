@@ -74,14 +74,12 @@ namespace ServerRealization
             if (!CheckLoginPassword(args[0], args[1]))
                 return "False";
 
-            if (DBContext.Users
-                .Where(y => y.Login == args[0] && y.Password == args[1])
-                .First().Id != DBContext.Notes
-                    .Where(y => y.Id == id)
-                    .First().UserId)
+            if (IsAne(args[0], args[1], id))
                 return "ane";
+
             if (DBContext.Notes
-                .Where(x => x.Id == id).Count() == 1)
+                .Where(x => x.Id == id)
+                .Count() == 1)
             {
                 DBContext.Notes
                     .Where(x => x.Id == id).First().Text += args[3];
@@ -101,16 +99,13 @@ namespace ServerRealization
             if (!CheckLoginPassword(args[0], args[1]))
                 return "False";
 
-            if (DBContext.Notes
-                .Where(x => x.Id == id).Count() == 1)
-            {
-                if (DBContext.Users
-                    .Where(y => y.Login == args[0] && y.Password == args[1])
-                    .First().Id != DBContext.Notes
-                        .Where(y => y.Id == id)
-                        .First().UserId)
-                    return "ane";
+            if (IsAne(args[0], args[1], id))
+                return "ane";
 
+            if (DBContext.Notes
+                .Where(x => x.Id == id)
+                .Count() == 1)
+            {
                 Note note = DBContext.Notes
                     .Where(x => x.Id == id).First();
                 if (note.Text.Length < count)
@@ -131,17 +126,13 @@ namespace ServerRealization
             if (!CheckLoginPassword(args[0], args[1]))
                 return "False";
 
+            if (IsAne(args[0], args[1], id))
+                return "ane";
+
             if (DBContext.Notes
                 .Where(x => x.Id == id)
                 .Count() == 1)
             {
-                if (DBContext.Users
-                    .Where(y => y.Login == args[0] && y.Password == args[1])
-                    .First().Id != DBContext.Notes
-                        .Where(y => y.Id == id)
-                        .First().UserId)
-                    return "ane";
-
                 Note note = DBContext.Notes
                     .Where(x => x.Id == id).First();
                 if (note.Text.Length < count)
@@ -150,6 +141,15 @@ namespace ServerRealization
                 return "True";
             }
             return "False";
+        }
+
+        private bool IsAne(string login, string password, int noteId)
+        {
+            return DBContext.Users
+                    .Where(y => y.Login == login && y.Password == password)
+                    .First().Id != DBContext.Notes
+                        .Where(y => y.Id == noteId)
+                        .First().UserId;
         }
 
         private bool CheckLoginPassword(string login, string password)
