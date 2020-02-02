@@ -73,41 +73,38 @@ namespace ServerRealization
 
         private string AddTextToNote(string[] args)
         {
-            if (!CheckArgs(args, 4))
+            if (!CheckArgs(args, 4, true, 2))
                 return "ae";
+            int id = int.Parse(args[2]);
             
             if (DBContext.Users
                 .Where(x => x.Login == args[0] && x.Password == args[1])
                 .Count() != 1)
                 return "False";
 
-            if (int.TryParse(args[2], out int id))
+            if (DBContext.Users
+                .Where(y => y.Login == args[0] && y.Password == args[1])
+                .First().Id != DBContext.Notes
+                    .Where(y => y.Id == id)
+                    .First().UserId)
+                return "ane";
+            if (DBContext.Notes
+                .Where(x => x.Id == id).Count() == 1)
             {
-                if (DBContext.Users
-                    .Where(y => y.Login == args[0] && y.Password == args[1])
-                    .First().Id != DBContext.Notes
-                        .Where(y => y.Id == id)
-                        .First().UserId)
-                    return "ane";
-                if (DBContext.Notes
-                    .Where(x => x.Id == id).Count() == 1)
-                {
-                    DBContext.Notes
-                        .Where(x => x.Id == id).First().Text += args[3];
-                    return "True";
-                }
+                DBContext.Notes
+                    .Where(x => x.Id == id).First().Text += args[3];
+                return "True";
             }
+            
             return "False";
         }
 
         private string RemoveTextFromNote(string[] args)
         {
-            if (!CheckArgs(args, 4))
+            if (!CheckArgs(args, 4, true, 2, 3))
                 return "ae";
-            if (!int.TryParse(args[2], out int id) || id < 1)
-                return "ae";
-            if (!int.TryParse(args[3], out int count) || count < 1)
-                return "ae";
+            int id = int.Parse(args[2]);
+            int count = int.Parse(args[3]);
 
             if (DBContext.Users
                 .Where(x => x.Login == args[0] && x.Password == args[1])
@@ -136,12 +133,10 @@ namespace ServerRealization
 
         private string InsertTextToNote(string[] args)
         {
-            if (!CheckArgs(args, 5))
+            if (!CheckArgs(args, 5, true, 2, 3))
                 return "ae";
-            if (!int.TryParse(args[2], out int id) || id < 1)
-                return "ae";
-            if (!int.TryParse(args[3], out int count) || count < 1)
-                return "ae";
+            int id = int.Parse(args[2]);
+            int count = int.Parse(args[3]);
 
             if (DBContext.Users
                 .Where(x => x.Login == args[0] && x.Password == args[1])
@@ -169,7 +164,7 @@ namespace ServerRealization
             return "False";
         }
 
-        private bool CheckArgs(string[] args, int expectedCount)
+        private bool CheckArgs(string[] args, int expectedCount, bool isUInt = true, params int[] integerIds)
         {
             int i = -1;
             if (args != null)
@@ -177,9 +172,15 @@ namespace ServerRealization
                     for (i = 0; i < expectedCount; ++i)
                         if (args[i] == "")
                             return false;
-            if (i == expectedCount)
-                return true;
-            return false;
+            if (i != expectedCount)
+                return false;
+            for (i = 0; i < integerIds.Length; ++i)
+                if (integerIds[i] < expectedCount)
+                    if (!int.TryParse(args[integerIds[i]], out int val))
+                        return false;
+                    else { if (val == 0 || (isUInt && val < 0)) return false; }
+                else return false;
+            return true;
         }
     }
 }
