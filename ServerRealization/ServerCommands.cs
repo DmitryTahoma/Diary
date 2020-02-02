@@ -26,11 +26,7 @@ namespace ServerRealization
         private string CheckLoginPassword(string[] args)
         {
             if(CheckArgs(args, 2))
-                return 
-                    (DBContext.Users
-                    .Where((x) => x.Login == args[0] && x.Password == args[1])
-                    .Count()
-                    == 1).ToString();
+                return CheckLoginPassword(args[0], args[1]).ToString();
             return "ae";
         }
 
@@ -54,9 +50,7 @@ namespace ServerRealization
             if (!CheckArgs(args, 3))
                 return "ae";
             
-            if (DBContext.Users
-                .Where(x => x.Login == args[0] && x.Password == args[1])
-                .Count() != 1)
+            if (!CheckLoginPassword(args[0], args[1]))
                 return "False";
 
             string text = "";
@@ -76,10 +70,8 @@ namespace ServerRealization
             if (!CheckArgs(args, 4, true, 2))
                 return "ae";
             int id = int.Parse(args[2]);
-            
-            if (DBContext.Users
-                .Where(x => x.Login == args[0] && x.Password == args[1])
-                .Count() != 1)
+
+            if (!CheckLoginPassword(args[0], args[1]))
                 return "False";
 
             if (DBContext.Users
@@ -106,12 +98,10 @@ namespace ServerRealization
             int id = int.Parse(args[2]);
             int count = int.Parse(args[3]);
 
-            if (DBContext.Users
-                .Where(x => x.Login == args[0] && x.Password == args[1])
-                .Count() != 1)
+            if (!CheckLoginPassword(args[0], args[1]))
                 return "False";
 
-            if(DBContext.Notes
+            if (DBContext.Notes
                 .Where(x => x.Id == id).Count() == 1)
             {
                 if (DBContext.Users
@@ -138,9 +128,7 @@ namespace ServerRealization
             int id = int.Parse(args[2]);
             int count = int.Parse(args[3]);
 
-            if (DBContext.Users
-                .Where(x => x.Login == args[0] && x.Password == args[1])
-                .Count() != 1)
+            if (!CheckLoginPassword(args[0], args[1]))
                 return "False";
 
             if (DBContext.Notes
@@ -162,6 +150,13 @@ namespace ServerRealization
                 return "True";
             }
             return "False";
+        }
+
+        private bool CheckLoginPassword(string login, string password)
+        {
+            return DBContext.Users
+                    .Where((x) => x.Login == login && x.Password == password)
+                    .Count() == 1;
         }
 
         private bool CheckArgs(string[] args, int expectedCount, bool isUInt = true, params int[] integerIds)
