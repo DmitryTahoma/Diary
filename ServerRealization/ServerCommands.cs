@@ -77,16 +77,13 @@ namespace ServerRealization
             if (IsAne(args[0], args[1], id))
                 return "ane";
 
-            if (DBContext.Notes
+            if (!NoteIsExist(id))
+                return "False";
+
+            DBContext.Notes
                 .Where(x => x.Id == id)
-                .Count() == 1)
-            {
-                DBContext.Notes
-                    .Where(x => x.Id == id).First().Text += args[3];
-                return "True";
-            }
-            
-            return "False";
+                .First().Text += args[3];
+            return "True";
         }
 
         private string RemoveTextFromNote(string[] args)
@@ -102,18 +99,15 @@ namespace ServerRealization
             if (IsAne(args[0], args[1], id))
                 return "ane";
 
-            if (DBContext.Notes
-                .Where(x => x.Id == id)
-                .Count() == 1)
-            {
-                Note note = DBContext.Notes
-                    .Where(x => x.Id == id).First();
-                if (note.Text.Length < count)
-                    return "ae";
-                note.Text = note.Text.Substring(0, note.Text.Length - count);
-                return "True";
-            }
-            return "False";
+            if (!NoteIsExist(id))
+                return "False";
+
+            Note note = DBContext.Notes
+                .Where(x => x.Id == id).First();
+            if (note.Text.Length < count)
+                return "ae";
+            note.Text = note.Text.Substring(0, note.Text.Length - count);
+            return "True";
         }
 
         private string InsertTextToNote(string[] args)
@@ -129,18 +123,22 @@ namespace ServerRealization
             if (IsAne(args[0], args[1], id))
                 return "ane";
 
-            if (DBContext.Notes
-                .Where(x => x.Id == id)
-                .Count() == 1)
-            {
-                Note note = DBContext.Notes
-                    .Where(x => x.Id == id).First();
-                if (note.Text.Length < count)
-                    return "ae";
-                note.Text = note.Text.Substring(0, note.Text.Length - count) + args[4];
-                return "True";
-            }
-            return "False";
+            if (!NoteIsExist(id))
+                return "False";
+
+            Note note = DBContext.Notes
+                .Where(x => x.Id == id).First();
+            if (note.Text.Length < count)
+                return "ae";
+            note.Text = note.Text.Substring(0, note.Text.Length - count) + args[4];
+            return "True";
+        }
+
+        private bool NoteIsExist(int id)
+        {
+            return DBContext.Notes
+                    .Where(x => x.Id == id)
+                    .Count() == 1;
         }
 
         private bool IsAne(string login, string password, int noteId)
