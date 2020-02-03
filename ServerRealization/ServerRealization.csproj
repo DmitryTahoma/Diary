@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArgsHelper.cs" />
     <Compile Include="Database\Context\Action.cs" />
     <Compile Include="Database\Context\LabelCollection.cs" />
     <Compile Include="Database\Context\Collection.cs" />

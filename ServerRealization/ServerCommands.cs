@@ -25,14 +25,14 @@ namespace ServerRealization
 
         private string CheckLoginPassword(string[] args)
         {
-            if(CheckArgs(args, 2))
-                return CheckLoginPassword(args[0], args[1]).ToString();
+            if(ArgsHelper.CheckArgs(args, 2))
+                return ArgsHelper.CheckLoginPassword(args[0], args[1]).ToString();
             return "ae";
         }
 
         private string RegisterNewUser(string[] args)
         {
-            if (!CheckArgs(args, 3))
+            if (!ArgsHelper.CheckArgs(args, 3))
                 return "ae";
             
             if (DBContext.Users
@@ -47,10 +47,10 @@ namespace ServerRealization
 
         private string CreateNewNote(string[] args)
         {
-            if (!CheckArgs(args, 3))
+            if (!ArgsHelper.CheckArgs(args, 3))
                 return "ae";
             
-            if (!CheckLoginPassword(args[0], args[1]))
+            if (!ArgsHelper.CheckLoginPassword(args[0], args[1]))
                 return "False";
 
             string text = "";
@@ -67,17 +67,17 @@ namespace ServerRealization
 
         private string AddTextToNote(string[] args)
         {
-            if (!CheckArgs(args, 4, true, 2))
+            if (!ArgsHelper.CheckArgs(args, 4, true, 2))
                 return "ae";
             int id = int.Parse(args[2]);
 
-            if (!CheckLoginPassword(args[0], args[1]))
+            if (!ArgsHelper.CheckLoginPassword(args[0], args[1]))
                 return "False";
 
-            if (IsAne(args[0], args[1], id))
+            if (ArgsHelper.IsAne(args[0], args[1], id))
                 return "ane";
 
-            if (!NoteIsExist(id))
+            if (!ArgsHelper.NoteIsExist(id))
                 return "False";
 
             DBContext.Notes
@@ -88,18 +88,18 @@ namespace ServerRealization
 
         private string RemoveTextFromNote(string[] args)
         {
-            if (!CheckArgs(args, 4, true, 2, 3))
+            if (!ArgsHelper.CheckArgs(args, 4, true, 2, 3))
                 return "ae";
             int id = int.Parse(args[2]);
             int count = int.Parse(args[3]);
 
-            if (!CheckLoginPassword(args[0], args[1]))
+            if (!ArgsHelper.CheckLoginPassword(args[0], args[1]))
                 return "False";
 
-            if (IsAne(args[0], args[1], id))
+            if (ArgsHelper.IsAne(args[0], args[1], id))
                 return "ane";
 
-            if (!NoteIsExist(id))
+            if (!ArgsHelper.NoteIsExist(id))
                 return "False";
 
             Note note = DBContext.Notes
@@ -112,18 +112,18 @@ namespace ServerRealization
 
         private string InsertTextToNote(string[] args)
         {
-            if (!CheckArgs(args, 5, true, 2, 3))
+            if (!ArgsHelper.CheckArgs(args, 5, true, 2, 3))
                 return "ae";
             int id = int.Parse(args[2]);
             int count = int.Parse(args[3]);
 
-            if (!CheckLoginPassword(args[0], args[1]))
+            if (!ArgsHelper.CheckLoginPassword(args[0], args[1]))
                 return "False";
 
-            if (IsAne(args[0], args[1], id))
+            if (ArgsHelper.IsAne(args[0], args[1], id))
                 return "ane";
 
-            if (!NoteIsExist(id))
+            if (!ArgsHelper.NoteIsExist(id))
                 return "False";
 
             Note note = DBContext.Notes
@@ -132,48 +132,6 @@ namespace ServerRealization
                 return "ae";
             note.Text = note.Text.Substring(0, note.Text.Length - count) + args[4];
             return "True";
-        }
-
-        private bool NoteIsExist(int id)
-        {
-            return DBContext.Notes
-                    .Where(x => x.Id == id)
-                    .Count() == 1;
-        }
-
-        private bool IsAne(string login, string password, int noteId)
-        {
-            return DBContext.Users
-                    .Where(y => y.Login == login && y.Password == password)
-                    .First().Id != DBContext.Notes
-                        .Where(y => y.Id == noteId)
-                        .First().UserId;
-        }
-
-        private bool CheckLoginPassword(string login, string password)
-        {
-            return DBContext.Users
-                    .Where((x) => x.Login == login && x.Password == password)
-                    .Count() == 1;
-        }
-
-        private bool CheckArgs(string[] args, int expectedCount, bool isUInt = true, params int[] integerIds)
-        {
-            int i = -1;
-            if (args != null)
-                if (args.Length > expectedCount - 1)
-                    for (i = 0; i < expectedCount; ++i)
-                        if (args[i] == "")
-                            return false;
-            if (i != expectedCount)
-                return false;
-            for (i = 0; i < integerIds.Length; ++i)
-                if (integerIds[i] < expectedCount)
-                    if (!int.TryParse(args[integerIds[i]], out int val))
-                        return false;
-                    else { if (val == 0 || (isUInt && val < 0)) return false; }
-                else return false;
-            return true;
         }
     }
 }
