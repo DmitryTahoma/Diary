@@ -20,6 +20,7 @@ namespace ServerRealization
                 case "attn": return AddTextToNote(args);
                 case "rtfn": return RemoveTextFromNote(args);
                 case "ittn": return InsertTextToNote(args);
+                case "cnpm": return CreateNewParagraphMission(args);
             }
         }
 
@@ -132,6 +133,32 @@ namespace ServerRealization
                 return "ae";
             note.Text = note.Text.Substring(0, note.Text.Length - count) + args[4];
             return "True";
+        }
+
+        private string CreateNewParagraphMission(string[] args)
+        {
+            if (!ArgsHelper.CheckArgs(args, 3))
+                return "ae";
+
+            if(!ArgsHelper.CheckLoginPassword(args[0], args[1]))
+                return "False";
+
+            DateTime end = DateTime.MinValue;
+            if (ArgsHelper.CheckArgs(args.Skip(4).ToArray(), 6, true, 0, 1, 2, 3, 4, 5))
+                try { end = new DateTime(int.Parse(args[4]), int.Parse(args[5]), int.Parse(args[6]), int.Parse(args[7]), int.Parse(args[8]), int.Parse(args[9])); }
+                catch(ArgumentOutOfRangeException) { }
+
+            DateTime created = DateTime.Now;
+            Note note = new Note(DBContext.Users.Where(x => x.Login == args[0] && x.Password == args[1]).First(),
+                DBContext.Collections.Where(x => x.Id == 1).First(), args[2], args[3], created, created);
+            DBContext.Notes.Add(note);
+            Database.Context.Action action = new Database.Context.Action(note, created, end);
+            DBContext.Actions.Add(action);
+            Collection collection = new Collection();
+            DBContext.Collections.Add(collection);
+            Mission mission = new Mission(action, false, collection);
+            DBContext.Missions.Add(mission);
+            return mission.Id.ToString();
         }
     }
 }

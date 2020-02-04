@@ -228,11 +228,11 @@ namespace ServerRealization.Test
         [DataRow("Alex92", "pass1234", "NameOfNote", "", 2038, 1, 12, 12, 10, 19, "id")]
         [DataRow("Alex92", "pass1234", "NameOfNote", "Some text about this note which have paragraph", -1, -1, -1, -1, -1, -1, "id")]
         [DataRow("Alex92", "pass1234", "NameOfNote", "", -1, -1, -1, -1, -1, -1, "id")]
+        [DataRow("Tahoma", "password", "Name", "Text", 2020, 12, 12, 20, -1, 30, "id")]
+        [DataRow("Tahoma", "password", "Name", "Text", 2020, 12, 120500, 20, 30, 30, "id")]
         [DataRow("", "password", "Name", "Text", 2020, 12, 12, 20, 30, 30, "ae")]
         [DataRow("Tahoma", "", "Name", "Text", 2020, 12, 12, 20, 30, 30, "ae")]
         [DataRow("Tahoma", "password", "", "Text", 2020, 12, 12, 20, 30, 30, "ae")]
-        [DataRow("Tahoma", "password", "Name", "Text", 2020, 12, 12, 20, -1, 30, "ae")]
-        [DataRow("Tahoma", "password", "Name", "Text", 2020, 12, 120500, 20, 30, 30, "ae")]
         [DataRow("DmitryTahoma", "password", "Name", "Text", 2020, 12, 12, 20, 30, 30, "False")]
         [DataRow("Tahoma", "noCorrectPassword", "Name", "Text", 2020, 12, 12, 20, 30, 30, "False")]
         [DataRow("Tahoma", "pass1234", "Name", "Text", 2020, 12, 12, 20, 30, 30, "False")]
@@ -253,11 +253,11 @@ namespace ServerRealization.Test
                 Assert.IsTrue(int.TryParse(result, out int id));
                 Mission mission = DBContext.Missions.Where(x => x.Id == id).First();
                 Assert.IsFalse(mission.IsProgressType);
-                Assert.IsFalse(mission.Context is Collection);
+                Assert.IsTrue(mission.Context is Collection);
                 Assert.AreEqual(0, ((Collection)mission.Context).Count);
                 Database.Context.Action action = mission.Action;
                 Assert.IsTrue(before <= action.Start && action.Start <= after);
-                if (endY == -1)
+                if (endY == -1 || endN == -1 || endD > 31)
                     Assert.AreEqual(DateTime.MinValue, action.End);
                 else
                     Assert.AreEqual(new DateTime(endY, endM, endD, endH, endN, endS), action.End);
