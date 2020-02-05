@@ -12,6 +12,7 @@
         public DayOfWeekViewModel()
         {
             AddNote = new Command<StackPanel>(OnAddNoteExecute);
+            AddParagraphNote = new Command<StackPanel>(OnAddParagraphNoteExecute);
         }
 
         #region Properties
@@ -56,6 +57,14 @@
         private void OnAddNoteExecute(StackPanel stackPanel)
         {
             stackPanel.Children.Add(new SimpleNote());
+        }
+
+        public Command<StackPanel> AddParagraphNote { get; private set; }
+        private void OnAddParagraphNoteExecute(StackPanel stackPanel)
+        {
+            ParagraphMissionNote note = new ParagraphMissionNote();
+            note.DataContext.Context = new ShellModel.Context.ParagraphMission(0, 0, 0, 0, 0, "Name", "Text", DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now);
+            stackPanel.Children.Add(note);
         }
 
         #endregion

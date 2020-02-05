@@ -26,14 +26,29 @@
                    Foreground="Blue" />
         <StackPanel Grid.Row="1"
                     x:Name="Notes" />
-        <Button x:Name="AddNoteBtn" Grid.Row="2"
-                Content="Add note">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <catel:EventToCommand Command="{Binding AddNote}"
-                                          CommandParameter="{Binding ElementName=Notes}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Button>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="AddNoteBtn"
+                    Content="Add note">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <catel:EventToCommand Command="{Binding AddNote}"
+                                              CommandParameter="{Binding ElementName=Notes}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Column="1"
+                    Content="Add paragraph note">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <catel:EventToCommand Command="{Binding AddParagraphNote}"
+                                              CommandParameter="{Binding ElementName=Notes}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </Grid>
     </Grid>
 </UserControl>
