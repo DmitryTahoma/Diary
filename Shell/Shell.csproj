@@ -105,6 +105,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\CheckTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DayOfWeek.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -118,6 +122,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Pages\RegistrationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ParagraphMissionNote.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -141,6 +149,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\CheckTextBox.xaml.cs">
+      <DependentUpon>CheckTextBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DayOfWeek.xaml.cs">
       <DependentUpon>DayOfWeek.xaml</DependentUpon>
     </Compile>
@@ -153,6 +164,9 @@
     <Compile Include="Controls\Pages\RegistrationPage.xaml.cs">
       <DependentUpon>RegistrationPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ParagraphMissionNote.xaml.cs">
+      <DependentUpon>ParagraphMissionNote.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ProgressMissionNote.xaml.cs">
       <DependentUpon>ProgressMissionNote.xaml</DependentUpon>
     </Compile>
@@ -162,10 +176,12 @@
     <Compile Include="Controls\SimpleNote.xaml.cs">
       <DependentUpon>SimpleNote.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\CheckTextBoxViewModel.cs" />
     <Compile Include="ViewModels\DayOfWeekViewModel.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowVewModel.cs" />
     <Compile Include="ViewModels\NoteCollectionViewModel.cs" />
+    <Compile Include="ViewModels\ParagraphMissionNoteViewModel.cs" />
     <Compile Include="ViewModels\ProgressMissionNoteViewModel.cs" />
     <Compile Include="ViewModels\RegistrationPageViewModel.cs" />
     <Compile Include="ViewModels\RevealPasswordBoxViewModel.cs" />

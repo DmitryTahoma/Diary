@@ -13,6 +13,7 @@
             AddNote = new Command<StackPanel>(OnAddNoteExecute);
             AddPmNote = new Command<StackPanel>(OnAddPmNoteExecute);
             AddDow = new Command<StackPanel>(OnAddDowExecute);
+            AddParMNote = new Command<StackPanel>(OnAddParMNoteExecute);
         }
 
         #region Properties
@@ -41,6 +42,14 @@
             Controls.DayOfWeek dow = new Controls.DayOfWeek();
             stackPanel.Children.Add(dow);
             dow.DataContext.Date = DateTime.Now;
+        }
+
+        public Command<StackPanel> AddParMNote { get; private set; }
+        private void OnAddParMNoteExecute(StackPanel stackPanel)
+        {
+            ParagraphMissionNote note = new ParagraphMissionNote();
+            stackPanel.Children.Add(note);
+            note.DataContext.Context = new ParagraphMission(0, 0, 0, 0, 0, "Name", "Text", DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now);
         }
 
         #endregion
