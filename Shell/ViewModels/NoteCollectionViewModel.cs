@@ -14,6 +14,7 @@
             AddPmNote = new Command<StackPanel>(OnAddPmNoteExecute);
             AddDow = new Command<StackPanel>(OnAddDowExecute);
             AddParMNote = new Command<StackPanel>(OnAddParMNoteExecute);
+            AddWeek = new Command<StackPanel>(OnAddWeekExecute);
         }
 
         #region Properties
@@ -50,6 +51,16 @@
             ParagraphMissionNote note = new ParagraphMissionNote();
             stackPanel.Children.Add(note);
             note.DataContext.Context = new ParagraphMission(0, 0, 0, 0, 0, "Name", "Text", DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now);
+        }
+
+        int weekIterator = 0;
+        public Command<StackPanel> AddWeek { get; private set; }
+        private void OnAddWeekExecute(StackPanel stackPanel)
+        {
+            Week week = new Week();
+            week.DataContext.Start = DateTime.Now.AddDays(weekIterator);
+            stackPanel.Children.Add(week);
+            weekIterator += 7;
         }
 
         #endregion
