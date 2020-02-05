@@ -10,7 +10,6 @@ namespace ShellModel.Context
         {
         }
 
-        public IMissionContext Context { private set; get; }
         public Progress Progress { get => (Progress)Context; }
 
         public override bool Equals(object obj)

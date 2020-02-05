@@ -16,5 +16,6 @@ namespace ShellModel.Context
         public int ActionId { get => base.Id; }
         public int ContextId { private set; get; }
         public MissionType Type { private set; get; }
+        public IMissionContext Context { protected set; get; }
     }
 }

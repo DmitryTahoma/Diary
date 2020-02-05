@@ -14,7 +14,6 @@ namespace ShellModel.Context
             Context = paragraph;
         }
 
-        public IMissionContext Context { private set; get; }
         public Paragraph Paragraph { get => (Paragraph)Context; }
     }
 }
