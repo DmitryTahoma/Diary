@@ -12,7 +12,6 @@
         {
             TextForChangeKeyDown = new Command<KeyEventArgs>(OnTextForChangeKeyDownExecute);
             AddBtnClick = new Command(OnAddBtnClickExecute);
-            Loaded = new Command(OnLoadedExecute);
             CurrentProgress = GetProgressString(CurrentValue, MaxValue);
         }
 
@@ -101,13 +100,6 @@
                 CurrentValue += int.Parse(TextForChange);
                 CurrentProgress = GetProgressString(CurrentValue, MaxValue);
             }
-        }
-
-        public Command Loaded { get; private set; }
-        private void OnLoadedExecute()
-        {
-            if (Note != null)
-                Note.Note = Context;
         }
 
         #endregion
