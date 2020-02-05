@@ -54,7 +54,8 @@
                 </i:Interaction.Triggers>
             </Button>
         </StackPanel>
-        <StackPanel Grid.Row="1"
-                    x:Name="Notes" />
+        <ScrollViewer Grid.Row="1">
+            <StackPanel x:Name="Notes" />
+        </ScrollViewer>
     </Grid>
 </UserControl>
