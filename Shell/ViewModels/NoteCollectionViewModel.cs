@@ -15,6 +15,7 @@
             AddDow = new Command<StackPanel>(OnAddDowExecute);
             AddParMNote = new Command<StackPanel>(OnAddParMNoteExecute);
             AddWeek = new Command<StackPanel>(OnAddWeekExecute);
+            AddYear = new Command<StackPanel>(OnAddYearExecute);
         }
 
         #region Properties
@@ -61,6 +62,12 @@
             week.DataContext.Start = DateTime.Now.AddDays(weekIterator);
             stackPanel.Children.Add(week);
             weekIterator += 7;
+        }
+
+        public Command<StackPanel> AddYear { get; private set; }
+        private void OnAddYearExecute(StackPanel stackPanel)
+        {
+            stackPanel.Children.Add(new Year());
         }
 
         #endregion
