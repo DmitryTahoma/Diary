@@ -271,5 +271,41 @@ namespace ServerRealization.Test
                 Assert.AreEqual(password, user.Password);
             }
         }
+
+        [DataTestMethod]
+        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "Do first" }, "id")]
+        [DataRow("Alex92", "pass1234", "Hello, world", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", new string[] { "Do first", "Ut enim ad minim veniam", "quis nostrud exercitation ullamco" }, "id")]
+        [DataRow("", "pass1234", "Name", "Text", new string[] { "Do first" }, "ae")]
+        [DataRow("Alex92", "", "Name", "Text", new string[] { "Do first" }, "ae")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "" }, "ae")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "", "", "" }, "ae")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "", "", "", "", "", "" }, "ae")]
+        [DataRow("Alex92", "pass123456", "Name", "Text", new string[] { "Do first" }, "False")]
+        [DataRow("Alex93", "pass1234", "Name", "Text", new string[] { "Do first" }, "False")]
+        [DataRow("Tahoma", "password", "Name", "Text", new string[] { "Do first" }, "False")]
+        [DataRow("Alex92", "password", "Name", "Text", new string[] { "Do first" }, "False")]
+        [DataRow("Tahoma", "pass1234", "Name", "Text", new string[] { "Do first" }, "False")]
+        public void AddPointToParagraphMissionTest(string login, string password, string name, string text, string[] points, string expectedResult)
+        {
+            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
+            int id = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, name, text }));
+
+            for (int i = 0; i < points.Length; ++i)
+            {
+                string result = server.ExecuteCommand("aptpm", new string[] { login, password, id.ToString(), points[i] });
+
+                if (expectedResult == "id")
+                {
+                    Assert.IsTrue(int.TryParse(result, out int idp));
+                    Mission mission = DBContext.Missions.Where(x => x.Id == id).First();
+                    Collection collection = (Collection)mission.Context;
+                    Assert.AreEqual(i + 1, collection.Count);
+                    Point point = DBContext.Points.Where(x => x.Id == idp).First();
+                    Assert.AreEqual(point.ParagraphId, collection.Id);
+                }
+                else
+                    Assert.AreEqual(expectedResult, result);
+            }
+        }
     }
 }
