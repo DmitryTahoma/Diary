@@ -307,5 +307,28 @@ namespace ServerRealization.Test
                     Assert.AreEqual(expectedResult, result);
             }
         }
+
+        [DataTestMethod]
+        [DataRow("Alex92", "pass1234", "New point text", "True")]
+        [DataRow("Alex92", "pass1234", "point text Lorem ipsum", "True")]
+        [DataRow("", "pass1234", "New point text", "ae")]
+        [DataRow("Alex92", "", "New point text", "ae")]
+        [DataRow("Alex92", "pass1234", "", "ae")]
+        [DataRow("Tahoma", "pass1234", "point text Lorem ipsum", "False")]
+        [DataRow("Alex92", "pass12345", "point text Lorem ipsum", "False")]
+        [DataRow("Tahoma", "password", "point text Lorem ipsum", "False")]
+        public void ChangePointTextTest(string login, string password, string newPointText, string expectedResult)
+        {
+            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
+            int id = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, "Name of note", "Text of note" }));
+            string result = server.ExecuteCommand("aptpm", new string[] { correctLogin, correctPassword, id.ToString(), "First text of point" });
+            Assert.IsTrue(int.TryParse(result, out int idp));
+            result = server.ExecuteCommand("cpt", new string[] { login, password, idp.ToString(), newPointText });
+
+            if (expectedResult == "True")
+                Assert.AreEqual(newPointText, DBContext.Points.Where(x => x.Id == idp).First().Name);
+            else
+                Assert.AreEqual(expectedResult, result);
+        }
     }
 }

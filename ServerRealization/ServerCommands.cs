@@ -22,6 +22,7 @@ namespace ServerRealization
                 case "ittn": return InsertTextToNote(args);
                 case "cnpm": return CreateNewParagraphMission(args);
                 case "aptpm": return AddPointToParagraphMission(args);
+                case "cpt": return ChangePointText(args);
             }
         }
 
@@ -172,14 +173,28 @@ namespace ServerRealization
                 return "False";
 
             Mission mission = DBContext.Missions.Where(x => x.Id == id).First();
-                Point point = null;
+            Point point = null;
             if (DBContext.Points.Count != 0)
                 point = new Point(mission.ContextId, args[3], false);
             else
-                point = new Point(0, mission.ContextId, args[3], false);
+                point = new Point(1, mission.ContextId, args[3], false);
             DBContext.Points.Add(point);
             ((Collection)mission.Context).Count++;
             return point.Id.ToString();
+        }
+
+        private string ChangePointText(string[] args)
+        {
+            if (!ArgsHelper.CheckArgs(args, 4, true, 2))
+                return "ae";
+            int id = int.Parse(args[2]);
+            if (!ArgsHelper.CheckLoginPassword(args[0], args[1]) || ArgsHelper.IsAne(args[0], args[1],
+                DBContext.Missions.Where(x => x.ContextId ==
+                    DBContext.Points.Where(y => y.Id == id).First().ParagraphId).First().Action.NoteId))
+                return "False";
+
+            DBContext.Points.Where(x => x.Id == id).First().Name = args[3];
+            return "True";
         }
     }
 }
