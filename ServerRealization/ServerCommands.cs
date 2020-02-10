@@ -71,7 +71,7 @@ namespace ServerRealization
 
         private string AddTextToNote(string[] args)
         {
-            if (!ArgsHelper.CheckArgs(args, 4, true, 2))
+            if (!ArgsHelper.CheckArgs(args, 4, 2))
                 return "ae";
             int id = int.Parse(args[2]);
 
@@ -92,7 +92,7 @@ namespace ServerRealization
 
         private string RemoveTextFromNote(string[] args)
         {
-            if (!ArgsHelper.CheckArgs(args, 4, true, 2, 3))
+            if (!ArgsHelper.CheckArgs(args, 4, 2, 3))
                 return "ae";
             int id = int.Parse(args[2]);
             int count = int.Parse(args[3]);
@@ -116,7 +116,7 @@ namespace ServerRealization
 
         private string InsertTextToNote(string[] args)
         {
-            if (!ArgsHelper.CheckArgs(args, 5, true, 2, 3))
+            if (!ArgsHelper.CheckArgs(args, 5, 2, 3))
                 return "ae";
             int id = int.Parse(args[2]);
             int count = int.Parse(args[3]);
@@ -147,7 +147,7 @@ namespace ServerRealization
                 return "False";
 
             DateTime end = DateTime.MinValue;
-            if (ArgsHelper.CheckArgs(args.Skip(4).ToArray(), 6, true, 0, 1, 2, 3, 4, 5))
+            if (ArgsHelper.CheckArgs(args.Skip(4).ToArray(), 6, 0, 1, 2, 3, 4, 5))
                 try { end = new DateTime(int.Parse(args[4]), int.Parse(args[5]), int.Parse(args[6]), int.Parse(args[7]), int.Parse(args[8]), int.Parse(args[9])); }
                 catch(ArgumentOutOfRangeException) { }
 
@@ -166,7 +166,7 @@ namespace ServerRealization
 
         private string AddPointToParagraphMission(string[] args)
         {
-            if (!ArgsHelper.CheckArgs(args, 4, true, 2))
+            if (!ArgsHelper.CheckArgs(args, 4, 2))
                 return "ae";
             int id = int.Parse(args[2]);
 
@@ -186,7 +186,7 @@ namespace ServerRealization
 
         private string ChangePointText(string[] args)
         {
-            if (!ArgsHelper.CheckArgs(args, 4, true, 2))
+            if (!ArgsHelper.CheckArgs(args, 4, 2))
                 return "ae";
             int id = int.Parse(args[2]);
             if (!ArgsHelper.CheckLoginPassword(args[0], args[1]) || ArgsHelper.IsAne(args[0], args[1],
@@ -200,7 +200,7 @@ namespace ServerRealization
 
         private string ChangeNoteName(string[] args)
         {
-            if (!ArgsHelper.CheckArgs(args, 4, true, 2))
+            if (!ArgsHelper.CheckArgs(args, 4, 2))
                 return "ae";
             int id = int.Parse(args[2]);
 

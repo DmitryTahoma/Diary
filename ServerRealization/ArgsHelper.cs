@@ -28,7 +28,7 @@ namespace ServerRealization
                     .Count() == 1;
         }
 
-        public static bool CheckArgs(string[] args, int expectedCount, bool isUInt = true, params int[] integerIds)
+        public static bool CheckArgs(string[] args, int expectedCount, params int[] integerIds)
         {
             int i = -1;
             if (args != null)
@@ -42,7 +42,7 @@ namespace ServerRealization
                 if (integerIds[i] < expectedCount)
                     if (!int.TryParse(args[integerIds[i]], out int val))
                         return false;
-                    else { if (val == 0 || (isUInt && val < 0)) return false; }
+                    else { if (val < 1) return false; }
                 else return false;
             return true;
         }
