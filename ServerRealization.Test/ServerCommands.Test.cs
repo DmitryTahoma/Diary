@@ -330,5 +330,25 @@ namespace ServerRealization.Test
             else
                 Assert.AreEqual(expectedResult, result);
         }
+
+        [DataTestMethod]
+        [DataRow("Alex92", "pass1234", "New point text", "True")]
+        [DataRow("Alex92", "pass1234", "point text Lorem ipsum", "True")]
+        [DataRow("", "pass1234", "New point text", "ae")]
+        [DataRow("Alex92", "", "New point text", "ae")]
+        [DataRow("Alex92", "pass1234", "", "ae")]
+        [DataRow("Tahoma", "pass1234", "point text Lorem ipsum", "False")]
+        [DataRow("Alex92", "pass12345", "point text Lorem ipsum", "False")]
+        [DataRow("Tahoma", "password", "point text Lorem ipsum", "ane")]
+        public void ChangeNoteNameTest(string login, string password, string newName, string expectedResult)
+        {
+            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
+            int id = int.Parse(server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, "Name of note", "Text of note" }));
+            string result = server.ExecuteCommand("chnn", new string[] { login, password, id.ToString(), newName });
+
+            if (expectedResult == "True")
+                Assert.AreEqual(newName, DBContext.Notes.Where(x => x.Id == id).First().Name);
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 }

@@ -23,6 +23,7 @@ namespace ServerRealization
                 case "cnpm": return CreateNewParagraphMission(args);
                 case "aptpm": return AddPointToParagraphMission(args);
                 case "cpt": return ChangePointText(args);
+                case "chnn": return ChangeNoteName(args);
             }
         }
 
@@ -194,6 +195,23 @@ namespace ServerRealization
                 return "False";
 
             DBContext.Points.Where(x => x.Id == id).First().Name = args[3];
+            return "True";
+        }
+
+        private string ChangeNoteName(string[] args)
+        {
+            if (!ArgsHelper.CheckArgs(args, 4, true, 2))
+                return "ae";
+            int id = int.Parse(args[2]);
+
+            if (!ArgsHelper.CheckLoginPassword(args[0], args[1]) || !ArgsHelper.NoteIsExist(id))
+                return "False";
+
+            if (ArgsHelper.IsAne(args[0], args[1], id))
+                return "ane";
+
+
+            DBContext.Notes.Where(x => x.Id == id).First().Name = args[3];
             return "True";
         }
     }
