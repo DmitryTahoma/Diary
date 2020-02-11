@@ -350,5 +350,25 @@ namespace ServerRealization.Test
                 Assert.AreEqual(newName, DBContext.Notes.Where(x => x.Id == id).First().Name);
             Assert.AreEqual(expectedResult, result);
         }
+
+        [DataTestMethod]
+        [DataRow("Alex92", "pass1234", true, "True")]
+        [DataRow("Alex92", "pass1234", false, "True")]
+        [DataRow("", "pass1234", true, "ae")]
+        [DataRow("Alex92", "", false, "ae")]
+        [DataRow("Alex923", "pass1234", true, "False")]
+        [DataRow("Alex92", "pass12345", false, "False")]
+        [DataRow("Tahoma", "password", true, "False")]
+        public void SetCheckedPointTest(string login, string password, bool val, string expectedResult)
+        {
+            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
+            int id = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, "Name of note", "Text of note" }));
+            int idp = int.Parse(server.ExecuteCommand("aptpm", new string[] { correctLogin, correctPassword, id.ToString(), "First text of point" }));
+            string result = server.ExecuteCommand("scp", new string[] { login, password, idp.ToString(), val.ToString() });
+
+            if (expectedResult == "True")
+                Assert.AreEqual(val, DBContext.Points.Where(x => x.Id == idp).First().IsChecked);
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 }

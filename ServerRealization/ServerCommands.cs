@@ -24,6 +24,7 @@ namespace ServerRealization
                 case "aptpm": return AddPointToParagraphMission(args);
                 case "cpt": return ChangePointText(args);
                 case "chnn": return ChangeNoteName(args);
+                case "scp": return SetCheckedPoint(args);
             }
         }
 
@@ -212,6 +213,24 @@ namespace ServerRealization
 
 
             DBContext.Notes.Where(x => x.Id == id).First().Name = args[3];
+            return "True";
+        }
+
+        private string SetCheckedPoint(string[] args)
+        {
+            if (!ArgsHelper.CheckArgs(args, 4, 2) || !bool.TryParse(args[3], out bool val))
+                return "ae";
+            int id = int.Parse(args[2]);
+
+            if (!ArgsHelper.CheckLoginPassword(args[0], args[1]) || ArgsHelper.IsAne(args[0], args[1],
+                DBContext.Missions
+                .Where(y => y.ContextId == DBContext.Points
+                    .Where(x => x.Id == id)
+                    .First().ParagraphId)
+                .First().Action.NoteId))
+                return "False";
+
+            DBContext.Points.Where(x => x.Id == id).First().IsChecked = val;
             return "True";
         }
     }
