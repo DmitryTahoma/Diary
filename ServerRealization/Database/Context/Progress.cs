@@ -1,14 +1,17 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace ServerRealization.Database.Context
 {
     public class Progress : IDBObject
     {
         public Progress(int start, int current, int end)
-            : this(DBContext.Progresses.Max(x => x.Id) + 1, start, current, end) { }
+            : this(DBContext.Progresses.Count == 0? 1 : DBContext.Progresses.Max(x => x.Id) + 1, start, current, end) { }
 
         public Progress(int id, int start, int current, int end)
         {
+            if (id <= 0 || end <= start)
+                throw new ArgumentException();
             Id = id;
             Start = start;
             Current = current;
