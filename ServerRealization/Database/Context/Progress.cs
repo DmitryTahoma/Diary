@@ -33,5 +33,10 @@ namespace ServerRealization.Database.Context
                 && this.Current == other.Current
                 && this.End == other.End;
         }
+
+        public override string ToString()
+        {
+            return Id.ToString() + 'z' + Start.ToString() + 'z' + Current.ToString() + 'z' + End.ToString();
+        }
     }
 }

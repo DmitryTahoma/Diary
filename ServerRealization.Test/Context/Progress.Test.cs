@@ -51,5 +51,14 @@ namespace ServerRealization.Context.Test
                 Assert.AreEqual(end, ((Progress)progress2).End);
             }
         }
+
+        [DataTestMethod]
+        [DataRow(1, 2, 3, 4)]
+        [DataRow(100, 250, 348, 432534)]
+        public void ToStringTest(int id, int start, int current, int end)
+        {
+            Progress progress = new Progress(id, start, current, end);
+            Assert.AreEqual(id.ToString() + 'z' + start.ToString() + 'z' + current.ToString() + 'z' + end.ToString(), progress.ToString());
+        }
     }
 }
