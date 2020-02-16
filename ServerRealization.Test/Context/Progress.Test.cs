@@ -60,5 +60,27 @@ namespace ServerRealization.Context.Test
             Progress progress = new Progress(id, start, current, end);
             Assert.AreEqual(id.ToString() + 'z' + start.ToString() + 'z' + current.ToString() + 'z' + end.ToString(), progress.ToString());
         }
+        
+        [DataTestMethod]
+        [DataRow(1, 2, 3, 4)]
+        [DataRow(100, 250, 348, 432534)]
+        public void EqualsTest(int id, int start, int current, int end)
+        {
+            Progress progress1 = new Progress(id, start, current, end);
+            Progress progress2 = new Progress(id, start, current, end);
+
+            Assert.AreEqual(progress1, progress2);
+            progress1.Start += end / 2;
+            Assert.AreNotEqual(progress1, progress2);
+            progress1.Start = start;
+            Assert.AreEqual(progress1, progress2);
+            progress1.Current = start + 70;
+            Assert.AreNotEqual(progress1, progress2);
+            progress1.Current = current;
+            progress2.End = (current + start) * 2;
+            Assert.AreNotEqual(progress1, progress2);
+            progress2 = new Progress(id * 7, start, current, end);
+            Assert.AreNotEqual(progress1, progress2);
+        }
     }
 }
