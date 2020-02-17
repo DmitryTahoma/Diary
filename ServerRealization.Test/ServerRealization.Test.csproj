@@ -62,6 +62,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\Point.Test.cs" />
     <Compile Include="Context\Progress.Test.cs" />
     <Compile Include="ServerCommands.Test.cs" />
     <Compile Include="ServerProgram.Test.cs" />
