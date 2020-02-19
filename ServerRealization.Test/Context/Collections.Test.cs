@@ -58,5 +58,28 @@ namespace ServerRealization.Context.Test
             }
             Assert.AreEqual(result, collection.ToString());
         }
+
+        [DataTestMethod]
+        [DataRow(new string[] { }, new bool[] { }, new string[] { }, new bool[] { }, true)]
+        [DataRow(new string[] { "hello" }, new bool[] { false }, new string[] { "hello" }, new bool[] { false }, true)]
+        [DataRow(new string[] { "Lorem", "ipsum", "dolor sit amet" }, new bool[] { true, false, true }, new string[] { "Lorem", "ipsum", "dolor sit amet" }, new bool[] { true, false, true }, true)]
+        [DataRow(new string[] { "Lorem" }, new bool[] { true }, new string[] { "Loren" }, new bool[] { true }, false)]
+        [DataRow(new string[] { "Lorem" }, new bool[] { true }, new string[] { "Lorem" }, new bool[] { false }, false)]
+        [DataRow(new string[] { "Lorem", "ipsum", "dolor sit amet" }, new bool[] { false, true, false }, new string[] { "Lorem", "ipsum", "dolor sit amet," }, new bool[] { false, true, false }, false)]
+        [DataRow(new string[] { "Lorem", "ipsum", "dolor sit amet" }, new bool[] { false, true, false }, new string[] { "Lorem", "ipsum", "dolor sit amet" }, new bool[] { false, false, false }, false)]
+        public void EqualsTest(string[] names1, bool[] isCheckeds1, string[] names2, bool[] isCheckeds2, bool expectedResult)
+        {
+            Collection collection1 = new Collection(names1.Length);
+            DBContext.Collections.Add(collection1);
+            for (int i = 0; i < names1.Length; ++i)
+                DBContext.Points.Add(new Point(collection1, names1[i], isCheckeds1[i]));
+
+            Collection collection2 = new Collection(names2.Length);
+            DBContext.Collections.Add(collection2);
+            for (int i = 0; i < names2.Length; ++i)
+                DBContext.Points.Add(new Point(collection2, names2[i], isCheckeds2[i]));
+
+            Assert.AreEqual(expectedResult, collection1.Equals(collection2));
+        }
     }
 }

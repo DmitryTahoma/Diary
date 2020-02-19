@@ -27,8 +27,18 @@ namespace ServerRealization.Database.Context
             if (!(obj is Collection))
                 return false;
             Collection other = (Collection)obj;
-            return this.Id == other.Id
-                && this.Count == other.Count;
+            if(this.Count == other.Count)
+            {
+                List<Point> thisPoints = DBContext.Points.Where(x => x.ParagraphId == this.Id).ToList();
+                List<Point> otherPoints = DBContext.Points.Where(x => x.ParagraphId == other.Id).ToList();
+                for(int i = 0; i < Count; ++i)
+                {
+                    if (thisPoints[i].Name != otherPoints[i].Name || thisPoints[i].IsChecked != otherPoints[i].IsChecked)
+                        return false;
+                }
+                return true;
+            }
+            return false;
         }
 
         public override string ToString()
