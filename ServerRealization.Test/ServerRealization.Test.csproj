@@ -62,6 +62,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\Action.Test.cs" />
     <Compile Include="Context\Collections.Test.cs" />
     <Compile Include="Context\Note.Test.cs" />
     <Compile Include="Context\Point.Test.cs" />
