@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\Collections.Test.cs" />
+    <Compile Include="Context\Note.Test.cs" />
     <Compile Include="Context\Point.Test.cs" />
     <Compile Include="Context\Progress.Test.cs" />
     <Compile Include="ServerCommands.Test.cs" />

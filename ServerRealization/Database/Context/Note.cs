@@ -48,5 +48,10 @@ namespace ServerRealization.Database.Context
                 && this.User.Equals(other.User)
                 && this.Stereotype.Equals(other.Stereotype);
         }
+
+        public override string ToString()
+        {
+            return "\b<sn>\b" + Id.ToString() + "\b<sn>\b" + Name + "\b<sn>\b" + Text + "\b<sn>\b" + (Created - DateTime.MinValue).TotalDays.ToString() + "\b<sn>\b" + (LastChanged - DateTime.MinValue).TotalDays.ToString() + "\b<sn>\b";
+        }
     }
 }
