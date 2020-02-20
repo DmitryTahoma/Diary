@@ -10,7 +10,7 @@ namespace ServerRealization.Database.Context
                   DBContext.Collections.Where(x => x.Id == stereotypeId).First(), name, text, created, lastChanged) { }
 
         public Note(User user, Collection stereotype, string name, string text, DateTime created, DateTime lastChanged)
-            : this(DBContext.Notes.Max(x => x.Id) + 1, user, stereotype, name, text, created, lastChanged) { }
+            : this(DBContext.Notes.Count() == 0? 1 : DBContext.Notes.Max(x => x.Id) + 1, user, stereotype, name, text, created, lastChanged) { }
 
         public Note(int id, int userId, int stereotypeId, string name, string text, DateTime created, DateTime lastChanged)
             : this(id, DBContext.Users.Where(x => x.Id == userId).First(),
