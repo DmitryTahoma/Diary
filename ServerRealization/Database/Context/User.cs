@@ -6,7 +6,7 @@ namespace ServerRealization.Database.Context
     public class User : IDBObject
     {
         public User(string name, string login, string password, DateTime registration)
-            : this(DBContext.Users.Max(x => x.Id) + 1, name, login, password, registration) { }
+            : this(DBContext.Users.Count == 0 ? 1 : DBContext.Users.Max(x => x.Id) + 1, name, login, password, registration) { }
 
         public User(int id, string name, string login, string password, DateTime registration)
         {

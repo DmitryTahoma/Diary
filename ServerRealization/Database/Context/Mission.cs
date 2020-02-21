@@ -5,10 +5,10 @@ namespace ServerRealization.Database.Context
     public class Mission : IDBObject
     {
         public Mission(int actionId, bool isProgressType, int contextId)
-            : this(DBContext.Missions.Max(x => x.Id) + 1, actionId, isProgressType, contextId) { }
+            : this(DBContext.Missions.Count == 0 ? 1 : DBContext.Missions.Max(x => x.Id) + 1, actionId, isProgressType, contextId) { }
 
         public Mission(Action action, bool isProgressType, IDBObject context)
-            : this(DBContext.Missions.Max(x => x.Id) + 1, action, isProgressType, context) { }
+            : this(DBContext.Missions.Count == 0? 1 : DBContext.Missions.Max(x => x.Id) + 1, action, isProgressType, context) { }
 
         public Mission(int id, int actionId, bool isProgressType, int contextId)
             : this(id, DBContext.Actions.Where(x => x.Id == actionId).First(), isProgressType,
