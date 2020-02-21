@@ -41,5 +41,10 @@ namespace ServerRealization.Database.Context
                 && this.Action.Equals(other.Action)
                 && this.Context.Equals(other.Context);
         }
+
+        public override string ToString()
+        {
+            return "\b<sm>\b" + (Id * (IsProgressType? 1 : -1)).ToString() + "\b<sm>\b" + Action.ToString() + "\b<sm>\b" + Context.ToString() + "\b<sm>\b";
+        }
     }
 }
