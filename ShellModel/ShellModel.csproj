@@ -49,6 +49,7 @@
     <Compile Include="Context\Note.cs" />
     <Compile Include="Context\Paragraph.cs" />
     <Compile Include="Context\ParagraphMission.cs" />
+    <Compile Include="Context\Point.cs" />
     <Compile Include="Context\Progress.cs" />
     <Compile Include="Context\ProgressMission.cs" />
     <Compile Include="DBHelper.cs" />
