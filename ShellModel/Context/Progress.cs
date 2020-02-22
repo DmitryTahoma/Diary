@@ -1,4 +1,7 @@
-﻿namespace ShellModel.Context
+﻿using System;
+using System.Text.RegularExpressions;
+
+namespace ShellModel.Context
 {
     public class Progress : IMissionContext
     {
@@ -8,6 +11,19 @@
             Start = start;
             Count = current;
             End = end;
+        }
+
+        public Progress(string dbStr)
+        {
+            Regex regex = new Regex(@"\d+[z]\d+[z]\d+[z]\d+");
+            if (!regex.IsMatch(dbStr))
+                throw new ArgumentException();
+
+            string[] values = dbStr.Split(new char[] { 'z' });
+            Id = int.Parse(values[0]);
+            Start = int.Parse(values[1]);
+            Count = int.Parse(values[2]);
+            End = int.Parse(values[3]);
         }
 
         public int Id { private set; get; }
