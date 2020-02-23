@@ -1,4 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ServerRealization.Database;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ShellModel.Context.Test
@@ -7,19 +9,41 @@ namespace ShellModel.Context.Test
     public class ParagraphTest
     {
         [DataTestMethod]
-        [DataRow(0, new string[] { }, 0, new string[] { }, true)]
-        [DataRow(10, new string[] { "NULL" }, 10, new string[] { "NULL" }, true)]
-        [DataRow(0, new string[] { "", "123", "-r23tgef-sdf" }, 0, new string[] { "", "123", "-r23tgef-sdf" }, true)]
-        [DataRow(10, new string[] { }, 0, new string[] { }, false)]
-        [DataRow(0, new string[] { "" }, 0, new string[] { }, false)]
-        [DataRow(0, new string[] { "", "123", "fgsdghsdfh" }, 0, new string[] { }, false)]
-        [DataRow(0, new string[] { "fasdgsdfhfd", "asfgs" }, 0, new string[] { "fasdg", "dsgsd" }, false)]
-        public void EqualsTest(int id1, string[] values1, int id2, string[] values2, bool expectedValue)
+        [DataRow(73507, new int[] { 429403, 328177 }, new string[] { "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." }, new bool[] { true, true })]
+        [DataRow(964832, new int[] { 996491, 333150, 485311, 581062, 988271, 48390 }, new string[] { "Duis aute irure dolor", "in reprehenderit in", "voluptate velit esse cillum dolore", "eu fugiat nulla pariatur.", "Excepteur sint occaecat cupidatat non proident", "sunt in culpa qui officia deserunt mollit anim id est laborum" }, new bool[] { true, false, false, false, false, true })]
+        public void InitializationTest(int id, int[] ids, string[] points, bool[] isCheckeds)
         {
-            IMissionContext paragraph1 = new Paragraph(id1, values1.ToList());
-            IMissionContext paragraph2 = new Paragraph(id2, values2.ToList());
+            IMissionContext paragraph1 = new Paragraph();
+            Paragraph paragraph2 = new Paragraph(id);
 
-            Assert.AreEqual(expectedValue, paragraph1.Equals(paragraph2));
+            List<Point> pointsL = new List<Point>();
+            for(int i = 0; i < points.Length; ++i)
+                pointsL.Add(new Point(ids[i], points[i], isCheckeds[i]));
+            Paragraph paragraph3 = new Paragraph(id, pointsL);
+
+            ServerRealization.Database.Context.Collection pointsDb = new ServerRealization.Database.Context.Collection(points.Length);
+            DBContext.Collections.Add(pointsDb);
+            for (int i = 0; i < points.Length; ++i)
+                DBContext.Points.Add(new ServerRealization.Database.Context.Point(ids[i], pointsDb, points[i], isCheckeds[i]));
+            Paragraph paragraph4 = new Paragraph(pointsDb.ToString());
+
+            Assert.AreEqual(-1, paragraph1.Id);
+            Assert.AreEqual(id, paragraph2.Id);
+            Assert.AreEqual(id, paragraph3.Id);
+            Assert.AreEqual(points.Length, paragraph3.Count);
+            Assert.AreEqual(points.Length, paragraph4.Count);
+            Assert.AreEqual(points.Length, paragraph3.Items.Count);
+            Assert.AreEqual(points.Length, paragraph4.Items.Count);
+            for (int i = 0; i < points.Length; ++i)
+            {
+                Assert.AreEqual(ids[i], paragraph3.Items[i].Id);
+                Assert.AreEqual(points[i], paragraph3.Items[i].Text);
+                Assert.AreEqual(isCheckeds[i], paragraph3.Items[i].IsChecked);
+
+                Assert.AreEqual(ids[i], paragraph4.Items[i].Id);
+                Assert.AreEqual(points[i], paragraph4.Items[i].Text);
+                Assert.AreEqual(isCheckeds[i], paragraph4.Items[i].IsChecked);
+            }
         }
     }
 }
