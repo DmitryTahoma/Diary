@@ -44,7 +44,7 @@ namespace ServerRealization.Database.Context
         public override string ToString()
         {
             List<Point> points = DBContext.Points.Where(x => x.ParagraphId == Id).ToList();
-            string result = "\b<sc>\b" + Count.ToString() + "\b<sc>\b";
+            string result = "\b<sc>\b" + Id.ToString() + "\b<sc>\b" + Count.ToString() + "\b<sc>\b";
             foreach (Point point in points)
                 result += point.ToString() + "\b<sc>\b";
             return result;

@@ -36,12 +36,12 @@ namespace ServerRealization.Context.Test
         }
 
         [DataTestMethod]
-        [DataRow(new string[] { "", "" }, new bool[] { true, false })]
-        [DataRow(new string[] { "hello", "world" }, new bool[] { false, true })]
-        [DataRow(new string[] { "Lorem ipsum dolor sit amet,", " consectetur adipiscing elit, sed do eiusmod ", "tempor incididunt ut labore et dolore magna aliqua.", " Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.", " Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu", " fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia", " deserunt mollit anim id est laborum." }, new bool[] { true, false, false, true, true, true, true })]
-        public void ToStringTest(string[] names, bool[] isCheckeds)
+        [DataRow(1, new string[] { "", "" }, new bool[] { true, false })]
+        [DataRow(12, new string[] { "hello", "world" }, new bool[] { false, true })]
+        [DataRow(13, new string[] { "Lorem ipsum dolor sit amet,", " consectetur adipiscing elit, sed do eiusmod ", "tempor incididunt ut labore et dolore magna aliqua.", " Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.", " Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu", " fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia", " deserunt mollit anim id est laborum." }, new bool[] { true, false, false, true, true, true, true })]
+        public void ToStringTest(int id, string[] names, bool[] isCheckeds)
         {
-            Collection collection = new Collection(names.Length);
+            Collection collection = new Collection(id, names.Length);
             List<Point> points = new List<Point>();
             DBContext.Collections.Add(collection);
             for (int i = 0; i < names.Length; ++i)
@@ -51,7 +51,7 @@ namespace ServerRealization.Context.Test
                 points.Add(p);
             }
 
-            string result = "\b<sc>\b" + names.Length.ToString() + "\b<sc>\b";
+            string result = "\b<sc>\b" + id.ToString() + "\b<sc>\b" + names.Length.ToString() + "\b<sc>\b";
             for(int i = 0; i < names.Length; ++i)
             {
                 result += points[i].ToString() + "\b<sc>\b";
