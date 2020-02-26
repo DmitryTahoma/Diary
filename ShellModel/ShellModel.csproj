@@ -54,6 +54,7 @@
     <Compile Include="Context\ProgressMission.cs" />
     <Compile Include="DBHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringsHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClientCore\ClientCore.csproj">

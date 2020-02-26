@@ -20,30 +20,11 @@ namespace ShellModel.Context
 
         public Note(string dbStr)
         {
-            string splitter = "\b<sn>\b";
             Regex regex = new Regex("^\b<sn>\b\\d+\b<sn>\b[\\s\\S]*\b<sn>\b[\\s\\S]*\b<sn>\b\\d+[,\\d]*\b<sn>\b\\d+[,\\d]*\b<sn>\b");
             if (regex.IsMatch(dbStr))
             {
-                string[] values = new string[5];
-                for(int i = 0, s = 0, index = -1, start = 0; i < dbStr.Length; ++i)
-                {
-                    if (i == dbStr.Length - 1)
-                        values[index] = dbStr.Substring(start, i - start - splitter.Length + 1);
-                    if(s == splitter.Length)
-                    {
-                        if (index != -1)
-                            values[index] = dbStr.Substring(start, i - start - splitter.Length);
-                        index++;
-                        s = 0;
-                        start = i;
-                        if (index == values.Length)
-                            break;
-                    }
-                    if (splitter[s] == dbStr[i])
-                        s++;
-                    else if (s != 0)
-                        s = 0;
-                }
+                string[] values = StringsHelper.Split("\b<sn>\b", dbStr);
+
                 Id = int.Parse(values[0]);
                 Name = values[1];
                 Text = values[2];

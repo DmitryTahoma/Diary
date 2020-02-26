@@ -14,31 +14,12 @@ namespace ShellModel.Context
 
         public Point(string dbStr)
         {
-            string splitter = "\b<sp>\b";
-            Regex regex1 = new Regex("^" + splitter + @"\d+" + splitter + @"[\s\S]*" + splitter + "1" + splitter);
-            Regex regex2 = new Regex("^" + splitter + @"\d+" + splitter + @"[\s\S]*" + splitter);
+            Regex regex1 = new Regex("^\b<sp>\b\\d+\b<sp>\b[\\s\\S]*\b<sp>\b1\b<sp>\b");
+            Regex regex2 = new Regex("^\b<sp>\b\\d+\b<sp>\b[\\s\\S]*\b<sp>\b");
             if (regex2.IsMatch(dbStr))
             {
-                string[] values = new string[2];
-                for(int i = 0, s = 0, index = -1, start = 0; i < dbStr.Length; ++i)
-                {
-                    if (i == dbStr.Length - 1)
-                        values[index] = dbStr.Substring(start, i - start - splitter.Length + 1);
-                    if(s == splitter.Length)
-                    {
-                        if(index != -1)
-                            values[index] = dbStr.Substring(start, i - start - splitter.Length);
-                        index++;
-                        s = 0;
-                        start = i;
-                        if (index == 2)
-                            break;
-                    }
-                    if (splitter[s] == dbStr[i])
-                        s++;
-                    else if (s != 0)
-                        s = 0;
-                }
+                string[] values = StringsHelper.Split("\b<sp>\b", dbStr);
+
                 Id = int.Parse(values[0]);
                 Text = values[1];
                 if (regex1.IsMatch(dbStr))
