@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ServerRealization.Database;
 using System;
 
 namespace ShellModel.Context.Test
@@ -7,23 +8,72 @@ namespace ShellModel.Context.Test
     public class ActionTest
     {
         [DataTestMethod]
-        [DataRow(13, 31, 331, "Name", "TestText")]
-        [DataRow(130, 140, 18000, "ShellModel", "ShellModel/Context/Action.cs")]
-        public void EqualsTest(int id, int noteId, int stereotypeId, string name, string text)
+        [DataRow(282, 420, "Lorem ipsum dolor sit amet", "consectetur adipiscing elit")]
+        [DataRow(883, 923, "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.", "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")]
+        public void InitializationTest(int id, int noteId, string name, string text)
         {
-            Random r = new Random();
-            int y1 = r.Next(2000, 2020), y2 = r.Next(2000, 2020), y3 = r.Next(2000, 2020), y4 = r.Next(2000, 2020),
-                m1 = r.Next(1, 12),      m2 = r.Next(1, 12),      m3 = r.Next(1, 12),      m4 = r.Next(1, 12),
-                d1 = r.Next(1, 28),      d2 = r.Next(1, 28),      d3 = r.Next(1, 28),      d4 = r.Next(1, 28),
-                h1 = r.Next(1, 23),      h2 = r.Next(1, 23),      h3 = r.Next(1, 23),      h4 = r.Next(1, 23),
-                n1 = r.Next(1, 59),      n2 = r.Next(1, 59),      n3 = r.Next(1, 59),      n4 = r.Next(1, 59),
-                s1 = r.Next(1, 59),      s2 = r.Next(1, 59),      s3 = r.Next(1, 59),      s4 = r.Next(1, 59);
+            Random random = new Random();
+            DateTime created = DateTime.Now.AddDays(random.NextDouble() * -1);
+            DateTime lastChanged = DateTime.Now;
+            DateTime start = new DateTime(random.Next());
+            DateTime end = new DateTime(random.Next());
+            if(start > end)
+            {
+                DateTime t = start;
+                start = end;
+                end = t;
+            }
 
-            Action action1 = new Action(id, noteId, stereotypeId, name, text, new DateTime(y1, m1, d1, h1, n1, s1), new DateTime(y2, m2, d2, h2, n2, s2), new DateTime(y3, m3, d3, h3, n3, s3), new DateTime(y4, m4, d4, h4, n4, s4));
-            Action action2 = new Action(id, noteId, stereotypeId, name, text, new DateTime(y1, m1, d1, h1, n1, s1), new DateTime(y2, m2, d2, h2, n2, s2), new DateTime(y3, m3, d3, h3, n3, s3), new DateTime(y4, m4, d4, h4, n4, s4));
+            Action action1 = new Action(id, noteId, 0, name, text, created, lastChanged, start, end);
 
-            Assert.AreEqual(action1.GetHashCode(), action2.GetHashCode());
-            Assert.AreEqual(action1, action2);
+            Note note2 = new Note(noteId, 0, name, text, created, lastChanged);
+            Action action2 = new Action(id, note2, start, end);
+
+            ServerRealization.Database.Context.User user = new ServerRealization.Database.Context.User("Name", "Login", "Password", DateTime.Now);
+            ServerRealization.Database.Context.Note dbNote = new ServerRealization.Database.Context.Note(noteId, user, new ServerRealization.Database.Context.Collection(), name, text, created, lastChanged);
+            ServerRealization.Database.Context.Action dbAction = new ServerRealization.Database.Context.Action(id, dbNote, start, end);
+            Action action3 = new Action(dbAction.ToString());
+
+            Assert.AreEqual(id, action1.Id);
+            Assert.AreEqual(id, action2.Id);
+            Assert.AreEqual(id, action3.Id);
+            Assert.AreEqual(noteId, action1.NoteId);
+            Assert.AreEqual(noteId, action2.NoteId);
+            Assert.AreEqual(noteId, action3.NoteId);
+            Assert.AreEqual(name, action1.Name);
+            Assert.AreEqual(name, action2.Name);
+            Assert.AreEqual(name, action3.Name);
+            Assert.AreEqual(text, action1.Text);
+            Assert.AreEqual(text, action2.Text);
+            Assert.AreEqual(text, action3.Text);
+            Assert.AreEqual(created, action1.Created);
+            Assert.AreEqual(created, action2.Created);
+            Assert.AreEqual(lastChanged, action1.LastChanged);
+            Assert.AreEqual(lastChanged, action2.LastChanged);
+            Assert.AreEqual(start, action1.Start);
+            Assert.AreEqual(start, action2.Start);
+            Assert.AreEqual(end, action1.End);
+            Assert.AreEqual(end, action2.End);
+
+            if (created > action3.Created)
+                Assert.IsTrue((created - action3.Created).TotalSeconds < 1);
+            else if (action3.Created > created)
+                Assert.IsTrue((action3.Created - created).TotalSeconds < 1);
+
+            if (lastChanged > action3.LastChanged)
+                Assert.IsTrue((lastChanged - action3.LastChanged).TotalSeconds < 1);
+            else if (action3.LastChanged > lastChanged)
+                Assert.IsTrue((action3.LastChanged - lastChanged).TotalSeconds < 1);
+
+            if (start > action3.Start)
+                Assert.IsTrue((start - action3.Start).TotalSeconds < 1);
+            else if (action3.Start > start)
+                Assert.IsTrue((action3.Start - start).TotalSeconds < 1);
+
+            if (end > action3.End)
+                Assert.IsTrue((end - action3.End).TotalSeconds < 1);
+            else if (action3.End > end)
+                Assert.IsTrue((action3.End - end).TotalSeconds < 1);
         }
     }
 }

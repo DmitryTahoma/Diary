@@ -20,7 +20,7 @@ namespace ShellModel.Context
 
         public Note(string dbStr)
         {
-            Regex regex = new Regex("^\b<sn>\b\\d+\b<sn>\b[\\s\\S]*\b<sn>\b[\\s\\S]*\b<sn>\b\\d+[,\\d]*\b<sn>\b\\d+[,\\d]*\b<sn>\b");
+            Regex regex = new Regex("^\b<sn>\b\\d+\b<sn>\b[\\s\\S]*\b<sn>\b[\\s\\S]*\b<sn>\b\\d+[,\\d[E\\-\\d]*]*\b<sn>\b\\d+[,\\d[E\\-\\d]*]*\b<sn>\b");
             if (regex.IsMatch(dbStr))
             {
                 string[] values = StringsHelper.Split("\b<sn>\b", dbStr);
@@ -35,12 +35,14 @@ namespace ShellModel.Context
                 throw new ArgumentException();
         }
 
-        public int Id { private set; get; }
-        public int StereotypeId { private set; get; }
+        protected Note() { }
+
+        public int Id { protected set; get; }
+        public int StereotypeId { protected set; get; }
         public string Name { set; get; }
         public string Text { set; get; }
-        public DateTime Created { private set; get; }
-        public DateTime LastChanged { private set; get; }
+        public DateTime Created { protected set; get; }
+        public DateTime LastChanged { protected set; get; }
 
         public override bool Equals(object obj)
         {
