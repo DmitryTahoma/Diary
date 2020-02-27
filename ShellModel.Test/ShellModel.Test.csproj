@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\Action.Test.cs" />
+    <Compile Include="Context\Mission.Test.cs" />
     <Compile Include="Context\Note.Test.cs" />
     <Compile Include="Context\Paragraph.Test.cs" />
     <Compile Include="Context\ParagraphMission.Test.cs" />

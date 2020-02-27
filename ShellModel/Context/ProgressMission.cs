@@ -10,6 +10,21 @@ namespace ShellModel.Context
         {
         }
 
+        public ProgressMission(int id, Action action, Progress progress)
+        {
+            Id = id;
+            ActionId = action.Id;
+            NoteId = action.NoteId;
+            StereotypeId = action.StereotypeId;
+            Name = action.Name;
+            Text = action.Text;
+            Created = action.Created;
+            LastChanged = action.LastChanged;
+            Start = action.Start;
+            End = action.End;
+            Context = progress;
+        }
+
         public Progress Progress { get => (Progress)Context; }
 
         public override bool Equals(object obj)

@@ -44,8 +44,10 @@ namespace ShellModel.Context
                 throw new ArgumentException();
         }
 
-        public new int Id { private set; get; }
-        public int NoteId { get => base.Id; }
+        protected Action() { }
+
+        public new int Id { protected set; get; }
+        public int NoteId { protected set { base.Id = value; } get => base.Id; }
         public DateTime Start { set; get; }
         public DateTime End { set; get; }
 
