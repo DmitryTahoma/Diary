@@ -18,17 +18,23 @@ namespace ShellModel.Context
         public static IMission CreateNew(string dbStr)
         {
             Regex regexProgress = new Regex("^\b<sm>\b\\d+\b<sm>\b\b<sa>\b\\d+\b<sa>\b\b<sn>\b\\d+\b<sn>\b[\\s\\S]*\b<sn>\b[\\s\\S]*\b<sn>\b\\d+[,\\d[E\\-\\d]*]*\b<sn>\b\\d+[,\\d[E\\-\\d]*]*\b<sn>\b\b<sa>\b\\d+[,\\d[E\\-\\d]*]*\b<sa>\b\\d+[,\\d[E\\-\\d]*]*\b<sa>\b\b<sm>\b\\d+z\\d+z\\d+z\\d+\b<sm>\b");
+            Regex regexParagraph = new Regex("^\b<sm>\b[-]\\d+\b<sm>\b\b<sa>\b\\d+\b<sa>\b\b<sn>\b\\d+\b<sn>\b[\\s\\S]*\b<sn>\b[\\s\\S]*\b<sn>\b\\d+[,\\d[E\\-\\d]*]*\b<sn>\b\\d+[,\\d[E\\-\\d]*]*\b<sn>\b\b<sa>\b\\d+[,\\d[E\\-\\d]*]*\b<sa>\b\\d+[,\\d[E\\-\\d]*]*\b<sa>\b\b<sm>\b\b<sc>\b\\d+\b<sc>\b\\d+\b<sc>\b[\b<sp>\b\\d+\b<sp>\b[\\s\\S]*\b<sp>\b[1\b<sp>\b]*\b<sc>\b]*\b<sm>\b");
             if(regexProgress.IsMatch(dbStr))
             {
                 string[] values = StringsHelper.Split("\b<sm>\b", dbStr);
-                int id = int.Parse(values[0]);
                 Action action = new Action(values[1]);
                 Progress progress = new Progress(values[2]);
-                ProgressMission progressMission = new ProgressMission(id, action, progress);
+                ProgressMission progressMission = new ProgressMission(int.Parse(values[0]), action, progress);
                 return progressMission;
             }
-
-            return null;
+            else if(regexParagraph.IsMatch(dbStr))
+            {
+                string[] values = StringsHelper.Split("\b<sm>\b", dbStr);
+                Action action = new Action(values[1]);
+                ParagraphMission paragraphMission = new ParagraphMission(int.Parse(values[0]) * -1, new Paragraph(values[2]), action.Id, action.NoteId, action.StereotypeId, action.Name, action.Text, action.Created, action.LastChanged, action.Start, action.End);
+                return paragraphMission;
+            }
+            throw new ArgumentException();
         }
 
         public new int Id { protected set; get; }
