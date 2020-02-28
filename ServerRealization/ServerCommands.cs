@@ -2,6 +2,7 @@
 using ServerRealization.Database;
 using ServerRealization.Database.Context;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ServerRealization
@@ -25,6 +26,7 @@ namespace ServerRealization
                 case "cpt": return ChangePointText(args);
                 case "chnn": return ChangeNoteName(args);
                 case "scp": return SetCheckedPoint(args);
+                case "gd": return GetDay(args);
             }
         }
 
@@ -232,6 +234,37 @@ namespace ServerRealization
 
             DBContext.Points.Where(x => x.Id == id).First().IsChecked = val;
             return "True";
+        }
+
+        private string GetDay(string[] args)
+        {
+            if (!ArgsHelper.CheckArgs(args, 5, 2, 3, 4))
+                return "ae";
+            try
+            {
+                DateTime t = new DateTime(int.Parse(args[4]), int.Parse(args[3]), int.Parse(args[2]));
+            }
+            catch { return "ae"; }
+            if (!ArgsHelper.CheckLoginPassword(args[0], args[1]))
+                return "False";
+
+            string splitter = "\b<sgd>\b";
+            string result = splitter;
+            List<Note> notes = DBContext.Notes.Where(x => x.User.Login == args[0] 
+                                                  && x.User.Password == args[1] 
+                                                  && x.Created.Day.ToString() == args[2] 
+                                                  && x.Created.Month.ToString() == args[3] 
+                                                  && x.Created.Year.ToString() == args[4])
+                                                        .ToList();
+            foreach (Note note in notes)
+                if (DBContext.Actions.Where(x => x.NoteId == note.Id).Count() != 0)
+                    result += DBContext.Missions.Where(x => x.ActionId ==
+                                            DBContext.Actions.Where(y => y.NoteId == note.Id)
+                                                .First().Id).First().ToString() + splitter;
+                else
+                    result += note.ToString() + splitter;
+
+            return result;
         }
     }
 }

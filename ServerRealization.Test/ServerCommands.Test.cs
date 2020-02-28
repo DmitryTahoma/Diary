@@ -2,15 +2,14 @@
 using ServerRealization.Database;
 using ServerRealization.Database.Context;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ServerRealization.Test
 {
     [TestClass]
-    public class ServerCommandsTest
+    public partial class ServerCommandsTest
     {
-        private static string correctLogin = "Alex92", correctPassword = "pass1234";
-
         [DataTestMethod]
         [DataRow("clp", new string[] { }, "ae")]
         [DataRow("clp", new string[] { "", "", "", "" }, "ae")]
@@ -369,6 +368,35 @@ namespace ServerRealization.Test
             if (expectedResult == "True")
                 Assert.AreEqual(val, DBContext.Points.Where(x => x.Id == idp).First().IsChecked);
             Assert.AreEqual(expectedResult, result);
+        }
+
+        [DataTestMethod]
+        [DataRow("Alex92", "pass1234", 50, 1, 28, 2, 2020, "data")]
+        [DataRow("Tahoma", "password", 1000, 2, 29, 2, 2020, "data")]
+        [DataRow("Tahoma92", "pass1234", 0, 1, 28, 2, 2020, "False")]
+        [DataRow("Tahoma", "password1234", 0, 1, 28, 2, 2020, "False")]
+        [DataRow("Alex92", "pass1234", 0, 1, 38, 2, 2020, "ae")]
+        [DataRow("Alex92", "pass1234", 0, 1, 28, 23, 2020, "ae")]
+        [DataRow("Alex92", "pass1234", 0, 1, 28, 2, -17, "ae")]
+        public void GetDayTest(string login, string password, int countNotes, int dispDays, int day, int month, int year, string expectedResult)
+        {
+            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
+            if (expectedResult == "data")
+            {
+                GenerateNotes(login, password, countNotes, dispDays);
+
+                string splitter = "\b<sgd>\b";
+                expectedResult = splitter;
+                List<Note> notes = DBContext.Notes.Where(x => x.User.Login == login && x.User.Password == password && x.Created.Day == day && x.Created.Month == month && x.Created.Year == year).ToList();
+                foreach(Note note in notes)
+                    if (DBContext.Actions.Where(x => x.NoteId == note.Id).Count() != 0)
+                        expectedResult += DBContext.Missions.Where(x => x.ActionId ==
+                                                DBContext.Actions.Where(y => y.NoteId == note.Id)
+                                                    .First().Id).First().ToString() + splitter;
+                    else
+                        expectedResult += note.ToString() + splitter;
+            }
+            Assert.AreEqual(expectedResult, server.ExecuteCommand("gd", new string[] { login, password, day.ToString(), month.ToString(), year.ToString() }));
         }
     }
 }

@@ -68,6 +68,7 @@
     <Compile Include="Context\Note.Test.cs" />
     <Compile Include="Context\Point.Test.cs" />
     <Compile Include="Context\Progress.Test.cs" />
+    <Compile Include="ServerCommands.Test.Based.cs" />
     <Compile Include="ServerCommands.Test.cs" />
     <Compile Include="ServerProgram.Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
