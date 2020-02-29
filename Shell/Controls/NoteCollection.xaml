@@ -71,6 +71,14 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
+            <Button Padding="10"
+                    Content="[Alex92] Generate 1000 notes">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <catel:EventToCommand Command="{Binding Generate1000Notes}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
         </StackPanel>
         <ScrollViewer Grid.Row="1">
             <StackPanel x:Name="Notes" />

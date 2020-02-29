@@ -242,7 +242,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Images\RPBbg.png" />
     <Resource Include="Resources\Images\RPBbgChecked.png" />

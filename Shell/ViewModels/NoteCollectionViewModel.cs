@@ -1,9 +1,11 @@
 ﻿namespace Shell.ViewModels
 {
     using Catel.MVVM;
+    using ClientCore;
     using Shell.Controls;
     using ShellModel.Context;
     using System;
+    using System.Threading.Tasks;
     using System.Windows.Controls;
 
     public class NoteCollectionViewModel : ViewModelBase
@@ -16,6 +18,7 @@
             AddParMNote = new Command<StackPanel>(OnAddParMNoteExecute);
             AddWeek = new Command<StackPanel>(OnAddWeekExecute);
             AddYear = new Command<StackPanel>(OnAddYearExecute);
+            Generate1000Notes = new Command(OnGenerate1000NotesExecute);
         }
 
         #region Properties
@@ -68,6 +71,16 @@
         private void OnAddYearExecute(StackPanel stackPanel)
         {
             stackPanel.Children.Add(new Year());
+        }
+
+        public Command Generate1000Notes { get; private set; }
+        private void OnGenerate1000NotesExecute()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                Client client = new Client(new SocketSettings.SocketSettings(@"D:\Projects\Portfolio\Diary\packages\ss.bin"));
+                client.Send("generate1000notes");
+            });
         }
 
         #endregion
