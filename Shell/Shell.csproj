@@ -141,6 +141,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\UserContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Week.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -184,6 +188,9 @@
     <Compile Include="Controls\SimpleNote.xaml.cs">
       <DependentUpon>SimpleNote.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\UserContent.xaml.cs">
+      <DependentUpon>UserContent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Week.xaml.cs">
       <DependentUpon>Week.xaml</DependentUpon>
     </Compile>
@@ -200,6 +207,7 @@
     <Compile Include="ViewModels\RegistrationPageViewModel.cs" />
     <Compile Include="ViewModels\RevealPasswordBoxViewModel.cs" />
     <Compile Include="ViewModels\SimpleNoteViewModel.cs" />
+    <Compile Include="ViewModels\UserContentViewModel.cs" />
     <Compile Include="ViewModels\WeekViewModel.cs" />
     <Compile Include="ViewModels\YearViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
