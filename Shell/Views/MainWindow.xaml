@@ -9,7 +9,8 @@
         mc:Ignorable="d"
         Title="Title" Height="450" Width="800">
     <TabControl SelectedIndex="{Binding SelectedTabItemId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-        <TabItem Visibility="Collapsed">
+        <TabItem Visibility="Visible"
+                 Header="Back">
             <pages:LoginPage DataContext="{Binding LoginPageContext, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </TabItem>
         <TabItem Visibility="Collapsed">
