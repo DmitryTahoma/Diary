@@ -6,6 +6,8 @@ namespace ShellModel
     {
         public static string[] Split(string splitter, string str)
         {
+            if (splitter == str)
+                return new string[] { };
             string[] values = new string[1];
             for (int i = 0, s = 0, index = -1, start = 0; i < str.Length; ++i)
             {

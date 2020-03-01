@@ -1,4 +1,5 @@
 ﻿using ServerCore;
+using SocketSettings;
 using System.Threading;
 
 namespace ServerRealization
@@ -22,6 +23,13 @@ namespace ServerRealization
             commands = new ServerCommands();
             server = new Server(commands, ip, port, defaultClientPorts, mlsOfdelay);
             mlsToStop = mlsOfdelay;
+        }
+
+        public ServerProgram(ISocketSettings settings)
+        {
+            commands = new ServerCommands();
+            server = new Server(commands, settings);
+            mlsToStop = settings.MlsOfDelay;
         }
 
         public void Run()

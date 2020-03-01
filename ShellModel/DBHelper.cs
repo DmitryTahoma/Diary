@@ -1,5 +1,8 @@
 ﻿using ClientCore;
+using ShellModel.Context;
 using SocketSettings;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace ShellModel
@@ -76,6 +79,28 @@ namespace ShellModel
                     if (bool.TryParse(result.ToString(), out bool x))
                         return x;
             return false;
+        }
+
+        public List<Note> GetDay(string login, string password, int day, int month, int year)
+        {
+            object result = DoLockedProcess(() => 
+            {
+                return client.SendCommand("gd", new string[] { login, password, day.ToString(), month.ToString(), year.ToString() });
+            });
+            if(result != null)
+                if(result is string)
+                    if(result.ToString() != "ae")
+                    {
+                        string[] r = StringsHelper.Split("\b<sgd>\b", result.ToString());
+                        List<Note> res = new List<Note>();
+                        for (int i = 0; i < r.Length; ++i)
+                            if (Mission.IsStringMission(r[i]))
+                                res.Add((ParagraphMission)Mission.CreateNew(r[i]));
+                            else
+                                res.Add(new Note(r[i]));
+                        return res;
+                    }
+            throw new ArgumentException();
         }
     }
 }

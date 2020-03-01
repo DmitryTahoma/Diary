@@ -37,6 +37,13 @@ namespace ShellModel.Context
             throw new ArgumentException();
         }
 
+        public static bool IsStringMission(string dbStr)
+        {
+            Regex regexProgress = new Regex("^\b<sm>\b\\d+\b<sm>\b\b<sa>\b\\d+\b<sa>\b\b<sn>\b\\d+\b<sn>\b[\\s\\S]*\b<sn>\b[\\s\\S]*\b<sn>\b\\d+[,\\d[E\\-\\d]*]*\b<sn>\b\\d+[,\\d[E\\-\\d]*]*\b<sn>\b\b<sa>\b\\d+[,\\d[E\\-\\d]*]*\b<sa>\b\\d+[,\\d[E\\-\\d]*]*\b<sa>\b\b<sm>\b\\d+z\\d+z\\d+z\\d+\b<sm>\b");
+            Regex regexParagraph = new Regex("^\b<sm>\b[-]\\d+\b<sm>\b\b<sa>\b\\d+\b<sa>\b\b<sn>\b\\d+\b<sn>\b[\\s\\S]*\b<sn>\b[\\s\\S]*\b<sn>\b\\d+[,\\d[E\\-\\d]*]*\b<sn>\b\\d+[,\\d[E\\-\\d]*]*\b<sn>\b\b<sa>\b\\d+[,\\d[E\\-\\d]*]*\b<sa>\b\\d+[,\\d[E\\-\\d]*]*\b<sa>\b\b<sm>\b\b<sc>\b\\d+\b<sc>\b\\d+\b<sc>\b[\b<sp>\b\\d+\b<sp>\b[\\s\\S]*\b<sp>\b[1\b<sp>\b]*\b<sc>\b]*\b<sm>\b");
+            return regexProgress.IsMatch(dbStr) || regexParagraph.IsMatch(dbStr);
+        }
+
         public new int Id { protected set; get; }
         public int ActionId { protected set { base.Id = value; } get => base.Id; }
         public int ContextId { protected set; get; }

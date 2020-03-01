@@ -371,7 +371,7 @@ namespace ServerRealization.Test
         }
 
         [DataTestMethod]
-        [DataRow("Alex92", "pass1234", 50, 1, 28, 2, 2020, "data")]
+        [DataRow("Alex92", "pass1234", 50, 1, 1, 3, 2020, "data")]
         [DataRow("Tahoma", "password", 1000, 2, 29, 2, 2020, "data")]
         [DataRow("Tahoma92", "pass1234", 0, 1, 28, 2, 2020, "False")]
         [DataRow("Tahoma", "password1234", 0, 1, 28, 2, 2020, "False")]
