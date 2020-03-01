@@ -134,7 +134,7 @@ namespace ShellModel.Test
             }
             finally
             {
-                Thread.Sleep(server.Stop() + 100);
+                server.Stop();
             }
         }
     }

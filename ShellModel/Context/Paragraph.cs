@@ -25,8 +25,9 @@ namespace ShellModel.Context
 
         public Paragraph(string dbStr)
         {
-            Regex regex = new Regex("^\b<sc>\b\\d+\b<sc>\b\\d+\b<sc>\b[\b<sp>\b\\d+\b<sp>\b[\\s\\S]*\b<sp>\b[1\b<sp>\b]*\b<sc>\b]*");
-            if (regex.IsMatch(dbStr))
+            Regex regex = new Regex("^\b<sc>\b\\d+\b<sc>\b\\d+\b<sc>\b[\b<sp>\b\\d+\b<sp>\b[\\s\\S]*\b<sp>\b[1\b<sp>\b]*\b<sc>\b]*"),
+                  regex2 = new Regex("^\b<sc>\b\\d+\b<sc>\b\\d+\b<sc>\b");
+            if (regex.IsMatch(dbStr) || regex2.IsMatch(dbStr))
             {
                 string[] values = StringsHelper.Split("\b<sc>\b", dbStr);
                 Id = int.Parse(values[0]);

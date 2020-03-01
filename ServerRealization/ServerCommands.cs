@@ -271,7 +271,7 @@ namespace ServerRealization
         public string Generate1000Notes()
         {
             string login = "Alex92", password = "pass1234";
-            int dispDays = 30, count = 1000;
+            int dispDays = 1, count = 1000;
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             Random random = new Random();
             int userId = -1;
