@@ -4,11 +4,14 @@ using SocketSettings;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ShellModel
 {
     public class DBHelper
     {
+        static ISocketSettings lastSettings = null;
+
         object locker = new object();
         delegate object ProcessAction();
 
@@ -19,6 +22,7 @@ namespace ShellModel
         {
             client = new Client(settings);
             delay = settings.MlsOfDelay;
+            lastSettings = settings;
         }
 
         public DBHelper(string path)
@@ -26,6 +30,7 @@ namespace ShellModel
             SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings(path);
             delay = settings.MlsOfDelay;
             client = new Client(settings);
+            lastSettings = settings;
         }
 
         private object DoLockedProcess(ProcessAction action)
@@ -101,6 +106,22 @@ namespace ShellModel
                         return res;
                     }
             throw new ArgumentException();
+        }
+
+        public static async Task<List<Note>> GetDayAsync(string login, string password, int day, int month, int year)
+        {
+            return await Task<List<Note>>.Run(() =>
+            {
+                DBHelper dbHelper = new DBHelper(lastSettings);
+                try
+                {
+                    return dbHelper.GetDay(login, password, day, month, year);
+                }
+                catch
+                {
+                    return new List<Note>();
+                }
+            });
         }
     }
 }

@@ -137,5 +137,59 @@ namespace ShellModel.Test
                 server.Stop();
             }
         }
+
+        [DataTestMethod]
+        [DataRow("Alex92", "pass1234", 1, 3, 2020)]
+        [DataRow("Tahoma", "password", 27, 2, 2020)]
+        [DataRow("", "pass1234", 1, 3, 2020)]
+        [DataRow("Alex92", "", 1, 3, 2020)]
+        [DataRow("Alex92", "pass1234", 1000, 3, 2020)]
+        [DataRow("Alex92", "pass1234", 1, 32, 2020)]
+        [DataRow("Alex92", "pass1234", 1, 3, -1)]
+        public void GetDayAsyncTest(string login, string password, int day, int month, int year)
+        {
+            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 3000);
+            ServerProgram server = new ServerProgram(settings);
+            server.ExecuteCommand("generate1000notes", new string[] { });
+            server.Run();
+            DBHelper dbHelper = new DBHelper(settings);
+            List<Note> expectedResult = null;
+            try { expectedResult = dbHelper.GetDay(login, password, day, month, year); }
+            catch (ArgumentException) { expectedResult = new List<Note>(); }
+
+            List<Note> result = null;
+            try { result = DBHelper.GetDayAsync(login, password, day, month, year).Result; }
+            catch (ArgumentException) { result = new List<Note>(); }
+            Assert.AreEqual(expectedResult.Count, result.Count);
+            for (int i = 0; i < result.Count; ++i)
+            {
+                if (expectedResult[i] is ParagraphMission)
+                {
+                    Assert.IsTrue(result[i] is ParagraphMission);
+                    ParagraphMission expectedMission = (ParagraphMission)expectedResult[i],
+                        mission = (ParagraphMission)result[i];
+
+                    Assert.AreEqual(expectedMission.Context.Count, mission.Context.Count);
+                    Assert.AreEqual(expectedMission.ContextId, mission.ContextId);
+                    for (int j = 0; j < mission.Context.Count; ++j)
+                    {
+                        Assert.AreEqual(expectedMission.Paragraph.Items[j].Id, mission.Paragraph.Items[j].Id);
+                        Assert.AreEqual(expectedMission.Paragraph.Items[j].Text, mission.Paragraph.Items[j].Text);
+                        Assert.AreEqual(expectedMission.Paragraph.Items[j].IsChecked, mission.Paragraph.Items[j].IsChecked);
+                    }
+
+                    Assert.AreEqual(expectedMission.Id, mission.Id);
+                    Assert.AreEqual(expectedMission.ActionId, mission.ActionId);
+                    Assert.AreEqual(expectedMission.Start, expectedMission.Start);
+                    Assert.AreEqual(expectedMission.End, expectedMission.End);
+                }
+                Assert.AreEqual(expectedResult[i].Id, result[i].Id);
+                Assert.AreEqual(expectedResult[i].Name, result[i].Name);
+                Assert.AreEqual(expectedResult[i].Text, result[i].Text);
+                Assert.AreEqual(expectedResult[i].LastChanged, result[i].LastChanged);
+                Assert.AreEqual(expectedResult[i].Created, result[i].Created);
+                Assert.AreEqual(expectedResult[i].StereotypeId, result[i].StereotypeId);
+            }
+        }
     }
 }
