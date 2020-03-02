@@ -9,10 +9,13 @@
 
     public class DayOfWeekViewModel : ViewModelBase
     {
+        private StackPanel Notes = null;
+
         public DayOfWeekViewModel()
         {
-            AddNote = new Command<StackPanel>(OnAddNoteExecute);
-            AddParagraphNote = new Command<StackPanel>(OnAddParagraphNoteExecute);
+            ChangeStackPanel = new Command<StackPanel>(OnChangeStackPanelExecute);
+            AddNote = new Command(OnAddNoteExecute);
+            AddParagraphNote = new Command(OnAddParagraphNoteExecute);
         }
 
         #region Properties
@@ -53,18 +56,24 @@
 
         #region Commands
 
-        public Command<StackPanel> AddNote { get; private set; }
-        private void OnAddNoteExecute(StackPanel stackPanel)
+        public Command AddNote { get; private set; }
+        private void OnAddNoteExecute()
         {
-            stackPanel.Children.Add(new SimpleNote());
+            Notes.Children.Add(new SimpleNote());
         }
 
-        public Command<StackPanel> AddParagraphNote { get; private set; }
-        private void OnAddParagraphNoteExecute(StackPanel stackPanel)
+        public Command AddParagraphNote { get; private set; }
+        private void OnAddParagraphNoteExecute()
         {
             ParagraphMissionNote note = new ParagraphMissionNote();
             note.DataContext.Context = new ShellModel.Context.ParagraphMission(0, 0, 0, 0, 0, "Name", "Text", DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now);
-            stackPanel.Children.Add(note);
+            Notes.Children.Add(note);
+        }
+
+        public Command<StackPanel> ChangeStackPanel { get; private set; }
+        private void OnChangeStackPanelExecute(StackPanel stackPanel)
+        {
+            Notes = stackPanel;
         }
 
         #endregion

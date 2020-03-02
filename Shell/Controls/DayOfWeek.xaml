@@ -51,4 +51,10 @@
             </Button>
         </Grid>
     </Grid>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <catel:EventToCommand Command="{Binding ChangeStackPanel}"
+                                  CommandParameter="{Binding ElementName=Notes}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 </UserControl>
