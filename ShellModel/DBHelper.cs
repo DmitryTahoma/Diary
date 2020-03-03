@@ -12,7 +12,7 @@ namespace ShellModel
     {
         static ISocketSettings lastSettings = null;
 
-        object locker = new object();
+        static object locker = new object();
         delegate object ProcessAction();
 
         Client client;

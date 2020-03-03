@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using ShellModel.Context;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ShellModel.Test
 {
@@ -190,6 +191,38 @@ namespace ShellModel.Test
                 Assert.AreEqual(expectedResult[i].Created, result[i].Created);
                 Assert.AreEqual(expectedResult[i].StereotypeId, result[i].StereotypeId);
             }
+        }
+
+        [DataTestMethod]
+        [DataRow(new string[] { "Alex92", "gsdhasf" }, new string[] { "pass1234", "fgsdghegggg" }, new bool[] { true, false })]
+        [DataRow(new string[] { "Tahoma", "Tahoma", "Tahoma", "Alex92", "Alex93" }, new string[] { "Tahoma", "password", "gsdgsdasfhdf", "pass1234", "pass1234" }, new bool[] { false, true, false, true, false })]
+        [DataRow(new string[] { "fsdgdfhdfh", "sdtyjnbsd54", "3w6tiyjsdht", "ety6ehrstjhdft", "gdeuse46tedtujk", "yedrikdrtyg", "sykdhrydrtsn", "sdtyjnbsd54", "jrdtgwfsvtyrss46", "hjsrd5gyawft" }, new string[] { "", "3w6tiyjsdht", "fsdgdfhdfh", "43e7syse4cye4", "e4s7yacsetbe", "s56u8nsevtesueys5", "idsr5vsf", "se5uynsegv4y", "a4hbatyerstv", "awegb6a4yct" }, new bool[] { false, false, false, false, false, false, false, false, false, false })]
+        public void QueueTest(string[] logins, string[] passwords, bool[] results)
+        {
+            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 3000);
+            ServerProgram server = new ServerProgram(settings);
+            server.Run();
+
+            Random random = new Random();
+            List<Thread> threads = new List<Thread>();
+            List<Exception> errors = new List<Exception>();
+            for (int j = 0, t = random.Next(5, 10); j < t; ++j)
+                threads.Add(new Thread(() => {
+                    for (int i = 0; i < logins.Length; ++i)
+                        try
+                        {
+                            DBHelper dbHelper = new DBHelper(settings);
+                            Assert.AreEqual(results[i], dbHelper.SignIn(logins[i], passwords[i]));
+                        }
+                        catch(Exception e) { errors.Add(e); }
+                    }));                
+
+            foreach (Thread thread in threads)
+                thread.Start();
+            Thread.Sleep(10000);
+            
+            if(errors.Count != 0)
+                Assert.Fail(errors.Count.ToString() + "errors thrown");
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using SocketSettings;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace ClientCore
 {
@@ -12,11 +14,15 @@ namespace ClientCore
         TcpClient client;
         int port, serverPort;
 
+        delegate string SendHandler(string msg);
+        Queue<SendHandler> sendQueue;
+
         public Client(ISocketSettings clientSettings)
         {
             settings = clientSettings;
             port = -1;
             serverPort = settings.ServerPort;
+            sendQueue = new Queue<SendHandler>();
         }
 
         public string Send(string message)
@@ -26,11 +32,24 @@ namespace ClientCore
                 DetermineFreePort();
             }
 
-            byte[] data = Encoding.Unicode.GetBytes(GetLocalIP() + ":" + port.ToString() + "|" + message);
-            client = new TcpClient(settings.ServerIP, serverPort);
-            NetworkStream stream = client.GetStream();
-            stream.Write(data, 0, data.Length);
-            return ListenResponse();
+            SendHandler handler = new SendHandler((msg) => 
+            {  
+                byte[] data = Encoding.Unicode.GetBytes(GetLocalIP() + ":" + port.ToString() + "|" + msg);
+                client = new TcpClient(settings.ServerIP, serverPort);
+                NetworkStream stream = client.GetStream();
+                stream.Write(data, 0, data.Length);
+                return ListenResponse();
+            });
+            sendQueue.Enqueue(handler);
+
+            while (true)
+                if (sendQueue.Peek() == handler)
+                {
+                    SendHandler sendHandler = sendQueue.Dequeue();
+                    return sendHandler.Invoke(message);
+                }
+                else
+                    Thread.Sleep(100);            
         }
 
         public string SendCommand(string command, string[] args)
