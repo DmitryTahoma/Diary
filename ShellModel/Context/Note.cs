@@ -30,6 +30,7 @@ namespace ShellModel.Context
                 Text = values[2];
                 Created = DateTime.MinValue.AddDays(double.Parse(values[3]));
                 LastChanged = DateTime.MinValue.AddDays(double.Parse(values[4]));
+                StringLastChanged = LastChanged.ToString("dddd, dd MMMM yyyy HH:mm:ss");
             }
             else
                 throw new ArgumentException();
@@ -42,7 +43,17 @@ namespace ShellModel.Context
         public string Name { set; get; }
         public string Text { set; get; }
         public DateTime Created { protected set; get; }
-        public DateTime LastChanged { protected set; get; }
+        DateTime lastChanged;
+        public DateTime LastChanged 
+        {
+            protected set 
+            {
+                lastChanged = value;
+                StringLastChanged = LastChanged.ToString("dddd, dd MMMM yyyy HH:mm:ss");
+            }
+            get => lastChanged;
+        }
+        public string StringLastChanged { protected set; get; }
 
         public override bool Equals(object obj)
         {

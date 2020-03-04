@@ -11,21 +11,22 @@
         public ParagraphMissionNoteViewModel()
         {
             AddNew = new Command<StackPanel>(OnAddNewExecute);
+            Note = new SimpleNoteViewModel();
         }
 
         #region Properties
 
-        public Note Note
+        public SimpleNoteViewModel Note
         {
-            get { return GetValue<Note>(NoteProperty); }
+            get { return GetValue<SimpleNoteViewModel>(NoteProperty); }
             set { SetValue(NoteProperty, value); }
         }
-        public static readonly PropertyData NoteProperty = RegisterProperty(nameof(Note), typeof(Note), null);
+        public static readonly PropertyData NoteProperty = RegisterProperty(nameof(Note), typeof(SimpleNoteViewModel), null);
 
         public ParagraphMission Context
         {
             get { return GetValue<ParagraphMission>(ContextProperty); }
-            set { SetValue(ContextProperty, value); Note = value; }
+            set { SetValue(ContextProperty, value); Note.Note = value; }
         }
         public static readonly PropertyData ContextProperty = RegisterProperty(nameof(Context), typeof(ParagraphMission), null);
 

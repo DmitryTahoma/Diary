@@ -1,5 +1,6 @@
 ﻿namespace Shell.ViewModels
 {
+    using Catel.Data;
     using Catel.MVVM;
     using ShellModel.Context;
     using System;
@@ -8,7 +9,7 @@
     {
         public SimpleNoteViewModel()
         {
-            Note = new Note(0, 0, "Note not loaded", "Note not loaded", DateTime.Now, DateTime.Now);
+            Note = new Note(-1, "", "", DateTime.MinValue, DateTime.MinValue);
         }
 
         public SimpleNoteViewModel(Note note)
@@ -18,21 +19,15 @@
 
         #region Properties
 
-        public Note Note { set; get; }
-
-        public string Text
+        public Note Note
         {
-            set => Note.Text = value;
-            get => Note.Text; 
+            get { return GetValue<Note>(NoteProperty); }
+            set 
+            { 
+                SetValue(NoteProperty, value);
+            }
         }
-
-        public string Name 
-        {
-            set => Note.Name = value;
-            get => Note.Name; 
-        }
-
-        public string LastChanged { get => Note.LastChanged.ToString("dddd, dd MMMM yyyy HH:mm:ss"); }
+        public static readonly PropertyData NoteProperty = RegisterProperty(nameof(Note), typeof(Note), null);
 
         #endregion
     }

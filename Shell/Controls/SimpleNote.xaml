@@ -22,13 +22,13 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <TextBox Grid.ColumnSpan="3"
-                 Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Text="{Binding Note.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  AcceptsTab="True"
                  TextWrapping="Wrap"
                  VerticalScrollBarVisibility="Auto"/>
         <TextBox Grid.Row="1"
                  Grid.Column="1"
-                 Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Text="{Binding Note.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  AcceptsTab="True"
                  TextWrapping="Wrap"
                  VerticalScrollBarVisibility="Auto"/>
@@ -40,7 +40,7 @@
                 Last changed:
             </TextBlock>
             <TextBlock Margin="5, 0, 0, 0"
-                       Text="{Binding LastChanged, UpdateSourceTrigger=PropertyChanged}"/>
+                       Text="{Binding Note.StringLastChanged, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
     </Grid>
 </UserControl>
