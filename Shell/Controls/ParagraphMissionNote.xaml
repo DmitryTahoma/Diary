@@ -27,11 +27,16 @@
                       IsEnabled="False">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <catel:EventToCommand Command="{Binding AddNew}"
-                                              CommandParameter="{Binding ElementName=Items}"/>
+                        <catel:EventToCommand Command="{Binding AddNew}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </CheckBox>
         </StackPanel>
     </Grid>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <catel:EventToCommand Command="{Binding BindStackPanel}"
+                                  CommandParameter="{Binding ElementName=Items}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 </UserControl>

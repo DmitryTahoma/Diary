@@ -8,10 +8,13 @@
 
     public class ParagraphMissionNoteViewModel : ViewModelBase
     {
+        StackPanel points = null;
+
         public ParagraphMissionNoteViewModel()
         {
-            AddNew = new Command<StackPanel>(OnAddNewExecute);
+            AddNew = new Command(OnAddNewExecute);
             Note = new SimpleNoteViewModel();
+            BindStackPanel = new Command<StackPanel>(OnBindStackPanelExecute);
         }
 
         #region Properties
@@ -34,12 +37,30 @@
 
         #region Commands
 
-        public Command<StackPanel> AddNew { get; private set; }
-        private void OnAddNewExecute(StackPanel stackPanel)
+        public Command AddNew { get; private set; }
+        private void OnAddNewExecute()
         {
-            stackPanel.Children.Insert(stackPanel.Children.Count - 1, new CheckTextBox());
+            points.Children.Insert(points.Children.Count - 1, new CheckTextBox());
+        }
+
+        public Command<StackPanel> BindStackPanel { get; private set; }
+        private void OnBindStackPanelExecute(StackPanel stackPanel)
+        {
+            points = stackPanel;
+            LoadPoints();
         }
 
         #endregion
+
+        private void LoadPoints()
+        {
+            foreach(Point point in Context.Paragraph.Items)
+            {
+                CheckTextBox check = new CheckTextBox();
+                check.DataContext.IsChecked = point.IsChecked;
+                check.DataContext.Text = point.Text;
+                points.Children.Insert(points.Children.Count - 1, check);
+            }
+        }
     }
 }
