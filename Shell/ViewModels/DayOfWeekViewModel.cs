@@ -3,7 +3,10 @@
     using Catel.Data;
     using Catel.MVVM;
     using Shell.Controls;
+    using ShellModel;
+    using ShellModel.Context;
     using System;
+    using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -77,5 +80,23 @@
         }
 
         #endregion
+        
+        public async void LoadDayFromDB()
+        {
+            List<Note> notes = await DBHelper.GetDayAsync(DBHelper.Login, DBHelper.Password, date.Day, date.Month, date.Year);
+            foreach(Note n in notes)
+                if(n is ParagraphMission)
+                {
+                    ParagraphMissionNote note = new ParagraphMissionNote();
+                    note.DataContext.Context = (ParagraphMission) n;
+                    Notes.Children.Add(note);
+                }
+                else
+                {
+                    SimpleNote note = new SimpleNote();
+                    note.DataContext.Note = n;
+                    Notes.Children.Add(note);
+                }
+        }
     }
 }

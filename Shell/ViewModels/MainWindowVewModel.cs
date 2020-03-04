@@ -21,7 +21,11 @@
             {
                 bool result = dbHelper.SignIn(e, p);
                 if (result)
+                {
+                    DBHelper.Login = e;
+                    DBHelper.Password = p;
                     SelectedTabItemId = 2;
+                }
                 return result;
             };
             RegistrationPageContext.OnSignUp += (e, p, n) => 

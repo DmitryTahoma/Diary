@@ -36,6 +36,7 @@
                     MinHeight = 100 
                 };
                 day.DataContext.Date = date.AddDays(i);
+                day.DataContext.LoadDayFromDB();
                 wrapPanel.Children.Add(day);
             }
         }

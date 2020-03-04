@@ -10,6 +10,7 @@ namespace ShellModel
 {
     public class DBHelper
     {
+        public static string Login = "", Password = "";
         static ISocketSettings lastSettings = null;
 
         static object locker = new object();
