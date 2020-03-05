@@ -113,6 +113,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Month.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\NoteCollection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -167,6 +171,9 @@
     <Compile Include="Controls\DayOfWeek.xaml.cs">
       <DependentUpon>DayOfWeek.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Month.xaml.cs">
+      <DependentUpon>Month.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NoteCollection.xaml.cs">
       <DependentUpon>NoteCollection.xaml</DependentUpon>
     </Compile>
@@ -201,6 +208,7 @@
     <Compile Include="ViewModels\DayOfWeekViewModel.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowVewModel.cs" />
+    <Compile Include="ViewModels\MonthViewModel.cs" />
     <Compile Include="ViewModels\NoteCollectionViewModel.cs" />
     <Compile Include="ViewModels\ParagraphMissionNoteViewModel.cs" />
     <Compile Include="ViewModels\ProgressMissionNoteViewModel.cs" />
