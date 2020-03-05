@@ -19,6 +19,7 @@
             AddWeek = new Command<StackPanel>(OnAddWeekExecute);
             AddYear = new Command<StackPanel>(OnAddYearExecute);
             Generate1000Notes = new Command(OnGenerate1000NotesExecute);
+            AddMonth = new Command<StackPanel>(OnAddMonthExecute);
         }
 
         #region Properties
@@ -81,6 +82,17 @@
                 Client client = new Client(new SocketSettings.SocketSettings(@"D:\Projects\Portfolio\Diary\packages\ss.bin"));
                 client.Send("generate1000notes");
             });
+        }
+
+        int monthIterator = 0;
+        public Command<StackPanel> AddMonth { get; private set; }
+        private void OnAddMonthExecute(StackPanel stackPanel)
+        {
+            Month month = new Month();
+            month.DataContext.Month = (monthIterator % 12) + 1;
+            month.DataContext.Year = DateTime.Now.Year + (int)Math.Floor((double)monthIterator / 12);
+            stackPanel.Children.Add(month);
+            monthIterator++;
         }
 
         #endregion

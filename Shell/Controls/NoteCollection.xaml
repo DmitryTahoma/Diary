@@ -79,6 +79,15 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
+            <Button Padding="10"
+                    Content="Add Month">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <catel:EventToCommand Command="{Binding AddMonth}"
+                                              CommandParameter="{Binding ElementName=Notes}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
         </StackPanel>
         <ScrollViewer Grid.Row="1">
             <StackPanel x:Name="Notes" />
