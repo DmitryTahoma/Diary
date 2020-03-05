@@ -17,7 +17,7 @@
             <pages:RegistrationPage DataContext="{Binding RegistrationPageContext, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </TabItem>
         <TabItem Visibility="Collapsed">
-            <controls:UserContent DataContext="{Binding UserContentContext, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <pages:UserContent DataContext="{Binding UserContentContext, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </TabItem>
         <TabItem Visibility="Visible" 
                  Header="Development mode">

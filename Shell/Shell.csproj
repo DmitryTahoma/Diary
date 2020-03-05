@@ -129,6 +129,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Pages\UserContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ParagraphMissionNote.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -142,10 +146,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SimpleNote.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\UserContent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -183,6 +183,9 @@
     <Compile Include="Controls\Pages\RegistrationPage.xaml.cs">
       <DependentUpon>RegistrationPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Pages\UserContent.xaml.cs">
+      <DependentUpon>UserContent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ParagraphMissionNote.xaml.cs">
       <DependentUpon>ParagraphMissionNote.xaml</DependentUpon>
     </Compile>
@@ -194,9 +197,6 @@
     </Compile>
     <Compile Include="Controls\SimpleNote.xaml.cs">
       <DependentUpon>SimpleNote.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\UserContent.xaml.cs">
-      <DependentUpon>UserContent.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Week.xaml.cs">
       <DependentUpon>Week.xaml</DependentUpon>
