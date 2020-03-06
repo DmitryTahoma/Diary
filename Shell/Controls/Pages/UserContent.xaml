@@ -3,24 +3,167 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:controls="clr-namespace:Shell.Controls"
              xmlns:view="clr-namespace:Shell.ViewModels"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:catel="http://schemas.catelproject.com"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-<UserControl.DataContext>
-    <view:UserContentViewModel x:Name="DataContext"/>
-</UserControl.DataContext>
+    <UserControl.DataContext>
+        <view:UserContentViewModel x:Name="DataContext"/>
+    </UserControl.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid>
-
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                Hello
+            </Button>
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal">
+                <Button x:Name="JanBtn"
+                        Content="January">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
+                                                  CommandParameter="{Binding ElementName=JanBtn, Path=Content}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="FebBtn"
+                        Content="February">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
+                                                  CommandParameter="{Binding ElementName=FebBtn, Path=Content}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="MarBtn"
+                        Content="March">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
+                                                  CommandParameter="{Binding ElementName=MarBtn, Path=Content}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="AprBtn"
+                        Content="April">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
+                                                  CommandParameter="{Binding ElementName=AprBtn, Path=Content}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="MayBtn"
+                        Content="May">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
+                                                  CommandParameter="{Binding ElementName=MayBtn, Path=Content}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="JunBtn"
+                        Content="June">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
+                                                  CommandParameter="{Binding ElementName=JunBtn, Path=Content}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="JulBtn"
+                        Content="July">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
+                                                  CommandParameter="{Binding ElementName=JulBtn, Path=Content}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="AugBtn"
+                        Content="August">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
+                                                  CommandParameter="{Binding ElementName=AugBtn, Path=Content}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="SepBtn"
+                        Content="September">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
+                                                  CommandParameter="{Binding ElementName=SepBtn, Path=Content}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="OctBtn"
+                        Content="October">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
+                                                  CommandParameter="{Binding ElementName=OctBtn, Path=Content}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="NovBtn"
+                        Content="November">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
+                                                  CommandParameter="{Binding ElementName=NovBtn, Path=Content}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="DecBtn"
+                        Content="December">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
+                                                  CommandParameter="{Binding ElementName=DecBtn, Path=Content}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
         </Grid>
 
         <ScrollViewer Grid.Row="1">
-            <controls:Year/>
+            <TabControl x:Name="MonthTabs" SelectedIndex="{Binding ElementName=DataContext, Path=SelectedMonthId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TabItem Visibility="Collapsed"/>
+                <TabItem Visibility="Collapsed"/>
+                <TabItem Visibility="Collapsed"/>
+                <TabItem Visibility="Collapsed"/>
+                <TabItem Visibility="Collapsed"/>
+                <TabItem Visibility="Collapsed"/>
+                <TabItem Visibility="Collapsed"/>
+                <TabItem Visibility="Collapsed"/>
+                <TabItem Visibility="Collapsed"/>
+                <TabItem Visibility="Collapsed"/>
+                <TabItem Visibility="Collapsed"/>
+                <TabItem Visibility="Collapsed"/>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Loaded">
+                        <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=InitializeMonths}"
+                                              CommandParameter="{Binding ElementName=MonthTabs, Path=Items}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TabControl>
         </ScrollViewer>
     </Grid>
 </UserControl>
