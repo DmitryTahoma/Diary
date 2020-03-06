@@ -6,6 +6,8 @@
 
     public class WeekViewModel : ViewModelBase
     {
+        bool isLoaded = false;
+
         public WeekViewModel()
         {
             CreateDays = new Command<WrapPanel>(OnCreateDaysExecute);
@@ -26,18 +28,22 @@
         public Command<WrapPanel> CreateDays { get; private set; }
         private void OnCreateDaysExecute(WrapPanel wrapPanel)
         {
-            DateTime date = Start;
-            for (int i = 0; i < Length; ++i)
+            if (!isLoaded)
             {
-                Controls.DayOfWeek day = new Controls.DayOfWeek() 
+                DateTime date = Start;
+                for (int i = 0; i < Length; ++i)
                 {
-                    Margin = new System.Windows.Thickness(10),
-                    MinWidth = 300,
-                    MinHeight = 100 
-                };
-                day.DataContext.Date = date.AddDays(i);
-                day.DataContext.LoadDayFromDB();
-                wrapPanel.Children.Add(day);
+                    Controls.DayOfWeek day = new Controls.DayOfWeek()
+                    {
+                        Margin = new System.Windows.Thickness(10),
+                        MinWidth = 300,
+                        MinHeight = 100
+                    };
+                    day.DataContext.Date = date.AddDays(i);
+                    day.DataContext.LoadDayFromDB();
+                    wrapPanel.Children.Add(day);
+                }
+                isLoaded = true;
             }
         }
 
