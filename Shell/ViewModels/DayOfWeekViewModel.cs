@@ -62,14 +62,16 @@
         public Command AddNote { get; private set; }
         private void OnAddNoteExecute()
         {
-            Notes.Children.Add(new SimpleNote());
+            SimpleNote note = new SimpleNote();
+            note.DataContext.Note = new Note(0, "", "", DateTime.Now, DateTime.Now);
+            Notes.Children.Add(note);
         }
 
         public Command AddParagraphNote { get; private set; }
         private void OnAddParagraphNoteExecute()
         {
             ParagraphMissionNote note = new ParagraphMissionNote();
-            note.DataContext.Context = new ShellModel.Context.ParagraphMission(0, 0, 0, 0, 0, "Name", "Text", DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now);
+            note.DataContext.Context = new ParagraphMission(-1, new Paragraph(), 0, 0, 0, "", "", DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now);
             Notes.Children.Add(note);
         }
 
