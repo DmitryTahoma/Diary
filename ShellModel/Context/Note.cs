@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace ShellModel.Context
@@ -63,6 +64,35 @@ namespace ShellModel.Context
             get => lastChanged;
         }
         public string StringLastChanged { protected set; get; }
+
+        public static List<KeyValuePair<string, string[]>> GetChanges(Note realNote, Note oldNote)
+        {
+            List<KeyValuePair<string, string[]>> result = new List<KeyValuePair<string, string[]>>();
+            if (realNote.id != oldNote.id)
+                return result;
+            if (realNote.Name != oldNote.Name)
+                result.Add(new KeyValuePair<string, string[]>("chnn", new string[] { realNote.id.ToString(), realNote.Name }));
+            if(realNote.Text != oldNote.Text)
+            {
+                bool ies = true;
+                int iee = 0;
+                for(int i = 0; i < realNote.Text.Length && i < oldNote.Text.Length; ++i)
+                    if(realNote.Text[i] != oldNote.Text[i])
+                    {
+                        ies = false;
+                        iee = i;
+                        break;
+                    }
+                if (ies && realNote.Text.Length > oldNote.Text.Length)
+                    result.Add(new KeyValuePair<string, string[]>("attn", new string[] { realNote.id.ToString(), realNote.Text.Substring(oldNote.Text.Length, realNote.Text.Length - oldNote.Text.Length) }));
+                else if (ies && realNote.Text.Length < oldNote.Text.Length)
+                    result.Add(new KeyValuePair<string, string[]>("rtfn", new string[] { realNote.id.ToString(), (oldNote.Text.Length - realNote.Text.Length).ToString() }));
+                else if (!ies)
+                    result.Add(new KeyValuePair<string, string[]>("ittn", new string[] { realNote.id.ToString(), (oldNote.Text.Length - iee).ToString(), realNote.Text.Substring(iee, realNote.Text.Length - iee) }));
+            }
+
+            return result;
+        }
 
         public override bool Equals(object obj)
         {
