@@ -47,5 +47,18 @@ namespace ShellModel.Context.Test
             else if (note3.LastChanged > lastChanged)
                 Assert.IsTrue((note3.LastChanged - lastChanged).TotalSeconds < 1);
         }
+
+        [DataTestMethod]
+        [DataRow(10, "name", "text", 11)]
+        [DataRow(-28, "qwerty", "asfds", 29)]
+        public void IdSetTest(int id, string name, string text, int newId)
+        {
+            Note note = new Note(id, 0, name, text, DateTime.Now, DateTime.Now);
+            note.Id = newId;
+            if (id > 0)
+                Assert.AreEqual(id, note.Id);
+            else
+                Assert.AreEqual(newId, note.Id);
+        }
     }
 }

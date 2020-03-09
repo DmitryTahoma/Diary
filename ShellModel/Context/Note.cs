@@ -38,7 +38,16 @@ namespace ShellModel.Context
 
         protected Note() { }
 
-        public int Id { protected set; get; }
+        int id = -1;
+        public int Id
+        {
+            set
+            {
+                if (id < 1)
+                    id = value;
+            }
+            get => id;
+        }
         public int StereotypeId { protected set; get; }
         public string Name { set; get; }
         public string Text { set; get; }
