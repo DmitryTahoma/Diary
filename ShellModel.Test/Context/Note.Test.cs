@@ -1,6 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ServerRealization;
+using ServerRealization.Database;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace ShellModel.Context.Test
 {
@@ -106,6 +110,50 @@ namespace ShellModel.Context.Test
                 for (int j = 0; j < expectedResult[i].Value.Length; ++j)
                     Assert.AreEqual(expectedResult[i].Value[j], result[i].Value[j]);
             }
+        }
+
+        [DataTestMethod]
+        [DataRow("name", "text", "name", "texttext")]
+        [DataRow("name", "texttext", "name", "text")]
+        [DataRow("name", "text", "name", "teeext")]
+        [DataRow("name", "text", "new name", "text")]
+        [DataRow("old name", "text is string", "new name", "text is new")]
+        public void AutoTimingTest(string name, string text, string newName, string newText)
+        {
+            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 300);
+            ServerProgram server = new ServerProgram(settings);
+            server.Run();
+            server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });
+            DBHelper helper = new DBHelper(settings);
+            DBHelper.Login = "Login";
+            DBHelper.Password = "Password";
+
+            Note note = new Note(name, text, true);
+            Thread.Sleep(500);
+
+            Assert.AreEqual(name, note.Name);
+            Assert.AreEqual(text, note.Text);
+            Assert.IsTrue(DBContext.Notes.Where(x => x.Id == note.Id).Count() == 1);
+            ServerRealization.Database.Context.Note dbNote = DBContext.Notes.Where(x => x.Id == note.Id).First();
+            Assert.AreEqual(name, dbNote.Name);
+            Assert.AreEqual(text, dbNote.Text);
+            Assert.IsTrue(new TimeSpan(0, 0, 1) > (note.Created > dbNote.Created ? note.Created - dbNote.Created : dbNote.Created - note.Created));
+            Assert.IsTrue(new TimeSpan(0, 0, 1) > (note.LastChanged > dbNote.LastChanged ? note.LastChanged - dbNote.LastChanged : dbNote.LastChanged - note.LastChanged));
+
+            note.Name = newName;
+            note.Text = newText;
+            Thread.Sleep(7000);
+            if(name != newName)
+                Assert.AreNotEqual(newName, dbNote.Name);
+            if(text != newText)
+                Assert.AreNotEqual(newText, dbNote.Text);
+
+            Thread.Sleep(3500);
+            Assert.AreEqual(newName, dbNote.Name);
+            Assert.AreEqual(newText, dbNote.Text);
+
+            server.Stop();
+            Thread.Sleep(1000);
         }
     }
 }

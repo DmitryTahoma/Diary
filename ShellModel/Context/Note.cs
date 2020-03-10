@@ -1,12 +1,21 @@
-﻿using System;
+﻿using ShellModel.Context.Commits;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Timers;
 
 namespace ShellModel.Context
 {
     public class Note
     {
-        public Note(int id, int stereotypeId, string name, string text, DateTime created, DateTime lastChanged)
+        bool isAutoTiming = false;
+        Timer updateTimer;
+        NoteCommit commit;
+
+        public Note(string name, string text, bool autoTiming = false)
+            : this(0, name, text, DateTime.Now, DateTime.Now, autoTiming) { }
+
+        public Note(int id, int stereotypeId, string name, string text, DateTime created, DateTime lastChanged, bool autoTiming = false)
         {
             Id = id;
             StereotypeId = stereotypeId;
@@ -14,10 +23,18 @@ namespace ShellModel.Context
             Text = text;
             Created = created;
             LastChanged = lastChanged;
+            isAutoTiming = autoTiming;
+            if (isAutoTiming)
+            {
+                InitializeTimer();
+                if (id < 1)
+                    Id = DBHelper.CreateNoteAsync(this).Result;
+                commit = new NoteCommit(name, text);
+            }
         }
 
-        public Note(int stereotypeId, string name, string text, DateTime created, DateTime lastChanged)
-            : this(-1, stereotypeId, name, text, created, lastChanged) { }
+        public Note(int stereotypeId, string name, string text, DateTime created, DateTime lastChanged, bool autoTiming = false)
+            : this(-1, stereotypeId, name, text, created, lastChanged, autoTiming) { }
 
         public Note(string dbStr)
         {
@@ -32,6 +49,8 @@ namespace ShellModel.Context
                 Created = DateTime.MinValue.AddDays(double.Parse(values[3]));
                 LastChanged = DateTime.MinValue.AddDays(double.Parse(values[4]));
                 StringLastChanged = LastChanged.ToString("dddd, dd MMMM yyyy HH:mm:ss");
+                isAutoTiming = true;
+                InitializeTimer();
             }
             else
                 throw new ArgumentException();
@@ -50,8 +69,32 @@ namespace ShellModel.Context
             get => id;
         }
         public int StereotypeId { protected set; get; }
-        public string Name { set; get; }
-        public string Text { set; get; }
+        string name = "";
+        public string Name
+        {
+            set
+            {
+                if(isAutoTiming)
+                    if (name != value && updateTimer != null)
+                        if(!updateTimer.Enabled)
+                            updateTimer.Start();
+                name = value;
+            }
+            get => name;
+        }
+        string text = "";
+        public string Text
+        {
+            set
+            {
+                if(isAutoTiming)
+                    if (text != value && updateTimer != null)
+                        if(!updateTimer.Enabled)
+                            updateTimer.Start();
+                text = value;
+            }
+            get => text;
+        }
         public DateTime Created { protected set; get; }
         DateTime lastChanged;
         public DateTime LastChanged 
@@ -68,8 +111,6 @@ namespace ShellModel.Context
         public static List<KeyValuePair<string, string[]>> GetChanges(Note realNote, Note oldNote)
         {
             List<KeyValuePair<string, string[]>> result = new List<KeyValuePair<string, string[]>>();
-            if (realNote.id != oldNote.id)
-                return result;
             if (realNote.Name != oldNote.Name)
                 result.Add(new KeyValuePair<string, string[]>("chnn", new string[] { realNote.id.ToString(), realNote.Name }));
             if(realNote.Text != oldNote.Text)
@@ -92,6 +133,21 @@ namespace ShellModel.Context
             }
 
             return result;
+        }
+
+        private void InitializeTimer()
+        {
+            updateTimer = new Timer();
+            updateTimer.Interval = 10000;
+            updateTimer.Elapsed += (s, e) => 
+            {
+                try
+                {
+                    if (DBHelper.SaveChangesAsync(GetChanges(this, commit)).Result)
+                        updateTimer.Stop();
+                }
+                catch(ArgumentException) { }
+            };
         }
 
         public override bool Equals(object obj)
