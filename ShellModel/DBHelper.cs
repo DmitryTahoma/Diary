@@ -109,6 +109,19 @@ namespace ShellModel
             throw new ArgumentException();
         }
 
+        public int CreateNote(Note note)
+        {
+            object result = DoLockedProcess(() =>
+            {
+                return client.SendCommand("cnn", new string[] { Login, Password, note.Name, note.Text });
+            });
+            if(result != null)
+                if (result is string res)                
+                    if (int.TryParse(res, out int r))
+                            return r;                
+            throw new ArgumentException();
+        }
+
         public static async Task<List<Note>> GetDayAsync(string login, string password, int day, int month, int year)
         {
             return await Task<List<Note>>.Run(() =>
@@ -121,6 +134,22 @@ namespace ShellModel
                 catch
                 {
                     return new List<Note>();
+                }
+            });
+        }
+
+        public static async Task<int> CreateNoteAsync(Note note)
+        {
+            return await Task<int>.Run(() =>
+            {
+                DBHelper dbHelper = new DBHelper(lastSettings);
+                try
+                {
+                    return dbHelper.CreateNote(note);
+                }
+                catch
+                {
+                    return -2;
                 }
             });
         }

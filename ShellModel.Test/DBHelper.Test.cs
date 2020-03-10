@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using ShellModel.Context;
 using System.Threading;
 using System.Threading.Tasks;
+using ServerRealization.Database;
+using System.Linq;
 
 namespace ShellModel.Test
 {
@@ -223,6 +225,28 @@ namespace ShellModel.Test
             
             if(errors.Count != 0)
                 Assert.Fail(errors.Count.ToString() + "errors thrown");
+        }
+
+        [DataTestMethod]
+        [DataRow("name", "text")]
+        [DataRow("create", "notetest")]
+        public void CreateNoteTest(string name, string text)
+        {
+            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 300);
+            ServerProgram server = new ServerProgram(settings);
+            server.Run();
+            server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });
+            DBHelper helper = new DBHelper(settings);
+            DBHelper.Login = "Login";
+            DBHelper.Password = "Password";
+
+            Note note = new Note(-1, name, text, DateTime.Now, DateTime.Now);
+            int id = helper.CreateNote(note);
+            Thread.Sleep(500);
+
+            ServerRealization.Database.Context.Note dbNote = DBContext.Notes.Where(x => x.Id == id).First();
+            Assert.AreEqual(name, dbNote.Name);
+            Assert.AreEqual(text, dbNote.Text);
         }
     }
 }
