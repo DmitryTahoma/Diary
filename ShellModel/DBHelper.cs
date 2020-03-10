@@ -122,6 +122,30 @@ namespace ShellModel
             throw new ArgumentException();
         }
 
+        public bool SaveChanges(List<KeyValuePair<string, string[]>> changes)
+        {
+            foreach(KeyValuePair<string, string[]> change in changes)
+            {
+                List<string> args = new List<string>(new string[] { Login, Password });
+                foreach (string arg in change.Value)
+                    args.Add(arg);
+
+                object result = DoLockedProcess(() => 
+                {
+                    return client.SendCommand(change.Key, args.ToArray());
+                });
+                bool s = false;
+                if (result != null)
+                    if (result is string)
+                        if (bool.TryParse((string)result, out bool res))
+                            if (res)
+                                s = true;
+                if (!s)
+                    throw new ArgumentException();
+            }
+            return true;
+        }
+
         public static async Task<List<Note>> GetDayAsync(string login, string password, int day, int month, int year)
         {
             return await Task<List<Note>>.Run(() =>
@@ -150,6 +174,22 @@ namespace ShellModel
                 catch
                 {
                     return -2;
+                }
+            });
+        }
+
+        public static async Task<bool> SaveChangesAsync(List<KeyValuePair<string, string[]>> changes)
+        {
+            return await Task<bool>.Run(() =>
+            {
+                DBHelper dbHelper = new DBHelper(lastSettings);
+                try
+                {
+                    return dbHelper.SaveChanges(changes);
+                }
+                catch
+                {
+                    return false;
                 }
             });
         }

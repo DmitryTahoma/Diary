@@ -248,5 +248,37 @@ namespace ShellModel.Test
             Assert.AreEqual(name, dbNote.Name);
             Assert.AreEqual(text, dbNote.Text);
         }
+
+        [DataTestMethod]
+        [DataRow("name", "text", "name", "texttext")]
+        [DataRow("name", "texttext", "name", "text")]
+        [DataRow("name", "text", "name", "teeext")]
+        [DataRow("name", "text", "new name", "text")]
+        [DataRow("old name", "text is string", "new name", "text is new")]
+        public void SaveChangesTest(string name, string text, string newName, string newText)
+        {
+            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 300);
+            ServerProgram server = new ServerProgram(settings);
+            server.Run();
+            server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });
+            DBHelper helper = new DBHelper(settings);
+            DBHelper.Login = "Login";
+            DBHelper.Password = "Password";
+
+            Note note = new Note(-1, name, text, DateTime.Now, DateTime.Now);
+            int id = helper.CreateNote(note);
+            Thread.Sleep(500);
+
+            List<KeyValuePair<string, string[]>> changes = Note.GetChanges(new Note(id, -1, newName, newText, DateTime.Now, DateTime.Now), note);
+            Assert.IsTrue(helper.SaveChanges(changes));
+            Thread.Sleep(500);
+
+            ServerRealization.Database.Context.Note dbNote = DBContext.Notes.Where(x => x.Id == id).First();
+            Assert.AreEqual(newName, dbNote.Name);
+            Assert.AreEqual(newText, dbNote.Text);
+
+            server.Stop();
+            Thread.Sleep(1000);
+        }
     }
 }
