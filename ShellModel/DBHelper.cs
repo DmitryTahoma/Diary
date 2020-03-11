@@ -162,20 +162,17 @@ namespace ShellModel
             });
         }
 
-        public static async Task<int> CreateNoteAsync(Note note)
+        public static int CreateNoteStatic(Note note)
         {
-            return await Task<int>.Run(() =>
+            DBHelper dbHelper = new DBHelper(lastSettings);
+            try
             {
-                DBHelper dbHelper = new DBHelper(lastSettings);
-                try
-                {
-                    return dbHelper.CreateNote(note);
-                }
-                catch
-                {
-                    return -2;
-                }
-            });
+                return dbHelper.CreateNote(note);
+            }
+            catch
+            {
+                return -2;
+            }
         }
 
         public static async Task<bool> SaveChangesAsync(List<KeyValuePair<string, string[]>> changes)

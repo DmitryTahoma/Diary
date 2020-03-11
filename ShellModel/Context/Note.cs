@@ -28,7 +28,7 @@ namespace ShellModel.Context
             {
                 InitializeTimer();
                 if (id < 1)
-                    Id = DBHelper.CreateNoteAsync(this).Result;
+                    Id = DBHelper.CreateNoteStatic(this);
                 commit = new NoteCommit(name, text);
             }
         }
@@ -51,6 +51,7 @@ namespace ShellModel.Context
                 StringLastChanged = LastChanged.ToString("dddd, dd MMMM yyyy HH:mm:ss");
                 isAutoTiming = true;
                 InitializeTimer();
+                commit = new NoteCommit(name, text);
             }
             else
                 throw new ArgumentException();
@@ -144,7 +145,10 @@ namespace ShellModel.Context
                 try
                 {
                     if (DBHelper.SaveChangesAsync(GetChanges(this, commit)).Result)
+                    {
                         updateTimer.Stop();
+                        lastChanged = DateTime.Now;
+                    }
                 }
                 catch(ArgumentException) { }
             };

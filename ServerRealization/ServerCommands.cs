@@ -55,11 +55,15 @@ namespace ServerRealization
 
         private string CreateNewNote(string[] args)
         {
-            if (!ArgsHelper.CheckArgs(args, 3))
+            if (!ArgsHelper.CheckArgs(args, 2))
                 return "ae";
             
             if (!ArgsHelper.CheckLoginPassword(args[0], args[1]))
                 return "False";
+
+            string name = "";
+            if (args.Length >= 3)
+                name = args[2];
 
             string text = "";
             if (args.Length >= 4)
@@ -68,7 +72,7 @@ namespace ServerRealization
             DateTime created = DateTime.Now;
             Note note = new Note(DBContext.Users.Where(x => x.Login == args[0]).First(),
                 DBContext.Collections.Where(x => x.Id == 1).First(),
-                args[2], text, created, created);
+                name, text, created, created);
             DBContext.Notes.Add(note);
             return note.Id.ToString();
         }
@@ -88,9 +92,12 @@ namespace ServerRealization
             if (!ArgsHelper.NoteIsExist(id))
                 return "False";
 
-            DBContext.Notes
-                .Where(x => x.Id == id)
-                .First().Text += args[3];
+            Note current = DBContext.Notes
+                                    .Where(x => x.Id == id)
+                                    .First();
+            current.Text += args[3];
+            current.LastChanged = DateTime.Now;
+
             return "True";
         }
 
@@ -115,6 +122,7 @@ namespace ServerRealization
             if (note.Text.Length < count)
                 return "ae";
             note.Text = note.Text.Substring(0, note.Text.Length - count);
+            note.LastChanged = DateTime.Now;
             return "True";
         }
 
@@ -139,6 +147,7 @@ namespace ServerRealization
             if (note.Text.Length < count)
                 return "ae";
             note.Text = note.Text.Substring(0, note.Text.Length - count) + args[4];
+            note.LastChanged = DateTime.Now;
             return "True";
         }
 
@@ -215,7 +224,10 @@ namespace ServerRealization
                 return "ane";
 
 
-            DBContext.Notes.Where(x => x.Id == id).First().Name = args[3];
+            Note current = DBContext.Notes.Where(x => x.Id == id).First();
+            current.Name = args[3];
+            current.LastChanged = DateTime.Now;
+
             return "True";
         }
 
