@@ -69,10 +69,28 @@ namespace ServerRealization
             if (args.Length >= 4)
                 text = args[3];
 
-            DateTime created = DateTime.Now;
+            int day = 0, month = 0, year = 0;
+            bool hasCreated = false;
+            if (args.Length >= 7)
+                if (ArgsHelper.CheckArgs(new string[] { args[4], args[5], args[6] }, 3, 0, 1, 2))
+                {
+                    hasCreated = true;
+                    day = int.Parse(args[4]);
+                    month = int.Parse(args[5]);
+                    year = int.Parse(args[6]);
+                }
+
+            DateTime created = DateTime.Now, lastChanged = created;
+            if (hasCreated)
+                try
+                {
+                    created = new DateTime(year, month, day);
+                }
+                catch(ArgumentOutOfRangeException) { }
+
             Note note = new Note(DBContext.Users.Where(x => x.Login == args[0]).First(),
                 DBContext.Collections.Where(x => x.Id == 1).First(),
-                name, text, created, created);
+                name, text, created, lastChanged);
             DBContext.Notes.Add(note);
             return note.Id.ToString();
         }

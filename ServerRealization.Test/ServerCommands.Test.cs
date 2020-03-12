@@ -85,7 +85,7 @@ namespace ServerRealization.Test
         [DataRow("Alex92", "pass1234", "Name", "Text", "id")]
         [DataRow("", "pass1234", "Name", "Text", "ae")]
         [DataRow("Alex92", "", "Name", "Text", "ae")]
-        [DataRow("Alex92", "pass1234", "", "Text", "ae")]
+        [DataRow("Alex92", "pass1234", "", "Text", "id")]
         [DataRow("Alex92", "pass1234", "Name", "", "id")]
         [DataRow("Alex93", "pass1234", "Name", "Text", "False")]
         [DataRow("Alex92", "pass12345", "Name", "", "False")]
@@ -112,6 +112,59 @@ namespace ServerRealization.Test
                 Assert.IsTrue(createdNote.Created.Equals(createdNote.LastChanged)
                     && createdNote.Created >= before
                     && createdNote.Created <= after);
+                Assert.AreEqual(name, createdNote.Name);
+                Assert.AreEqual(text, createdNote.Text);
+            }
+            else
+                Assert.Fail();
+        }
+
+        [DataTestMethod]
+        [DataRow("Alex92", "pass1234", "Name", "Text", 1, 2, 2020, "id")]
+        [DataRow("", "pass1234", "Name", "Text", 1, 3, 2020, "ae")]
+        [DataRow("Alex92", "", "Name", "Text", 1, 1, 2020, "ae")]
+        [DataRow("Alex92", "pass1234", "", "Text", 2, 1, 2020, "id")]
+        [DataRow("Alex92", "pass1234", "Name", "", 10, 10, 2020, "id")]
+        [DataRow("Alex93", "pass1234", "Name", "Text", 1, 1, 2020, "False")]
+        [DataRow("Alex92", "pass12345", "Name", "", 1, 1, 2020, "False")]
+        [DataRow("Alex934", "pass12345", "Name", "Text", 1, 1, 2020, "False")]
+        [DataRow("Alex92", "pass1234", "", "", 19, 11, 2020, "id")]
+        [DataRow("Alex92", "pass1234", "", "", 68, 10, 2020, "id")]
+        [DataRow("Alex92", "pass1234", "", "", -68, 10, 2020, "id")]
+        [DataRow("Alex92", "pass1234", "", "", 10, 13, 2020, "id")]
+        [DataRow("Alex92", "pass1234", "", "", 10, -13, 2020, "id")]
+        [DataRow("Alex92", "pass1234", "", "", 10, 10, -700, "id")]
+        public void CreateNewNoteTest2(string login, string password, string name, string text, int day, int month, int year, string expectedResult)
+        {
+            ServerProgram server = new ServerProgram("192.168.0.107", 11221, new int[] { 11222 }, 300);
+            DateTime before = DateTime.Now;
+            string result = server.ExecuteCommand("cnn", new string[] { login, password, name, text, day.ToString(), month.ToString(), year.ToString() });
+            DateTime after = DateTime.Now;
+
+            if (expectedResult != "id")
+                Assert.AreEqual(expectedResult, result);
+            else if (int.TryParse(result, out int id))
+            {
+                Assert.IsTrue(id > 0);
+                Note createdNote = DBContext.Notes.Where(x => x.Id == id).First();
+
+                Assert.AreEqual(DBContext.Users
+                    .Where(x => x.Login == login && x.Password == password)
+                    .First().Id, createdNote.UserId);
+                Assert.IsTrue(createdNote.LastChanged >= before
+                    && createdNote.LastChanged <= after);
+
+                bool isCreatableDateTime = false;
+                try
+                {
+                    DateTime _ = new DateTime(year, month, day);
+                    isCreatableDateTime = true;
+                }
+                catch(ArgumentOutOfRangeException) { }
+
+                Assert.IsTrue(isCreatableDateTime ? createdNote.Created == new DateTime(year, month, day)
+                    : createdNote.Created >= before && createdNote.Created <= after);
+
                 Assert.AreEqual(name, createdNote.Name);
                 Assert.AreEqual(text, createdNote.Text);
             }
