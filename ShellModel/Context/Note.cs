@@ -99,15 +99,7 @@ namespace ShellModel.Context
             get => text;
         }
         public DateTime Created { protected set; get; }
-        DateTime lastChanged;
-        public DateTime LastChanged 
-        {
-            protected set 
-            {
-                lastChanged = value;
-            }
-            get => lastChanged;
-        }
+        public DateTime LastChanged { protected set; get; }
         public string StringLastChanged { get => LastChanged.ToString("dddd, dd MMMM yyyy HH:mm:ss"); }
 
         public static List<KeyValuePair<string, string[]>> GetChanges(Note realNote, Note oldNote)
@@ -148,7 +140,7 @@ namespace ShellModel.Context
                     if (DBHelper.SaveChangesAsync(GetChanges(this, commit)).Result)
                     {
                         updateTimer.Stop();
-                        lastChanged = DateTime.Now;
+                        LastChanged = DateTime.Now;
                         Timing?.Invoke();
                     }
                 }
