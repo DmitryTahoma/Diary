@@ -7,9 +7,13 @@
 
     public class SimpleNoteViewModel : ViewModelBase
     {
+        public delegate void DeletingHandler();
+        public event DeletingHandler Deleting;
+
         public SimpleNoteViewModel()
         {
             Note = new Note(-1, "", "", DateTime.MinValue, DateTime.MinValue);
+            Delete = new Command(OnDeleteExecute);
         }
 
         public SimpleNoteViewModel(Note note)
@@ -39,6 +43,16 @@
             set { SetValue(StringLastChangedProperty, value); }
         }
         public static readonly PropertyData StringLastChangedProperty = RegisterProperty(nameof(StringLastChanged), typeof(string), null);
+
+        #endregion
+
+        #region Commands
+
+        public Command Delete { get; private set; }
+        private void OnDeleteExecute()
+        {
+            Deleting?.Invoke();
+        }
 
         #endregion
     }
