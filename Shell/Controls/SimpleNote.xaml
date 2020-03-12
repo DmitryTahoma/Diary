@@ -40,7 +40,7 @@
                 Last changed:
             </TextBlock>
             <TextBlock Margin="5, 0, 0, 0"
-                       Text="{Binding Note.StringLastChanged, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                       Text="{Binding ElementName=DataContext, Path=StringLastChanged, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
     </Grid>
 </UserControl>

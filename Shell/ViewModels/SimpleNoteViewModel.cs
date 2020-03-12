@@ -25,9 +25,20 @@
             set 
             { 
                 SetValue(NoteProperty, value);
+                StringLastChanged = Note.StringLastChanged;
+                if (value != null)
+                    value.Timing += () => {
+                        StringLastChanged = value.StringLastChanged; };
             }
         }
         public static readonly PropertyData NoteProperty = RegisterProperty(nameof(Note), typeof(Note), null);
+
+        public string StringLastChanged
+        {
+            get { return GetValue<string>(StringLastChangedProperty); }
+            set { SetValue(StringLastChangedProperty, value); }
+        }
+        public static readonly PropertyData StringLastChangedProperty = RegisterProperty(nameof(StringLastChanged), typeof(string), null);
 
         #endregion
     }

@@ -113,7 +113,7 @@ namespace ShellModel
         {
             object result = DoLockedProcess(() =>
             {
-                return client.SendCommand("cnn", new string[] { Login, Password, note.Name, note.Text });
+                return client.SendCommand("cnn", new string[] { Login, Password, note.Name, note.Text, note.Created.Day.ToString(), note.Created.Month.ToString(), note.Created.Year.ToString() });
             });
             if(result != null)
                 if (result is string res)                

@@ -8,6 +8,9 @@ namespace ShellModel.Context
 {
     public class Note
     {
+        public delegate void TimingAction();
+        public event TimingAction Timing;
+
         bool isAutoTiming = false;
         Timer updateTimer;
         NoteCommit commit;
@@ -48,7 +51,6 @@ namespace ShellModel.Context
                 Text = values[2];
                 Created = DateTime.MinValue.AddDays(double.Parse(values[3]));
                 LastChanged = DateTime.MinValue.AddDays(double.Parse(values[4]));
-                StringLastChanged = LastChanged.ToString("dddd, dd MMMM yyyy HH:mm:ss");
                 isAutoTiming = true;
                 InitializeTimer();
                 commit = new NoteCommit(name, text);
@@ -103,11 +105,10 @@ namespace ShellModel.Context
             protected set 
             {
                 lastChanged = value;
-                StringLastChanged = LastChanged.ToString("dddd, dd MMMM yyyy HH:mm:ss");
             }
             get => lastChanged;
         }
-        public string StringLastChanged { protected set; get; }
+        public string StringLastChanged { get => LastChanged.ToString("dddd, dd MMMM yyyy HH:mm:ss"); }
 
         public static List<KeyValuePair<string, string[]>> GetChanges(Note realNote, Note oldNote)
         {
@@ -148,6 +149,7 @@ namespace ShellModel.Context
                     {
                         updateTimer.Stop();
                         lastChanged = DateTime.Now;
+                        Timing?.Invoke();
                     }
                 }
                 catch(ArgumentException) { }

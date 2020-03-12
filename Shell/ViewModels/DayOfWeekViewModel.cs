@@ -63,7 +63,7 @@
         private void OnAddNoteExecute()
         {
             SimpleNote note = new SimpleNote();
-            note.DataContext.Note = new Note(0, "", "", DateTime.Now, DateTime.Now, true);
+            note.DataContext.Note = new Note(0, "", "", Date, DateTime.Now, true);
             Notes.Children.Add(note);
         }
 
