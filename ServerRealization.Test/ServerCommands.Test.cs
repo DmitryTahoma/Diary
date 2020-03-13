@@ -451,5 +451,51 @@ namespace ServerRealization.Test
             }
             Assert.AreEqual(expectedResult, server.ExecuteCommand("gd", new string[] { login, password, day.ToString(), month.ToString(), year.ToString() }));
         }
+
+        [DataTestMethod]
+        [DataRow("Alex92", "pass1234", "Name", "Text", 10, 10, 2020, new string[] { "hello", ",!", "world" }, "True")]
+        [DataRow("Alex92", "pass1234", "Temp name of note or paragraph note", "Some text in temp note", 1, 10, 2007, new string[] { "hello", ",!", "my", "2007" }, "True")]
+        [DataRow("Alex92", "pass1234", "Name", "", 10, 10, 2020, new string[] { "hello", ",!", "world" }, "True")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", 10, 10, 2020, new string[] { "hello", ",!", "world" }, "True")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", 10, 10, 2020, new string[] { }, "True")]
+        [DataRow("", "pass1234", "Name", "Text", 10, 10, 2020, new string[] { "hello", ",!", "world" }, "ae")]
+        [DataRow("Alex92", "", "Name", "Text", 10, 10, 2020, new string[] { "hello", ",!", "world" }, "ae")]
+        [DataRow("Alex952", "pass1234", "Name", "Text", 10, 10, 2020, new string[] { "hello", ",!", "world" }, "False")]
+        [DataRow("Alex92", "pass41234", "Name", "Text", 10, 10, 2020, new string[] { "hello", ",!", "world" }, "False")]
+        [DataRow("Tahoma", "password", "Name", "Text", 10, 10, 2020, new string[] { "hello", ",!", "world" }, "ane")]
+        public void RemoveNoteCascadeTest(string login, string password, string name, string text, int day, int month, int year, string[] points, string expectedResult)
+        {
+            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 300);
+            int id = int.Parse(server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, name, text, day.ToString(), month.ToString(), year.ToString() }));
+
+            string result = server.ExecuteCommand("rnc", new string[] { login, password, id.ToString() });
+            if (expectedResult == "True")
+                Assert.IsTrue(DBContext.Notes.Where(x => x.Id == id).Count() == 0);
+            else
+                Assert.AreEqual(expectedResult, result);
+
+            id = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, name, text, day.ToString(), month.ToString(), year.ToString() }));
+            int[] pointsid = new int[points.Length];
+            for(int i = 0; i < points.Length; ++i)            
+                pointsid[i] = int.Parse(server.ExecuteCommand("aptpm", new string[] { correctLogin, correctPassword, id.ToString(), points[i] }));
+
+            Mission mission = DBContext.Missions.Where(x => x.Id == id).First();
+            int actionId = mission.ActionId;
+            int noteId = mission.Action.NoteId;
+            int collectionId = mission.ContextId;
+
+            result = server.ExecuteCommand("rnc", new string[] { login, password, noteId.ToString() });
+            if(expectedResult == "True")
+            {
+                Assert.IsTrue(DBContext.Notes.Where(x => x.Id == noteId).Count() == 0);
+                Assert.IsTrue(DBContext.Actions.Where(x => x.Id == actionId).Count() == 0);
+                Assert.IsTrue(DBContext.Missions.Where(x => x.Id == id).Count() == 0);
+                Assert.IsTrue(DBContext.Collections.Where(x => x.Id == collectionId).Count() == 0);
+                foreach (int pointid in pointsid)
+                    Assert.IsTrue(DBContext.Points.Where(x => x.Id == pointid).Count() == 0);
+            }
+            else
+                Assert.AreEqual(expectedResult, result);
+        }
     }
 }

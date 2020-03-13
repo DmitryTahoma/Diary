@@ -31,12 +31,13 @@ namespace ServerRealization.Database.Context
             {
                 List<Point> thisPoints = DBContext.Points.Where(x => x.ParagraphId == this.Id).ToList();
                 List<Point> otherPoints = DBContext.Points.Where(x => x.ParagraphId == other.Id).ToList();
-                for(int i = 0; i < Count; ++i)
+                if (thisPoints.Count == otherPoints.Count)
                 {
-                    if (thisPoints[i].Name != otherPoints[i].Name || thisPoints[i].IsChecked != otherPoints[i].IsChecked)
-                        return false;
+                    for (int i = 0; i < thisPoints.Count; ++i)                    
+                        if (thisPoints[i].Name != otherPoints[i].Name || thisPoints[i].IsChecked != otherPoints[i].IsChecked)
+                            return false;                    
+                    return true;
                 }
-                return true;
             }
             return false;
         }

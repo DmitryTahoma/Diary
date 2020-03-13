@@ -27,6 +27,7 @@ namespace ServerRealization
                 case "chnn": return ChangeNoteName(args);
                 case "scp": return SetCheckedPoint(args);
                 case "gd": return GetDay(args);
+                case "rnc": return RemoveNoteCascade(args);
                 case "generate1000notes": return Generate1000Notes();
             }
         }
@@ -186,7 +187,7 @@ namespace ServerRealization
             Note note = new Note(DBContext.Users.Where(x => x.Login == args[0] && x.Password == args[1]).First(),
                 DBContext.Collections.Where(x => x.Id == 1).First(), args[2], args[3], created, created);
             DBContext.Notes.Add(note);
-            Database.Context.Action action = new Database.Context.Action(note, created, end);
+            Database.Context.Action action = new Database.Context.Action(note, DateTime.MinValue, DateTime.MaxValue);
             DBContext.Actions.Add(action);
             Collection collection = new Collection();
             DBContext.Collections.Add(collection);
@@ -296,6 +297,38 @@ namespace ServerRealization
                     result += note.ToString() + splitter;
 
             return result;
+        }
+
+        public string RemoveNoteCascade(string[] args)
+        {
+            if (!ArgsHelper.CheckArgs(args, 3, 2))
+                return "ae";
+
+            if (!ArgsHelper.CheckLoginPassword(args[0], args[1]))
+                return "False";
+
+            int id = int.Parse(args[2]);
+            if (ArgsHelper.IsAne(args[0], args[1], id))
+                return "ane";
+
+            if(DBContext.Actions.Where(x => x.NoteId == id).Count() != 0)
+            {
+                Mission mission = DBContext.Missions
+                    .Where(x => x.Id == 
+                        DBContext.Actions
+                        .Where(y => y.NoteId == id)
+                        .First().Id)
+                    .First();
+                DBContext.Actions.Remove(mission.Action);
+                List<Point> points = DBContext.Points.Where(x => x.Paragraph.Id == mission.ContextId).ToList();
+                foreach (Point point in points)
+                    DBContext.Points.Remove(point);
+                DBContext.Collections.Remove((Collection)mission.Context);
+                DBContext.Missions.Remove(mission);
+            }
+            DBContext.Notes.Remove(DBContext.Notes.Where(x => x.Id == id).First());
+
+            return "True";
         }
 
         public string Generate1000Notes()
