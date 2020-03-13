@@ -65,7 +65,11 @@
             SimpleNote note = new SimpleNote();
             note.DataContext.Note = new Note(0, "", "", Date, DateTime.Now, true);
             Notes.Children.Add(note);
-            note.DataContext.Deleting += () => { Notes.Children.Remove(note); };
+            note.DataContext.Deleting += () => 
+            {
+                Notes.Children.Remove(note);
+                DBHelper.RemoveNoteCascadeStatic(note.DataContext.Note);
+            };
         }
 
         public Command AddParagraphNote { get; private set; }
@@ -99,7 +103,11 @@
                     SimpleNote note = new SimpleNote();
                     note.DataContext.Note = n;
                     Notes.Children.Add(note);
-                    note.DataContext.Deleting += () => { Notes.Children.Remove(note); };
+                    note.DataContext.Deleting += () =>
+                    {
+                        Notes.Children.Remove(note);
+                        DBHelper.RemoveNoteCascadeStatic(note.DataContext.Note);
+                    };
                 }
         }
     }
