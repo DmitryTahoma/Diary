@@ -280,5 +280,24 @@ namespace ShellModel.Test
             server.Stop();
             Thread.Sleep(1000);
         }
+
+        [DataTestMethod]
+        [DataRow("Name", "Text")]
+        [DataRow("old name", "text is string")]
+        public void RemoveNoteCascadeTest(string name, string text)
+        {
+            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 300);
+            ServerProgram server = new ServerProgram(settings);
+            server.Run();
+            server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });
+            DBHelper helper = new DBHelper(settings);
+            DBHelper.Login = "Login";
+            DBHelper.Password = "Password";
+
+            Note note = new Note(name, text, true);
+            int id = note.Id;
+            Assert.IsTrue(helper.RemoveNoteCascade(note));
+            Assert.IsTrue(DBContext.Notes.Where(x => x.Id == id).Count() == 0);
+        }
     }
 }

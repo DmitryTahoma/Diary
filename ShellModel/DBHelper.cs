@@ -146,6 +146,17 @@ namespace ShellModel
             return true;
         }
 
+        public bool RemoveNoteCascade(Note note)
+        {
+            object result = DoLockedProcess(() => { return client.SendCommand("rnc", new string[] { Login, Password, note.Id.ToString() }); });
+            if (result != null)
+                if (result is string res)
+                    if (bool.TryParse(res, out bool r))
+                        if (r)
+                            return true;
+            return false;
+        }
+
         public static async Task<List<Note>> GetDayAsync(string login, string password, int day, int month, int year)
         {
             return await Task<List<Note>>.Run(() =>
@@ -189,6 +200,12 @@ namespace ShellModel
                     return false;
                 }
             });
+        }
+
+        public static bool RemoveNoteCascadeStatic(Note note)
+        {
+            DBHelper helper = new DBHelper(lastSettings);
+            return helper.RemoveNoteCascade(note);
         }
     }
 }
