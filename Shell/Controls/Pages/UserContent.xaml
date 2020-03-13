@@ -22,14 +22,6 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button>
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                Hello
-            </Button>
             <StackPanel Grid.Column="1"
                         Orientation="Horizontal">
                 <Button x:Name="JanBtn"
