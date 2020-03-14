@@ -178,14 +178,14 @@ namespace ServerRealization
             if(!ArgsHelper.CheckLoginPassword(args[0], args[1]))
                 return "False";
 
-            DateTime end = DateTime.MinValue;
-            if (ArgsHelper.CheckArgs(args.Skip(4).ToArray(), 6, 0, 1, 2, 3, 4, 5))
-                try { end = new DateTime(int.Parse(args[4]), int.Parse(args[5]), int.Parse(args[6]), int.Parse(args[7]), int.Parse(args[8]), int.Parse(args[9])); }
-                catch(ArgumentOutOfRangeException) { }
-
+            DateTime end = DateTime.MaxValue;
             DateTime created = DateTime.Now;
+            if (ArgsHelper.CheckArgs(args.Skip(4).ToArray(), 3, 0, 1, 2))
+                try { created = new DateTime(int.Parse(args[4]), int.Parse(args[5]), int.Parse(args[6])); }
+                catch (ArgumentOutOfRangeException) { }
+
             Note note = new Note(DBContext.Users.Where(x => x.Login == args[0] && x.Password == args[1]).First(),
-                DBContext.Collections.Where(x => x.Id == 1).First(), args[2], args[3], created, created);
+                DBContext.Collections.Where(x => x.Id == 1).First(), args[2], args[3], created, DateTime.Now);
             DBContext.Notes.Add(note);
             Database.Context.Action action = new Database.Context.Action(note, DateTime.MinValue, DateTime.MaxValue);
             DBContext.Actions.Add(action);
