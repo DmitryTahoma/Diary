@@ -173,11 +173,18 @@ namespace ServerRealization
 
         private string CreateNewParagraphMission(string[] args)
         {
-            if (!ArgsHelper.CheckArgs(args, 3))
+            if (!ArgsHelper.CheckArgs(args, 2))
                 return "ae";
-
             if(!ArgsHelper.CheckLoginPassword(args[0], args[1]))
                 return "False";
+
+            string name = "";
+            if (args.Length >= 3)
+                name = args[2];
+
+            string text = "";
+            if (args.Length >= 4)
+                text = args[3];
 
             DateTime end = DateTime.MaxValue;
             DateTime created = DateTime.Now;
@@ -186,7 +193,7 @@ namespace ServerRealization
                 catch (ArgumentOutOfRangeException) { }
 
             Note note = new Note(DBContext.Users.Where(x => x.Login == args[0] && x.Password == args[1]).First(),
-                DBContext.Collections.Where(x => x.Id == 1).First(), args[2], args[3], created, DateTime.Now);
+                DBContext.Collections.Where(x => x.Id == 1).First(), name, text, created, DateTime.Now);
             DBContext.Notes.Add(note);
             Database.Context.Action action = new Database.Context.Action(note, DateTime.MinValue, DateTime.MaxValue);
             DBContext.Actions.Add(action);
