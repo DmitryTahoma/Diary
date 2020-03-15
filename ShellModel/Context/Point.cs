@@ -7,7 +7,7 @@ namespace ShellModel.Context
     {
         public Point(int id, string text, bool isChecked)
         {
-            Id = id;
+            this.id = id;
             Text = text;
             IsChecked = isChecked;
         }
@@ -20,7 +20,7 @@ namespace ShellModel.Context
             {
                 string[] values = StringsHelper.Split("\b<sp>\b", dbStr);
 
-                Id = int.Parse(values[0]);
+                id = int.Parse(values[0]);
                 Text = values[1];
                 if (regex1.IsMatch(dbStr))
                     IsChecked = true;
@@ -29,7 +29,16 @@ namespace ShellModel.Context
                 throw new ArgumentException();
         }
 
-        public int Id { private set; get; }
+        int id = -1;
+        public int Id
+        {
+            set
+            {
+                if (id < 1)
+                    id = value;
+            }
+            get => id;
+        }
         public string Text { set; get; }
         public bool IsChecked { set; get; }
     }

@@ -23,5 +23,20 @@ namespace ShellModel.Context.Test
             Assert.AreEqual(isChecked, point1.IsChecked);
             Assert.AreEqual(isChecked, point2.IsChecked);
         }
+
+        [DataTestMethod]
+        [DataRow(-1, "point", true, 15)]
+        [DataRow(0, "paragraph", false, 19)]
+        [DataRow(1, "mission", true, 60)]
+        [DataRow(2, "helhehehe", false, 109)]
+        public void IdSetTest(int id, string text, bool isChecked, int newId)
+        {
+            Point point = new Point(id, text, isChecked);
+            point.Id = newId;
+            if (id > 0)
+                Assert.AreEqual(id, point.Id);
+            else
+                Assert.AreEqual(newId, point.Id);
+        }
     }
 }
