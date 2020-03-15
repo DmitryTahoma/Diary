@@ -28,6 +28,7 @@ namespace ServerRealization
                 case "scp": return SetCheckedPoint(args);
                 case "gd": return GetDay(args);
                 case "rnc": return RemoveNoteCascade(args);
+                case "rp": return RemovePoint(args);
                 case "generate1000notes": return Generate1000Notes();
             }
         }
@@ -328,6 +329,32 @@ namespace ServerRealization
             }
             DBContext.Notes.Remove(DBContext.Notes.Where(x => x.Id == id).First());
 
+            return "True";
+        }
+
+        public string RemovePoint(string[] args)
+        {
+            if (!ArgsHelper.CheckArgs(args, 3, 2))
+                return "ae";
+            if (!ArgsHelper.CheckLoginPassword(args[0], args[1]))
+                return "False";
+
+            int pointId = int.Parse(args[2]);
+            int noteId = DBContext.Missions
+                .Where(x => x.ContextId == 
+                    DBContext.Points
+                    .Where(y => y.Id == pointId)
+                    .First()
+                    .ParagraphId)
+                .First()
+                .Action
+                .NoteId;
+
+            if (ArgsHelper.IsAne(args[0], args[1], noteId))
+                return "ane";
+
+            DBContext.Points.Where(x => x.Id == pointId).First().Paragraph.Count--;
+            DBContext.Points.Remove(DBContext.Points.Where(x => x.Id == pointId).First());
             return "True";
         }
 

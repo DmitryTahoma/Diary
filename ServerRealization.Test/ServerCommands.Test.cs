@@ -506,5 +506,25 @@ namespace ServerRealization.Test
             else
                 Assert.AreEqual(expectedResult, result);
         }
+
+        [DataTestMethod]
+        [DataRow("Alex92", "pass1234", "TempText", "True")]
+        [DataRow("Alex92", "pass1234", "TextTeNamehehe", "True")]
+        [DataRow("", "pass1234", "TextTeNamehehe", "ae")]
+        [DataRow("Alex92", "", "TextTeNamehehe", "ae")]
+        [DataRow("Alex923", "pass1234", "TextTeNamehehe", "False")]
+        [DataRow("Alex92", "passd1234", "TextTeNamehehe", "False")]
+        [DataRow("Tahoma", "password", "TextTeNamehehe", "ane")]
+        public void RemovePointTest(string login, string password, string name, string expectedResult)
+        {
+            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
+            int missionId = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, "Name", "Text" }));
+            int pointId = int.Parse(server.ExecuteCommand("aptpm", new string[] { correctLogin, correctPassword, missionId.ToString(), name }));
+
+            string result = server.ExecuteCommand("rp", new string[] { login, password, pointId.ToString() });
+            if(expectedResult == "True")
+                Assert.IsTrue(DBContext.Points.Where(x => x.Id == pointId).Count() == 0);
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 }
