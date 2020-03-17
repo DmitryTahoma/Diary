@@ -14,6 +14,9 @@ namespace ShellModel.Context
             Context = paragraph;
         }
 
+        public ParagraphMission(string name, string text, DateTime created)
+            : this(-1, new Paragraph(), -1, -1, 0, name, text, created, DateTime.Now, DateTime.MinValue, DateTime.MinValue) { }
+
         public Paragraph Paragraph { get => (Paragraph)Context; }
     }
 }

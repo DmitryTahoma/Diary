@@ -299,5 +299,30 @@ namespace ShellModel.Test
             Assert.IsTrue(helper.RemoveNoteCascade(note));
             Assert.IsTrue(DBContext.Notes.Where(x => x.Id == id).Count() == 0);
         }
+
+        [DataTestMethod]
+        [DataRow("", "", 1, 1, 2020)]
+        [DataRow("Name", "", 2, 1, 2020)]
+        [DataRow("", "Text", 1, 3, 2020)]
+        [DataRow("Name", "Text", 5, 1, 2020)]
+        public void CreateNewParagraphMissionTest(string name, string text, int day, int month, int year)
+        {
+            SocketSettings.ISocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 300);
+            ServerProgram server = new ServerProgram(settings);
+            server.Run();
+            server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });
+            DBHelper helper = new DBHelper(settings);
+            DBHelper.Login = "Login";
+            DBHelper.Password = "Password";
+
+            ParagraphMission paragraphMission = new ParagraphMission(name, text, new DateTime(year, month, day));
+            int id = helper.CreateParagraphMission(paragraphMission);
+            Thread.Sleep(500);
+
+            ServerRealization.Database.Context.Mission mission = DBContext.Missions.Where(x => x.Id == id).First();
+            Assert.AreEqual(name, mission.Action.Note.Name);
+            Assert.AreEqual(text, mission.Action.Note.Text);
+            Assert.AreEqual(new DateTime(year, month, day), mission.Action.Note.Created);
+        }
     }
 }

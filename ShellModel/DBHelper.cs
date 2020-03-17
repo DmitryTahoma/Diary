@@ -157,6 +157,17 @@ namespace ShellModel
             return false;
         }
 
+        public int CreateParagraphMission(ParagraphMission paragraphMission)
+        {
+            object result = DoLockedProcess(() => { return client.SendCommand("cnpm", new string[] { Login, Password, paragraphMission.Name, paragraphMission.Text, paragraphMission.Created.Year.ToString(), paragraphMission.Created.Month.ToString(), paragraphMission.Created.Day.ToString() }); });
+            if (result != null)
+                if (result is string res)
+                    if (int.TryParse(res, out int r))
+                        if (r > 0)
+                            return r;
+            throw new ArgumentException();
+        }
+
         public static async Task<List<Note>> GetDayAsync(string login, string password, int day, int month, int year)
         {
             return await Task<List<Note>>.Run(() =>
