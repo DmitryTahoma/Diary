@@ -45,5 +45,17 @@ namespace ShellModel.Context.Test
                 Assert.AreEqual(isCheckeds[i], paragraph4.Items[i].IsChecked);
             }
         }
+
+        [DataTestMethod]
+        [DataRow("text")]
+        [DataRow("asdfghjklkjh")]
+        public void AddPointTest(string text)
+        {
+            Paragraph paragraph = new Paragraph();
+            paragraph.AddPoint(new Point(text, false));
+
+            Assert.AreEqual(text, paragraph.Items[0].Text);
+            Assert.AreEqual(paragraph.Count, paragraph.Items.Count);
+        }
     }
 }

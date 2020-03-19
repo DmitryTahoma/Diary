@@ -47,6 +47,11 @@ namespace ShellModel.Context
 
         public List<Point> Items { private set; get; }
 
+        public void AddPoint(Point point)
+        {
+            Items.Add(point);
+        }
+
         public override bool Equals(object obj)
         {
             if (!(obj is Paragraph))

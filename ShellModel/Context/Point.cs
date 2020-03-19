@@ -29,6 +29,11 @@ namespace ShellModel.Context
                 throw new ArgumentException();
         }
 
+        public Point(string text, bool isAutoTiming)
+        {
+            Text = text;
+        }
+
         int id = -1;
         public int Id
         {
