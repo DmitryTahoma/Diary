@@ -41,7 +41,16 @@ namespace ShellModel.Context
                 throw new ArgumentException();
         }
 
-        public int Id { private set; get; }
+        int id = -1;
+        public int Id
+        {
+            set
+            {
+                if (id < 1)
+                    id = value;
+            }
+            get => id;
+        }
 
         public int Count => Items.Count;
 

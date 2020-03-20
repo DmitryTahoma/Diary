@@ -57,5 +57,17 @@ namespace ShellModel.Context.Test
             Assert.AreEqual(text, paragraph.Items[0].Text);
             Assert.AreEqual(paragraph.Count, paragraph.Items.Count);
         }
+
+        [DataTestMethod]
+        [DataRow(-1, 1)]
+        [DataRow(0, 2)]
+        [DataRow(1, 3)]
+        [DataRow(4, 5)]
+        public void IdSetTest(int id, int newId)
+        {
+            Paragraph paragraph = new Paragraph(id);
+            paragraph.Id = newId;
+            Assert.AreEqual(id > 0 ? id : newId, paragraph.Id);
+        }
     }
 }
