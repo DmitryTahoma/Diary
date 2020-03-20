@@ -201,7 +201,7 @@ namespace ServerRealization
             DBContext.Collections.Add(collection);
             Mission mission = new Mission(action, false, collection);
             DBContext.Missions.Add(mission);
-            return mission.Id.ToString();
+            return mission.Id.ToString() + "|" + collection.Id.ToString();
         }
 
         private string AddPointToParagraphMission(string[] args)

@@ -300,10 +300,14 @@ namespace ServerRealization.Test
                 Assert.AreEqual(expectedResult, result);
             else
             {
-                Assert.IsTrue(int.TryParse(result, out int id));
+                string[] ids = result.Split('|');
+                Assert.IsTrue(int.TryParse(ids[0], out int id));
+                Assert.IsTrue(int.TryParse(ids[1], out int paragraphId));
                 Mission mission = DBContext.Missions.Where(x => x.Id == id).First();
                 Assert.IsFalse(mission.IsProgressType);
                 Assert.IsTrue(mission.Context is Collection);
+                Assert.IsTrue(DBContext.Collections.Where(x => x.Id == paragraphId).Count() == 1);
+                Assert.AreEqual(paragraphId, mission.Context.Id);
                 Assert.AreEqual(0, ((Collection)mission.Context).Count);
 
                 Database.Context.Action action = mission.Action;
