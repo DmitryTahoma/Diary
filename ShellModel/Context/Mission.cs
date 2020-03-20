@@ -46,7 +46,16 @@ namespace ShellModel.Context
             return regexProgress.IsMatch(dbStr) || regexParagraph.IsMatch(dbStr) || regexParagraph2.IsMatch(dbStr);
         }
 
-        public new int Id { protected set; get; }
+        protected int id = -1;
+        public new int Id
+        {
+            set
+            {
+                if (id < 1)
+                    id = value;
+            }
+            get => id;
+        }
         public int ActionId { protected set { base.Id = value; } get => base.Id; }
         public int ContextId { protected set; get; }
         public MissionType Type { protected set; get; }

@@ -42,5 +42,17 @@ namespace ShellModel.Context.Test
                 Assert.AreEqual(isCheckeds[i], ((Paragraph)mission2.Context).Items[i].IsChecked);
             }
         }
+
+        [DataTestMethod]
+        [DataRow(-1, 1)]
+        [DataRow(0, 2)]
+        [DataRow(1, 3)]
+        [DataRow(4, 5)]
+        public void IdSetTest(int id, int newId)
+        {
+            ParagraphMission mission = new ParagraphMission(id, new Paragraph(), 0, 0, 0, "", "", DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now);
+            mission.Id = newId;
+            Assert.AreEqual(id > 0 ? id : newId, mission.Id);
+        }
     }
 }
