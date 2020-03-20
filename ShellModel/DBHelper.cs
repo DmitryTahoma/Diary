@@ -157,14 +157,15 @@ namespace ShellModel
             return false;
         }
 
-        public int CreateParagraphMission(ParagraphMission paragraphMission)
+        public int[] CreateParagraphMission(ParagraphMission paragraphMission)
         {
             object result = DoLockedProcess(() => { return client.SendCommand("cnpm", new string[] { Login, Password, paragraphMission.Name, paragraphMission.Text, paragraphMission.Created.Year.ToString(), paragraphMission.Created.Month.ToString(), paragraphMission.Created.Day.ToString() }); });
             if (result != null)
                 if (result is string res)
-                    if (int.TryParse(res, out int r))
-                        if (r > 0)
-                            return r;
+                    if(res.Split('|').Length == 2)
+                        if (int.TryParse(res.Split('|')[0], out int r1))
+                            if (int.TryParse(res.Split('|')[1], out int r2))
+                                return new int[] { r1, r2 };
             throw new ArgumentException();
         }
 

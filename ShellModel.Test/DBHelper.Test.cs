@@ -316,10 +316,10 @@ namespace ShellModel.Test
             DBHelper.Password = "Password";
 
             ParagraphMission paragraphMission = new ParagraphMission(name, text, new DateTime(year, month, day));
-            int id = helper.CreateParagraphMission(paragraphMission);
+            int[] ids = helper.CreateParagraphMission(paragraphMission);
             Thread.Sleep(500);
 
-            ServerRealization.Database.Context.Mission mission = DBContext.Missions.Where(x => x.Id == id).First();
+            ServerRealization.Database.Context.Mission mission = DBContext.Missions.Where(x => x.Id == ids[0]).First();
             Assert.AreEqual(name, mission.Action.Note.Name);
             Assert.AreEqual(text, mission.Action.Note.Text);
             Assert.AreEqual(new DateTime(year, month, day), mission.Action.Note.Created);
