@@ -319,7 +319,17 @@ namespace ShellModel.Test
             int[] ids = helper.CreateParagraphMission(paragraphMission);
             Thread.Sleep(500);
 
-            ServerRealization.Database.Context.Mission mission = DBContext.Missions.Where(x => x.Id == ids[0]).First();
+            Assert.IsTrue(ids.Length == 4);
+            Assert.IsTrue(DBContext.Notes.Where(x => x.Id == ids[0]).Count() == 1);
+            Assert.IsTrue(DBContext.Actions.Where(x => x.Id == ids[1]).Count() == 1);
+            Assert.IsTrue(DBContext.Missions.Where(x => x.Id == ids[2]).Count() == 1);
+            Assert.IsTrue(DBContext.Collections.Where(x => x.Id == ids[3]).Count() == 1);
+
+            ServerRealization.Database.Context.Mission mission = DBContext.Missions.Where(x => x.Id == ids[2]).First();
+            Assert.AreEqual(mission.Action.NoteId, ids[0]);
+            Assert.AreEqual(mission.Action.Id, ids[1]);
+            Assert.AreEqual(mission.ContextId, ids[3]);
+            
             Assert.AreEqual(name, mission.Action.Note.Name);
             Assert.AreEqual(text, mission.Action.Note.Text);
             Assert.AreEqual(new DateTime(year, month, day), mission.Action.Note.Created);

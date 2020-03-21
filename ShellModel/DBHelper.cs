@@ -162,10 +162,13 @@ namespace ShellModel
             object result = DoLockedProcess(() => { return client.SendCommand("cnpm", new string[] { Login, Password, paragraphMission.Name, paragraphMission.Text, paragraphMission.Created.Year.ToString(), paragraphMission.Created.Month.ToString(), paragraphMission.Created.Day.ToString() }); });
             if (result != null)
                 if (result is string res)
-                    if(res.Split('|').Length == 2)
+                    if(res.Split('|').Length == 4)
                         if (int.TryParse(res.Split('|')[0], out int r1))
                             if (int.TryParse(res.Split('|')[1], out int r2))
-                                return new int[] { r1, r2 };
+                                if (int.TryParse(res.Split('|')[2], out int r3))
+                                    if (int.TryParse(res.Split('|')[3], out int r4))
+                                        if(r1 > 0 && r2 > 0 && r3 > 0 && r4 > 0)
+                                            return new int[] { r1, r2, r3, r4 };
             throw new ArgumentException();
         }
 

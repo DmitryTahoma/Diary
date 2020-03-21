@@ -301,13 +301,22 @@ namespace ServerRealization.Test
             else
             {
                 string[] ids = result.Split('|');
-                Assert.IsTrue(int.TryParse(ids[0], out int id));
-                Assert.IsTrue(int.TryParse(ids[1], out int paragraphId));
-                Mission mission = DBContext.Missions.Where(x => x.Id == id).First();
-                Assert.IsFalse(mission.IsProgressType);
-                Assert.IsTrue(mission.Context is Collection);
+                Assert.IsTrue(ids.Length == 4);
+                Assert.IsTrue(int.TryParse(ids[0], out int noteId));
+                Assert.IsTrue(int.TryParse(ids[1], out int actionId));
+                Assert.IsTrue(int.TryParse(ids[2], out int missionId));
+                Assert.IsTrue(int.TryParse(ids[3], out int paragraphId));
+                Assert.IsTrue(DBContext.Notes.Where(x => x.Id == noteId).Count() == 1);
+                Assert.IsTrue(DBContext.Actions.Where(x => x.Id == actionId).Count() == 1);
+                Assert.IsTrue(DBContext.Missions.Where(x => x.Id == missionId).Count() == 1);
                 Assert.IsTrue(DBContext.Collections.Where(x => x.Id == paragraphId).Count() == 1);
-                Assert.AreEqual(paragraphId, mission.Context.Id);
+
+                Mission mission = DBContext.Missions.Where(x => x.Id == missionId).First();
+                Assert.AreEqual(mission.Action.NoteId, noteId);
+                Assert.AreEqual(mission.Action.Id, actionId);
+                Assert.AreEqual(mission.ContextId, paragraphId);
+
+                Assert.IsFalse(mission.IsProgressType);
                 Assert.AreEqual(0, ((Collection)mission.Context).Count);
 
                 Database.Context.Action action = mission.Action;
