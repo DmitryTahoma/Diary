@@ -223,7 +223,7 @@ namespace ShellModel
             return helper.RemoveNoteCascade(note);
         }
 
-        public int[] CreateParagraphMissionStatic(ParagraphMission paragraphMission)
+        public static int[] CreateParagraphMissionStatic(ParagraphMission paragraphMission)
         {
             DBHelper helper = new DBHelper(lastSettings);
             try
