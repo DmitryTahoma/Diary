@@ -222,5 +222,18 @@ namespace ShellModel
             DBHelper helper = new DBHelper(lastSettings);
             return helper.RemoveNoteCascade(note);
         }
+
+        public int[] CreateParagraphMissionStatic(ParagraphMission paragraphMission)
+        {
+            DBHelper helper = new DBHelper(lastSettings);
+            try
+            {
+                return helper.CreateParagraphMission(paragraphMission);
+            }
+            catch
+            {
+                return new int[] { -3, -3, -3, -3 };
+            }
+        }
     }
 }
