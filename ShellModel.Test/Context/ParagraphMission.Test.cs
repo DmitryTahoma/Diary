@@ -1,7 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ServerRealization;
+using ServerRealization.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace ShellModel.Context.Test
 {
@@ -53,6 +56,36 @@ namespace ShellModel.Context.Test
             ParagraphMission mission = new ParagraphMission(id, new Paragraph(), 0, 0, 0, "", "", DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now);
             mission.Id = newId;
             Assert.AreEqual(id > 0 ? id : newId, mission.Id);
+        }
+
+        [DataTestMethod]
+        [DataRow("Name", "Text", 1, 1, 2020)]
+        [DataRow("farfghsdfsdgh", "shsdfgafhasdfgh", 10, 6, 1999)]
+        public void AutoCreatingTest(string name, string text, int day, int month, int year)
+        {
+            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 100, new int[] { 200, 300, 400 }, 300);
+            ServerProgram server = new ServerProgram(settings);
+            server.Run();
+            DBHelper helper = new DBHelper(settings);
+            helper.Registration("Login", "Password", "Name");
+            DBHelper.Login = "Login";
+            DBHelper.Password = "Password";
+
+            ParagraphMission mission = new ParagraphMission(name, text, new DateTime(year, month, day));
+            Assert.IsTrue(mission.Id < 1);
+
+            mission = new ParagraphMission(name, text, new DateTime(year, month, day), true);
+            Thread.Sleep(500);
+            Assert.IsTrue(mission.Id > 0);
+            Assert.IsTrue(DBContext.Missions.Where(x => x.Id == mission.Id).Count() == 1);
+            ServerRealization.Database.Context.Mission dbMission = DBContext.Missions.Where(x => x.Id == mission.Id).First();
+
+            Assert.AreEqual(mission.ActionId, dbMission.ActionId);
+            Assert.AreEqual(mission.NoteId, dbMission.Action.NoteId);
+            Assert.AreEqual(mission.Paragraph.Id, dbMission.ContextId);
+            Assert.AreEqual(mission.Name, dbMission.Action.Note.Name);
+            Assert.AreEqual(mission.Text, dbMission.Action.Note.Text);
+            Assert.AreEqual(mission.Created, dbMission.Action.Note.Created);
         }
     }
 }

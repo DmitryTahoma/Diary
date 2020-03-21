@@ -14,8 +14,18 @@ namespace ShellModel.Context
             Context = paragraph;
         }
 
-        public ParagraphMission(string name, string text, DateTime created)
-            : this(-1, new Paragraph(), -1, -1, 0, name, text, created, DateTime.Now, DateTime.MinValue, DateTime.MinValue) { }
+        public ParagraphMission(string name, string text, DateTime created, bool autoTiming = false)
+            : this(-1, new Paragraph(), -1, -1, 0, name, text, created, DateTime.Now, DateTime.MinValue, DateTime.MinValue) 
+        {
+            if(autoTiming)
+            {
+                int[] ids = DBHelper.CreateParagraphMissionStatic(this);
+                NoteId = ids[0];
+                ActionId = ids[1];
+                id = ids[2];
+                Paragraph.Id = ids[3];
+            }
+        }
 
         public Paragraph Paragraph { get => (Paragraph)Context; }
     }
