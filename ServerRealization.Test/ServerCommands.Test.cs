@@ -10,6 +10,14 @@ namespace ServerRealization.Test
     [TestClass]
     public partial class ServerCommandsTest
     {
+        static ServerProgram server = null;
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            server = new ServerProgram("192.168.0.107", 11221, new int[] { 11222, 11223, 11224 }, 1000);
+        }
+
         [DataTestMethod]
         [DataRow("clp", new string[] { }, "ae")]
         [DataRow("clp", new string[] { "", "", "", "" }, "ae")]
@@ -19,12 +27,10 @@ namespace ServerRealization.Test
         [DataRow("clp", new string[] { "Alex92", "pass1234" }, "True")]
         [DataRow("clp", new string[] { "Alex92", "pass1234", "hello" }, "True")]
         [DataRow("clp", new string[] { "", "Alex92", "pass1234", "" }, "ae")]
-        [DataRow("cnn", new string[] { "Alex92", "pass1234", "", "" }, "ae")]
         [DataRow("cnn", new string[] { "", "", "", "TextOfNote" }, "ae")]
         [DataRow("cnn", new string[] { "Alex93", "pass1234", "NameOfNote", "TextOfNote" }, "False")]
         public void SimpleTest(string commandName, string[] args, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
             string result = server.ExecuteCommand(commandName, args);
 
             Assert.AreEqual(expectedResult, result);
@@ -41,7 +47,6 @@ namespace ServerRealization.Test
         [DataRow(new string[] { "User", "Password", "Name" }, "True")]
         public void RegisterNewUserTest(string[] args, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
             if (args != null)
                 if (args.Length != 0)
                     if(args[0] != "")
@@ -71,8 +76,6 @@ namespace ServerRealization.Test
         [TestMethod]
         public void UniqueCheckerTest()
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
-
             string result = server.ExecuteCommand("rnu", new string[] { 
                 DBContext.Users.Where(x => x.Id == DBContext.Users.Max(y => y.Id)).First().Login,
                 "password", "name"
@@ -92,7 +95,6 @@ namespace ServerRealization.Test
         [DataRow("Alex934", "pass12345", "Name", "Text", "False")]
         public void CreateNewNoteTest(string login, string password, string name, string text, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
             DateTime before = DateTime.Now;
             string result = server.ExecuteCommand("cnn", new string[] { login, password, name, text });
             DateTime after = DateTime.Now;
@@ -136,7 +138,6 @@ namespace ServerRealization.Test
         [DataRow("Alex92", "pass1234", "", "", 10, 10, -700, "id")]
         public void CreateNewNoteTest2(string login, string password, string name, string text, int day, int month, int year, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.107", 11221, new int[] { 11222 }, 300);
             DateTime before = DateTime.Now;
             string result = server.ExecuteCommand("cnn", new string[] { login, password, name, text, day.ToString(), month.ToString(), year.ToString() });
             DateTime after = DateTime.Now;
@@ -182,7 +183,6 @@ namespace ServerRealization.Test
         [DataRow("Alex93", "pass12345", "Name", "Hello, wor", "ld", "False")]
         public void AddTextToNoteTest(string login, string password, string name, string text, string addedText, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
             string result = server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, name, text });
 
             Assert.IsTrue(int.TryParse(result, out int id));
@@ -207,7 +207,6 @@ namespace ServerRealization.Test
         [DataRow("Alex923", "pass12344", "Name", "Hello, world!123", 3, "False")]
         public void RemoveTextFromNoteTest(string login, string password, string name, string text, int removeCount, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
             string result = server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, name, text });
 
             Assert.IsTrue(int.TryParse(result, out int id));
@@ -233,7 +232,6 @@ namespace ServerRealization.Test
         [DataRow("Alex392", "pass13234", "Name", "Hello, wordl!", 3,  "ld!", "False")]
         public void InsertTextToNoteTest(string login, string password, string name, string text, int removeCount, string addedText, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
             string result = server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, name, text });
 
             Assert.IsTrue(int.TryParse(result, out int id));
@@ -251,7 +249,6 @@ namespace ServerRealization.Test
         public void ChangeNoteByUserTest(string name, string text, string addText, int removeCount, int insertCount, string instertText)
         {
             string correctLogin2 = "Tahoma", correctPassword2 = "password";
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
             string result = server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, name, text });
             Assert.IsTrue(int.TryParse(result, out int id));
 
@@ -291,7 +288,6 @@ namespace ServerRealization.Test
         [DataRow("Alex92", "password", "Name", "Text", 2020, 12, 12, "False")]
         public void CreateNewParagraphMissionTest(string login, string password, string name, string text, int year, int month, int day, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
             DateTime before = DateTime.Now;
             string result = server.ExecuteCommand("cnpm", new string[] { login, password, name, text, day.ToString(), month.ToString(), year.ToString() });
             DateTime after = DateTime.Now;
@@ -361,7 +357,6 @@ namespace ServerRealization.Test
         [DataRow("Tahoma", "pass1234", "Name", "Text", new string[] { "Do first" }, "False")]
         public void AddPointToParagraphMissionTest(string login, string password, string name, string text, string[] points, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.107", 11221, new int[] { 11222 }, 100);
             string[] res = server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, name, text }).Split('|');
             int id = int.Parse(res[2]);
 
@@ -395,8 +390,7 @@ namespace ServerRealization.Test
         [DataRow("Tahoma", "password", "point text Lorem ipsum", "False")]
         public void ChangePointTextTest(string login, string password, string newPointText, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
-            int id = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, "Name of note", "Text of note" }));
+            int id = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, "Name of note", "Text of note" }).Split('|')[2]);
             string result = server.ExecuteCommand("aptpm", new string[] { correctLogin, correctPassword, id.ToString(), "First text of point" });
             Assert.IsTrue(int.TryParse(result, out int idp));
             result = server.ExecuteCommand("cpt", new string[] { login, password, idp.ToString(), newPointText });
@@ -418,7 +412,6 @@ namespace ServerRealization.Test
         [DataRow("Tahoma", "password", "point text Lorem ipsum", "ane")]
         public void ChangeNoteNameTest(string login, string password, string newName, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
             int id = int.Parse(server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, "Name of note", "Text of note" }));
             string result = server.ExecuteCommand("chnn", new string[] { login, password, id.ToString(), newName });
 
@@ -437,8 +430,7 @@ namespace ServerRealization.Test
         [DataRow("Tahoma", "password", true, "False")]
         public void SetCheckedPointTest(string login, string password, bool val, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
-            int id = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, "Name of note", "Text of note" }));
+            int id = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, "Name of note", "Text of note" }).Split('|')[2]);
             int idp = int.Parse(server.ExecuteCommand("aptpm", new string[] { correctLogin, correctPassword, id.ToString(), "First text of point" }));
             string result = server.ExecuteCommand("scp", new string[] { login, password, idp.ToString(), val.ToString() });
 
@@ -457,7 +449,6 @@ namespace ServerRealization.Test
         [DataRow("Alex92", "pass1234", 0, 1, 28, 2, -17, "ae")]
         public void GetDayTest(string login, string password, int countNotes, int dispDays, int day, int month, int year, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
             if (expectedResult == "data")
             {
                 GenerateNotes(login, password, countNotes, dispDays);
@@ -489,7 +480,6 @@ namespace ServerRealization.Test
         [DataRow("Tahoma", "password", "Name", "Text", 10, 10, 2020, new string[] { "hello", ",!", "world" }, "ane")]
         public void RemoveNoteCascadeTest(string login, string password, string name, string text, int day, int month, int year, string[] points, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 300);
             int id = int.Parse(server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, name, text, day.ToString(), month.ToString(), year.ToString() }));
 
             string result = server.ExecuteCommand("rnc", new string[] { login, password, id.ToString() });
@@ -498,7 +488,7 @@ namespace ServerRealization.Test
             else
                 Assert.AreEqual(expectedResult, result);
 
-            id = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, name, text, day.ToString(), month.ToString(), year.ToString() }));
+            id = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, name, text, day.ToString(), month.ToString(), year.ToString() }).Split('|')[2]);
             int[] pointsid = new int[points.Length];
             for(int i = 0; i < points.Length; ++i)            
                 pointsid[i] = int.Parse(server.ExecuteCommand("aptpm", new string[] { correctLogin, correctPassword, id.ToString(), points[i] }));
@@ -532,8 +522,7 @@ namespace ServerRealization.Test
         [DataRow("Tahoma", "password", "TextTeNamehehe", "ane")]
         public void RemovePointTest(string login, string password, string name, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
-            int missionId = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, "Name", "Text" }));
+            int missionId = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, "Name", "Text" }).Split('|')[2]);
             int pointId = int.Parse(server.ExecuteCommand("aptpm", new string[] { correctLogin, correctPassword, missionId.ToString(), name }));
 
             string result = server.ExecuteCommand("rp", new string[] { login, password, pointId.ToString() });
