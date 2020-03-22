@@ -334,5 +334,31 @@ namespace ShellModel.Test
             Assert.AreEqual(text, mission.Action.Note.Text);
             Assert.AreEqual(new DateTime(year, month, day), mission.Action.Note.Created);
         }
+
+        [DataTestMethod]
+        [DataRow(new string[] { "", "hello" })]
+        [DataRow(new string[] { "lorem", "ipsum", "hello", "by", "direct" })]
+        public void AddPointToParagraphMissionTest(string[] points)
+        {
+            SocketSettings.ISocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 300);
+            ServerProgram server = new ServerProgram(settings);
+            server.Run();
+            server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });
+            DBHelper helper = new DBHelper(settings);
+            DBHelper.Login = "Login";
+            DBHelper.Password = "Password";
+            ParagraphMission paragraphMission = new ParagraphMission("name", "text", DateTime.Now, true);
+
+            for (int i = 0; i < points.Length; ++i)
+            {
+                int id = helper.AddPointToParagraphMission(paragraphMission, new Point(points[i], false));
+                Assert.AreEqual(points[i], DBContext.Points.Where(x => x.Id == id).First().Name);
+
+                id = DBHelper.AddPointToParagraphMissionStatic(paragraphMission, new Point(points[i], false));
+                Assert.AreEqual(points[i], DBContext.Points.Where(x => x.Id == id).First().Name);
+            }
+
+            Thread.Sleep(server.Stop() * 2);
+        }
     }
 }

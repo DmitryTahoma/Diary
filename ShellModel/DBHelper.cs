@@ -172,6 +172,17 @@ namespace ShellModel
             throw new ArgumentException();
         }
 
+        public int AddPointToParagraphMission(ParagraphMission paragraphMission, Point point)
+        {
+            object result = DoLockedProcess(() => { return client.SendCommand("aptpm", new string[] { Login, Password, paragraphMission.Id.ToString(), point.Text }); });
+            if (result != null)
+                if (result is string res)
+                    if (int.TryParse(res, out int r))
+                        if (r > 0)
+                            return r;
+            throw new ArgumentException();
+        }
+
         public static async Task<List<Note>> GetDayAsync(string login, string password, int day, int month, int year)
         {
             return await Task<List<Note>>.Run(() =>
@@ -235,5 +246,8 @@ namespace ShellModel
                 return new int[] { -3, -3, -3, -3 };
             }
         }
+
+        public static int AddPointToParagraphMissionStatic(ParagraphMission paragraphMission, Point point) 
+            => new DBHelper(lastSettings).AddPointToParagraphMission(paragraphMission, point);        
     }
 }
