@@ -87,5 +87,38 @@ namespace ShellModel.Context.Test
             Assert.AreEqual(mission.Text, dbMission.Action.Note.Text);
             Assert.AreEqual(mission.Created, dbMission.Action.Note.Created);
         }
+
+        [DataTestMethod]
+        [DataRow(new string[] { "", "hello" })]
+        [DataRow(new string[] { "lorem", "ipsum", "hello", "by", "direct" })]
+        public void AutoAddingPointTest(string[] points)
+        {
+            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11223, new int[] { 11221, 11222 }, 777);
+            ServerProgram server = new ServerProgram(settings);
+            server.Run();
+            DBHelper helper = new DBHelper(settings);
+            helper.Registration("Login", "Password", "Name");
+            DBHelper.Login = "Login";
+            DBHelper.Password = "Password";
+
+            ParagraphMission mission = new ParagraphMission("name", "text", DateTime.Now, true);
+            Thread.Sleep(500);
+            ServerRealization.Database.Context.Mission dbMission = DBContext.Missions.Where(x => x.Id == mission.Id).First();
+
+            for(int i = 0; i < points.Length; ++i)
+            {
+                mission.Paragraph.AddPoint(new Point(points[i], true));
+                Thread.Sleep(500);
+                Assert.AreEqual(i + 1, mission.Paragraph.Count);
+                Assert.AreEqual(i + 1, ((ServerRealization.Database.Context.Collection)dbMission.Context).Count);
+                Point point = mission.Paragraph.Items.Last();
+                Assert.IsTrue(point.Id > 0);
+                Assert.AreEqual(points[i], point.Text);
+                Assert.AreEqual(false, point.IsChecked);
+                ServerRealization.Database.Context.Point dbPoint = DBContext.Points.Where(x => x.Id == point.Id).First();
+                Assert.AreEqual(points[i], dbPoint.Name);
+                Assert.AreEqual(false, dbPoint.IsChecked);
+            }
+        }
     }
 }

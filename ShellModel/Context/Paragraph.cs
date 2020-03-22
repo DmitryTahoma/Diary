@@ -6,6 +6,9 @@ namespace ShellModel.Context
 {
     public class Paragraph : IMissionContext
     {
+        private bool isAutoTiming = false;
+        private ParagraphMission mission = null;
+
         public Paragraph(int id, List<Point> items)
         {
             Id = id;
@@ -22,6 +25,12 @@ namespace ShellModel.Context
         }
 
         public Paragraph() : this(-1) { }
+
+        public Paragraph(ParagraphMission mission, bool autoTiming) : this(-1) 
+        {
+            isAutoTiming = autoTiming;
+            this.mission = mission;
+        }
 
         public Paragraph(string dbStr)
         {
@@ -59,6 +68,8 @@ namespace ShellModel.Context
         public void AddPoint(Point point)
         {
             Items.Add(point);
+            if(isAutoTiming)            
+                point.Id = DBHelper.AddPointToParagraphMissionStatic(mission, point);
         }
 
         public override bool Equals(object obj)
