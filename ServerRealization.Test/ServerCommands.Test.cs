@@ -349,11 +349,11 @@ namespace ServerRealization.Test
         [DataTestMethod]
         [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "Do first" }, "id")]
         [DataRow("Alex92", "pass1234", "Hello, world", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", new string[] { "Do first", "Ut enim ad minim veniam", "quis nostrud exercitation ullamco" }, "id")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "" }, "id")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "", "", "" }, "id")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "", "", "", "", "", "" }, "id")]
         [DataRow("", "pass1234", "Name", "Text", new string[] { "Do first" }, "ae")]
         [DataRow("Alex92", "", "Name", "Text", new string[] { "Do first" }, "ae")]
-        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "" }, "ae")]
-        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "", "", "" }, "ae")]
-        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "", "", "", "", "", "" }, "ae")]
         [DataRow("Alex92", "pass123456", "Name", "Text", new string[] { "Do first" }, "False")]
         [DataRow("Alex93", "pass1234", "Name", "Text", new string[] { "Do first" }, "False")]
         [DataRow("Tahoma", "password", "Name", "Text", new string[] { "Do first" }, "False")]
@@ -361,8 +361,9 @@ namespace ServerRealization.Test
         [DataRow("Tahoma", "pass1234", "Name", "Text", new string[] { "Do first" }, "False")]
         public void AddPointToParagraphMissionTest(string login, string password, string name, string text, string[] points, string expectedResult)
         {
-            ServerProgram server = new ServerProgram("192.168.0.106", 11221, new int[] { 11222 }, 100);
-            int id = int.Parse(server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, name, text }));
+            ServerProgram server = new ServerProgram("192.168.0.107", 11221, new int[] { 11222 }, 100);
+            string[] res = server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, name, text }).Split('|');
+            int id = int.Parse(res[2]);
 
             for (int i = 0; i < points.Length; ++i)
             {
@@ -376,6 +377,7 @@ namespace ServerRealization.Test
                     Assert.AreEqual(i + 1, collection.Count);
                     Point point = DBContext.Points.Where(x => x.Id == idp).First();
                     Assert.AreEqual(point.ParagraphId, collection.Id);
+                    Assert.AreEqual(points[i], point.Name);
                 }
                 else
                     Assert.AreEqual(expectedResult, result);

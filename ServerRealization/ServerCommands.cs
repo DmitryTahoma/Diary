@@ -206,19 +206,23 @@ namespace ServerRealization
 
         private string AddPointToParagraphMission(string[] args)
         {
-            if (!ArgsHelper.CheckArgs(args, 4, 2))
+            if (!ArgsHelper.CheckArgs(args, 3, 2))
                 return "ae";
             int id = int.Parse(args[2]);
 
             if (!ArgsHelper.CheckLoginPassword(args[0], args[1]) || ArgsHelper.IsAne(args[0], args[1], DBContext.Missions.Where(x => x.Id == id).First().Action.NoteId))
                 return "False";
 
+            string text = "";
+            if (args.Length >= 4)
+                text = args[3];
+
             Mission mission = DBContext.Missions.Where(x => x.Id == id).First();
             Point point = null;
             if (DBContext.Points.Count != 0)
-                point = new Point(mission.ContextId, args[3], false);
+                point = new Point(mission.ContextId, text, false);
             else
-                point = new Point(1, mission.ContextId, args[3], false);
+                point = new Point(1, mission.ContextId, text, false);
             DBContext.Points.Add(point);
             ((Collection)mission.Context).Count++;
             return point.Id.ToString();
