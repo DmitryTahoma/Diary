@@ -11,6 +11,29 @@ namespace ShellModel.Context.Test
     [TestClass]
     public class ParagraphMissionTest
     {
+        SocketSettings.ISocketSettings settings = null;
+        ServerProgram server = null;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            settings = new SocketSettings.SocketSettings("192.168.0.107", 11223, new int[] { 11221, 11222 }, 777);
+            server = new ServerProgram(settings);
+            server.Run();
+            DBHelper helper = new DBHelper(settings);
+            helper.Registration("Login", "Password", "Name");
+            DBHelper.Login = "Login";
+            DBHelper.Password = "Password";
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            settings = null;
+            Thread.Sleep(server.Stop() + 400);
+            server = null;
+        }
+
         [DataTestMethod]
         [DataRow(0, 1, 2, 3, 4, "Name", "Text", new int[] { 1, 2, 3 }, new string[] { "Lorem ipsum dolor", "sit amet, consectetur", "adipiscing elit, sed do eiusmod" }, new bool[] { true, true, false })]
         [DataRow(10, 21, 32, 443, 53524, "gdsshdfh", "dgsdhsdfg", new int[] { 235, 47, 75, 5763 }, new string[] { "tempor incididunt ut labore", "et dolore magna aliqua. Ut enim", "ad minim veniam, quis nostrud exercitation", "ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." }, new bool[] { false, true, true, false })]
@@ -63,14 +86,6 @@ namespace ShellModel.Context.Test
         [DataRow("farfghsdfsdgh", "shsdfgafhasdfgh", 10, 6, 1999)]
         public void AutoCreatingTest(string name, string text, int day, int month, int year)
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 100, new int[] { 200, 300, 400 }, 300);
-            ServerProgram server = new ServerProgram(settings);
-            server.Run();
-            DBHelper helper = new DBHelper(settings);
-            helper.Registration("Login", "Password", "Name");
-            DBHelper.Login = "Login";
-            DBHelper.Password = "Password";
-
             ParagraphMission mission = new ParagraphMission(name, text, new DateTime(year, month, day));
             Assert.IsTrue(mission.Id < 1);
 
@@ -93,14 +108,6 @@ namespace ShellModel.Context.Test
         [DataRow(new string[] { "lorem", "ipsum", "hello", "by", "direct" })]
         public void AutoAddingPointTest(string[] points)
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11223, new int[] { 11221, 11222 }, 777);
-            ServerProgram server = new ServerProgram(settings);
-            server.Run();
-            DBHelper helper = new DBHelper(settings);
-            helper.Registration("Login", "Password", "Name");
-            DBHelper.Login = "Login";
-            DBHelper.Password = "Password";
-
             ParagraphMission mission = new ParagraphMission("name", "text", DateTime.Now, true);
             Thread.Sleep(500);
             ServerRealization.Database.Context.Mission dbMission = DBContext.Missions.Where(x => x.Id == mission.Id).First();
@@ -118,6 +125,62 @@ namespace ShellModel.Context.Test
                 ServerRealization.Database.Context.Point dbPoint = DBContext.Points.Where(x => x.Id == point.Id).First();
                 Assert.AreEqual(points[i], dbPoint.Name);
                 Assert.AreEqual(false, dbPoint.IsChecked);
+            }
+        }
+
+        [DataTestMethod]
+        [DataRow("name", "text", new string[] { "first", "second", "third" }, new bool[] { false, false, true }, "name", "text", new string[] { "first", "scenof", "third", }, new bool[] { false, true, true })]
+        [DataRow("", "", new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" }, new bool[] { false, false, true, false, false, false, true, false, true }, "name", "text", new string[] { "first", "2", "third", "five?", "or no?", "or it is five", "I MUST", "FIX IT", "9" }, new bool[] { false, true, false, true, true, true, true, false, false })]
+        public void GetChangesTest(string name, string text, string[] points, bool[] isCheckeds, string name2, string text2, string[] points2, bool[] isCheckeds2)
+        {
+            ParagraphMission oldPm = new ParagraphMission(name, text, DateTime.Now, true);
+            ParagraphMission newPm = new ParagraphMission(name2, text2, DateTime.Now);
+            for (int i = 0; i < points.Length; ++i)
+            {
+                Point point = new Point(points[i], true);
+                oldPm.Paragraph.AddPoint(point);
+                Thread.Sleep(100);
+                point.IsChecked = isCheckeds[i];
+
+                newPm.Paragraph.Items.Add(new Point(point.Id, point.Text, point.IsChecked));
+            }
+
+            for(int i = 0; i < points.Length; ++i)
+            {
+                newPm.Paragraph.Items[i].Text = points2[i];
+                newPm.Paragraph.Items[i].IsChecked = isCheckeds2[i];
+            }
+
+            List<KeyValuePair<string, string[]>> expectedResult = new List<KeyValuePair<string, string[]>>();
+            for (int i = 0; i < oldPm.Paragraph.Count; ++i)
+            {
+                if (newPm.Paragraph.Items
+                        .Where((x) =>
+                        {
+                            Point p = oldPm.Paragraph.Items[i];
+                            return x.Id == p.Id && x.Text != p.Text;
+                        })
+                        .Count() == 1)
+                    expectedResult.Add(new KeyValuePair<string, string[]>("cpt", new string[] { newPm.Paragraph.Items[i].Id.ToString(), newPm.Paragraph.Items[i].Text }));
+                if (newPm.Paragraph.Items
+                        .Where((x) =>
+                        {
+                            Point p = oldPm.Paragraph.Items[i];
+                            return x.Id == p.Id && x.IsChecked != p.IsChecked;
+                        })
+                        .Count() == 1)
+                    expectedResult.Add(new KeyValuePair<string, string[]>("scp", new string[] { oldPm.Paragraph.Items[i].Id.ToString(), oldPm.Paragraph.Items[i].IsChecked.ToString() }));
+            }
+
+            List<KeyValuePair<string, string[]>> result = ParagraphMission.GetChanges(newPm, oldPm);
+
+            Assert.AreEqual(expectedResult.Count, result.Count);
+            for (int i = 0; i < expectedResult.Count; ++i)
+            {
+                Assert.AreEqual(expectedResult[i].Key, result[i].Key);
+                Assert.AreEqual(expectedResult[i].Value.Length, result[i].Value.Length);
+                for (int j = 0; j < expectedResult[i].Value.Length; ++j)
+                    Assert.AreEqual(expectedResult[i].Value[j], result[i].Value[j]);
             }
         }
     }
