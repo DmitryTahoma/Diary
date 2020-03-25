@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ShellModel.Context
@@ -70,6 +71,11 @@ namespace ShellModel.Context
             Items.Add(point);
             if(isAutoTiming)            
                 point.Id = DBHelper.AddPointToParagraphMissionStatic(mission, point);
+        }
+
+        public void RemovePoint(int id)
+        {
+            Items.Remove(Items.Where(x => x.Id == id).First());
         }
 
         public override bool Equals(object obj)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ServerRealization.Database;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +18,7 @@ namespace ShellModel.Context.Test
             Paragraph paragraph2 = new Paragraph(id);
 
             List<Point> pointsL = new List<Point>();
-            for(int i = 0; i < points.Length; ++i)
+            for (int i = 0; i < points.Length; ++i)
                 pointsL.Add(new Point(ids[i], points[i], isCheckeds[i]));
             Paragraph paragraph3 = new Paragraph(id, pointsL);
 
@@ -68,6 +69,25 @@ namespace ShellModel.Context.Test
             Paragraph paragraph = new Paragraph(id);
             paragraph.Id = newId;
             Assert.AreEqual(id > 0 ? id : newId, paragraph.Id);
+        }
+
+        [DataTestMethod]
+        [DataRow(new string[] { "123", "333", "563" }, 0)]
+        [DataRow(new string[] { "123", "333", "563", "333", "563", "333", "563" }, 5)]
+        public void RemovePointTest(string[] points, int deletingPoint)
+        {
+            Random random = new Random();
+            Paragraph paragraph = new Paragraph();
+            for (int i = 0; i < points.Length; ++i)
+            {
+                paragraph.AddPoint(new Point(random.Next(1000, 1000000), points[i], false));
+                if (deletingPoint == i)
+                    deletingPoint = paragraph.Items.Last().Id;
+            }
+
+            Assert.AreEqual(1, paragraph.Items.Where(x => x.Id == deletingPoint).Count());
+            paragraph.RemovePoint(deletingPoint);
+            Assert.AreEqual(0, paragraph.Items.Where(x => x.Id == deletingPoint).Count());
         }
     }
 }
