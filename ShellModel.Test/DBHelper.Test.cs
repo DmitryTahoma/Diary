@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using ShellModel.Context;
 using System.Threading;
-using System.Threading.Tasks;
 using ServerRealization.Database;
 using System.Linq;
 
@@ -14,16 +13,36 @@ namespace ShellModel.Test
     [TestClass]
     public class DBHelperTest
     {
+        SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222, 11224, 12550 }, 1000);
+        ServerProgram server = null;
+        DBHelper helper = null;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            server = new ServerProgram(settings);
+            server.Run();
+            server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });
+            helper = new DBHelper(settings);
+            DBHelper.Login = "Login";
+            DBHelper.Password = "Password";
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            Thread.Sleep(server.Stop() + 333);
+            server = null;
+            helper = null;
+        }
+
+        public void GenerateTestNotes() => server.ExecuteCommand("generate1000notes", new string[] { });
+
         [DataTestMethod]
         [DataRow("templogin1", "password", "Dmitry")]
         [DataRow("mylogin", "herhdfhsdf22", "Tahoma")]
         public void RegistrationTest(string login, string password, string name)
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.105", 11221, new int[] { 11222, 11224, 12550 }, 3000);
-            ServerProgram server = new ServerProgram("192.168.0.105", 11221, new int[] { 11222, 11224, 12550 }, 3000);
-            server.Run();
-
-            DBHelper helper = new DBHelper(settings);
             bool isHappened = helper.Registration(login, password, name);
             Assert.AreEqual(true, isHappened);
 
@@ -39,11 +58,6 @@ namespace ShellModel.Test
         [DataRow("Alex926", "pass1234", false)]
         public void SignInTest(string login, string password, bool expectedResult)
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.105", 11221, new int[] { 11222, 11224, 12550 }, 3000);
-            ServerProgram server = new ServerProgram("192.168.0.105", 11221, new int[] { 11222, 11224, 12550 }, 3000);
-            server.Run();
-
-            DBHelper helper = new DBHelper(settings);
             bool isHappened = helper.SignIn(login, password);
             Assert.AreEqual(expectedResult, isHappened);
 
@@ -56,11 +70,6 @@ namespace ShellModel.Test
         [TestMethod]
         public void ActionsIsLockedTest()
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.105", 11221, new int[] { 11222, 11224, 12550 }, 3000);
-            ServerProgram server = new ServerProgram("192.168.0.105", 11221, new int[] { 11222, 11224, 12550 }, 3000);
-            server.Run();
-
-            DBHelper helper = new DBHelper(settings);
             DateTime before = DateTime.Now;
             helper.Registration("Temp", "TempTemp", "Temp");
             helper.SignIn("Temp", "Temp");
@@ -79,13 +88,9 @@ namespace ShellModel.Test
         [DataRow("Alex92", "pass1234", 1, 3, -1)]
         public void GetDayTest(string login, string password, int day, int month, int year)
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 3000);
-            ServerProgram server = new ServerProgram(settings);
-            server.ExecuteCommand("generate1000notes", new string[] { });
-            server.Run();
+            GenerateTestNotes();
             string expectedResultString = server.ExecuteCommand("gd", new string[] { login, password, day.ToString(), month.ToString(), year.ToString() });
 
-            DBHelper helper = new DBHelper(settings);
             try
             {
                 List<Note> result = helper.GetDay(login, password, day, month, year);
@@ -151,13 +156,9 @@ namespace ShellModel.Test
         [DataRow("Alex92", "pass1234", 1, 3, -1)]
         public void GetDayAsyncTest(string login, string password, int day, int month, int year)
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 3000);
-            ServerProgram server = new ServerProgram(settings);
-            server.ExecuteCommand("generate1000notes", new string[] { });
-            server.Run();
-            DBHelper dbHelper = new DBHelper(settings);
+            GenerateTestNotes();
             List<Note> expectedResult = null;
-            try { expectedResult = dbHelper.GetDay(login, password, day, month, year); }
+            try { expectedResult = helper.GetDay(login, password, day, month, year); }
             catch (ArgumentException) { expectedResult = new List<Note>(); }
 
             List<Note> result = null;
@@ -201,10 +202,6 @@ namespace ShellModel.Test
         [DataRow(new string[] { "fsdgdfhdfh", "sdtyjnbsd54", "3w6tiyjsdht", "ety6ehrstjhdft", "gdeuse46tedtujk", "yedrikdrtyg", "sykdhrydrtsn", "sdtyjnbsd54", "jrdtgwfsvtyrss46", "hjsrd5gyawft" }, new string[] { "", "3w6tiyjsdht", "fsdgdfhdfh", "43e7syse4cye4", "e4s7yacsetbe", "s56u8nsevtesueys5", "idsr5vsf", "se5uynsegv4y", "a4hbatyerstv", "awegb6a4yct" }, new bool[] { false, false, false, false, false, false, false, false, false, false })]
         public void QueueTest(string[] logins, string[] passwords, bool[] results)
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 3000);
-            ServerProgram server = new ServerProgram(settings);
-            server.Run();
-
             Random random = new Random();
             List<Thread> threads = new List<Thread>();
             List<Exception> errors = new List<Exception>();
@@ -213,8 +210,7 @@ namespace ShellModel.Test
                     for (int i = 0; i < logins.Length; ++i)
                         try
                         {
-                            DBHelper dbHelper = new DBHelper(settings);
-                            Assert.AreEqual(results[i], dbHelper.SignIn(logins[i], passwords[i]));
+                            Assert.AreEqual(results[i], helper.SignIn(logins[i], passwords[i]));
                         }
                         catch(Exception e) { errors.Add(e); }
                     }));                
@@ -232,14 +228,6 @@ namespace ShellModel.Test
         [DataRow("create", "notetest")]
         public void CreateNoteTest(string name, string text)
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 300);
-            ServerProgram server = new ServerProgram(settings);
-            server.Run();
-            server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });
-            DBHelper helper = new DBHelper(settings);
-            DBHelper.Login = "Login";
-            DBHelper.Password = "Password";
-
             Note note = new Note(-1, name, text, DateTime.Now, DateTime.Now);
             int id = helper.CreateNote(note);
             Thread.Sleep(500);
@@ -257,14 +245,6 @@ namespace ShellModel.Test
         [DataRow("old name", "text is string", "new name", "text is new")]
         public void SaveChangesTest(string name, string text, string newName, string newText)
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 300);
-            ServerProgram server = new ServerProgram(settings);
-            server.Run();
-            server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });
-            DBHelper helper = new DBHelper(settings);
-            DBHelper.Login = "Login";
-            DBHelper.Password = "Password";
-
             Note note = new Note(-1, name, text, DateTime.Now, DateTime.Now);
             int id = helper.CreateNote(note);
             Thread.Sleep(500);
@@ -286,14 +266,6 @@ namespace ShellModel.Test
         [DataRow("old name", "text is string")]
         public void RemoveNoteCascadeTest(string name, string text)
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 300);
-            ServerProgram server = new ServerProgram(settings);
-            server.Run();
-            server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });
-            DBHelper helper = new DBHelper(settings);
-            DBHelper.Login = "Login";
-            DBHelper.Password = "Password";
-
             Note note = new Note(name, text, true);
             int id = note.Id;
             Assert.IsTrue(helper.RemoveNoteCascade(note));
@@ -307,14 +279,6 @@ namespace ShellModel.Test
         [DataRow("Name", "Text", 5, 1, 2020)]
         public void CreateNewParagraphMissionTest(string name, string text, int day, int month, int year)
         {
-            SocketSettings.ISocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 300);
-            ServerProgram server = new ServerProgram(settings);
-            server.Run();
-            server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });
-            DBHelper helper = new DBHelper(settings);
-            DBHelper.Login = "Login";
-            DBHelper.Password = "Password";
-
             ParagraphMission paragraphMission = new ParagraphMission(name, text, new DateTime(year, month, day));
             int[] ids = helper.CreateParagraphMission(paragraphMission);
             Thread.Sleep(500);
@@ -340,13 +304,6 @@ namespace ShellModel.Test
         [DataRow(new string[] { "lorem", "ipsum", "hello", "by", "direct" })]
         public void AddPointToParagraphMissionTest(string[] points)
         {
-            SocketSettings.ISocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 300);
-            ServerProgram server = new ServerProgram(settings);
-            server.Run();
-            server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });
-            DBHelper helper = new DBHelper(settings);
-            DBHelper.Login = "Login";
-            DBHelper.Password = "Password";
             ParagraphMission paragraphMission = new ParagraphMission("name", "text", DateTime.Now, true);
 
             for (int i = 0; i < points.Length; ++i)
