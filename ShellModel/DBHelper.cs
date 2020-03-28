@@ -183,6 +183,16 @@ namespace ShellModel
             throw new ArgumentException();
         }
 
+        public bool RemovePoint(Point point)
+        {
+            object result = DoLockedProcess(() => { return client.SendCommand("rp", new string[] { Login, Password, point.Id.ToString() }); });
+            if (result != null)
+                if (result is string res)
+                    if (bool.TryParse(res, out bool r))
+                        return r;
+            throw new ArgumentException();
+        }
+
         public static async Task<List<Note>> GetDayAsync(string login, string password, int day, int month, int year)
         {
             return await Task<List<Note>>.Run(() =>
@@ -248,6 +258,9 @@ namespace ShellModel
         }
 
         public static int AddPointToParagraphMissionStatic(ParagraphMission paragraphMission, Point point) 
-            => new DBHelper(lastSettings).AddPointToParagraphMission(paragraphMission, point);        
+            => new DBHelper(lastSettings).AddPointToParagraphMission(paragraphMission, point);
+
+        public static bool RemovePointStatic(Point point)
+            => new DBHelper(lastSettings).RemovePoint(point);
     }
 }

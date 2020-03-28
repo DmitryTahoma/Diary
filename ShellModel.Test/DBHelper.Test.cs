@@ -317,5 +317,31 @@ namespace ShellModel.Test
 
             Thread.Sleep(server.Stop() * 2);
         }
+
+        [DataTestMethod]
+        [DataRow(new string[] { "1", "2", "3" }, 0)]
+        [DataRow(new string[] { "sdg", "sdgsdg", "sdgsdg", "gdsgd" }, 2)]
+        [DataRow(new string[] { "sdg", "sdgsdg", "sdgsdg", "gdsgd" }, 3)]
+        public void RemovePointTest(string[] points, int id)
+        {
+            ParagraphMission paragraphMission = new ParagraphMission("", "", DateTime.Now, true);
+
+            int dbId = -1;
+            for (int i = 0; i < points.Length; ++i)
+            {
+                Point point = new Point(points[i], true);
+                point.Id = helper.AddPointToParagraphMission(paragraphMission, point);
+                paragraphMission.Paragraph.Items.Add(point);
+                if (id == i)
+                    dbId = point.Id;
+            }
+
+            Assert.AreEqual(1, DBContext.Points.Where(x => x.Id == dbId).Count());
+            Assert.AreEqual(points.Length, paragraphMission.Paragraph.Count);
+            Assert.AreEqual(points.Length, DBContext.Collections.Where(x => x.Id == paragraphMission.Paragraph.Id).First().Count);
+            Assert.IsTrue(DBHelper.RemovePointStatic(paragraphMission.Paragraph.Items.Where(x => x.Id == dbId).First()));
+            Assert.AreEqual(0, DBContext.Points.Where(x => x.Id == dbId).Count());
+            Assert.AreEqual(points.Length - 1, DBContext.Collections.Where(x => x.Id == paragraphMission.Paragraph.Id).First().Count);
+        }
     }
 }
