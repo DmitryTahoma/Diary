@@ -193,6 +193,16 @@ namespace ShellModel
             throw new ArgumentException();
         }
 
+        public bool SetCheckedPoint(Point point, bool isChecked)
+        {
+            object result = DoLockedProcess(() => { return client.SendCommand("scp", new string[] { Login, Password, point.Id.ToString(), isChecked.ToString() }); });
+            if (result != null)
+                if (result is string res)
+                    if (bool.TryParse(res, out bool _))
+                        return true;
+            throw new ArgumentException();
+        }
+
         public static async Task<List<Note>> GetDayAsync(string login, string password, int day, int month, int year)
         {
             return await Task<List<Note>>.Run(() =>
@@ -262,5 +272,8 @@ namespace ShellModel
 
         public static bool RemovePointStatic(Point point)
             => new DBHelper(lastSettings).RemovePoint(point);
+
+        public static bool SetCheckedPointStatic(Point point, bool isChecked)
+            => new DBHelper(lastSettings).SetCheckedPoint(point, isChecked);
     }
 }

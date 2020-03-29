@@ -343,5 +343,19 @@ namespace ShellModel.Test
             Assert.AreEqual(0, DBContext.Points.Where(x => x.Id == dbId).Count());
             Assert.AreEqual(points.Length - 1, DBContext.Collections.Where(x => x.Id == paragraphMission.Paragraph.Id).First().Count);
         }
+
+        [DataTestMethod]
+        [DataRow(false)]
+        [DataRow(true)]
+        public void SetCheckedPointTest(bool isChecked)
+        {
+            ParagraphMission mission = new ParagraphMission("", "", DateTime.Now, true);
+            mission.Paragraph.AddPoint(new Point("", true));
+            Assert.IsFalse(mission.Paragraph.Items.First().IsChecked);
+            Assert.IsTrue(DBHelper.SetCheckedPointStatic(mission.Paragraph.Items.First(), isChecked));
+            Assert.AreEqual(isChecked, DBContext.Points.Where(x => x.Id == mission.Paragraph.Items.First().Id).First().IsChecked);
+            Assert.IsTrue(helper.SetCheckedPoint(mission.Paragraph.Items.First(), !isChecked));
+            Assert.AreEqual(!isChecked, DBContext.Points.Where(x => x.Id == mission.Paragraph.Items.First().Id).First().IsChecked);
+        }
     }
 }
