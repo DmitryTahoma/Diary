@@ -183,5 +183,31 @@ namespace ShellModel.Context.Test
                     Assert.AreEqual(expectedResult[i].Value[j], result[i].Value[j]);
             }
         }
+
+        [DataTestMethod]
+        [DataRow(new string[] { "1", "2", "3" }, 0)]
+        [DataRow(new string[] { "sdg", "sdgsdg", "sdgsdg", "gdsgd" }, 2)]
+        [DataRow(new string[] { "sdg", "sdgsdg", "sdgsdg", "gdsgd" }, 3)]
+        public void AutoRemovingPointTest(string[] points, int id)
+        {
+            ParagraphMission mission = new ParagraphMission("name", "text", DateTime.Now, true);
+            ServerRealization.Database.Context.Mission dbMission = DBContext.Missions.Where(x => x.Id == mission.Id).First();
+
+            int dbId = -1;
+            for (int i = 0; i < points.Length; ++i)
+            {
+                mission.Paragraph.AddPoint(new Point(points[i], true));
+                if (id == i)
+                    dbId = mission.Paragraph.Items.Last().Id;
+            }
+
+            Assert.AreEqual(1, DBContext.Points.Where(x => x.Id == dbId).Count());
+            Assert.AreEqual(points.Length, mission.Paragraph.Count);
+            Assert.AreEqual(points.Length, DBContext.Collections.Where(x => x.Id == mission.Paragraph.Id).First().Count);
+            mission.Paragraph.RemovePoint(dbId);
+            Assert.AreEqual(0, DBContext.Points.Where(x => x.Id == dbId).Count());
+            Assert.AreEqual(points.Length - 1, mission.Paragraph.Count);
+            Assert.AreEqual(points.Length - 1, DBContext.Collections.Where(x => x.Id == mission.Paragraph.Id).First().Count);
+        }
     }
 }

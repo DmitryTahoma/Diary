@@ -75,6 +75,8 @@ namespace ShellModel.Context
 
         public void RemovePoint(int id)
         {
+            if (isAutoTiming && mission != null)
+                DBHelper.RemovePointStatic(Items.Where(x => x.Id == id).First());
             Items.Remove(Items.Where(x => x.Id == id).First());
         }
 
