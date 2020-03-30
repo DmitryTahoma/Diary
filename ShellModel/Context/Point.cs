@@ -5,6 +5,9 @@ namespace ShellModel.Context
 {
     public class Point
     {
+        public delegate void VoidHandler();
+        public event VoidHandler PropertyChanged;
+
         public Point(int id, string text, bool isChecked)
         {
             this.id = id;
@@ -34,6 +37,12 @@ namespace ShellModel.Context
             Text = text;
         }
 
+        public Point(string text, bool isChecked, bool isAutoTiming)
+            : this(text, isAutoTiming)
+        {
+            IsChecked = isChecked;
+        }
+
         int id = -1;
         public int Id
         {
@@ -44,7 +53,29 @@ namespace ShellModel.Context
             }
             get => id;
         }
-        public string Text { set; get; }
-        public bool IsChecked { set; get; }
+
+        string text;
+        public string Text 
+        {
+            set
+            {
+                if (text != value)
+                    PropertyChanged?.Invoke();
+                text = value;
+            }
+            get => text;
+        }
+
+        bool isChecked;
+        public bool IsChecked 
+        {
+            set
+            {
+                if (isChecked != value)
+                    PropertyChanged?.Invoke();
+                isChecked = value;
+            }
+            get => isChecked;
+        }
     }
 }

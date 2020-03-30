@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="Context\Action.cs" />
     <Compile Include="Context\Commits\NoteCommit.cs" />
+    <Compile Include="Context\Commits\ParagraphCommit.cs" />
+    <Compile Include="Context\Commits\PointCommit.cs" />
     <Compile Include="Context\IMission.cs" />
     <Compile Include="Context\IMissionContext.cs" />
     <Compile Include="Context\Mission.cs" />

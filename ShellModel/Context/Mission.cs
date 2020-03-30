@@ -5,8 +5,8 @@ namespace ShellModel.Context
 {
     public abstract class Mission : Action
     {
-        public Mission(int id, MissionType type, int contextId, int actionId, int noteId, int stereotypeId, string name, string text, DateTime created, DateTime lastChanged, DateTime start, DateTime end) 
-            : base(actionId, noteId, stereotypeId, name, text, created, lastChanged, start, end)
+        public Mission(int id, MissionType type, int contextId, int actionId, int noteId, int stereotypeId, string name, string text, DateTime created, DateTime lastChanged, DateTime start, DateTime end, bool autoTiming = false) 
+            : base(actionId, noteId, stereotypeId, name, text, created, lastChanged, start, end, autoTiming)
         {
             Id = id;
             Type = type;

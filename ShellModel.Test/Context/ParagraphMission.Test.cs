@@ -209,5 +209,64 @@ namespace ShellModel.Context.Test
             Assert.AreEqual(points.Length - 1, mission.Paragraph.Count);
             Assert.AreEqual(points.Length - 1, DBContext.Collections.Where(x => x.Id == mission.Paragraph.Id).First().Count);
         }
+
+        [DataTestMethod]
+        [DataRow("", "", 1, 1, 2020, new string[] { "point1", "point2", "point3" }, new bool[] { false, false, true }, "", "", new string[] { "point", "hello", "point" }, new bool[] { false, false, true })]
+        [DataRow("", "", 19, 4, 2020, new string[] { }, new bool[] { }, "", "", new string[] { }, new bool[] { })]
+        public void AutoTimingTest(string name, string text, int day, int month, int year, string[] points, bool[] isCheckeds,
+            string newName, string newText, string[] newPoints, bool[] newIsCheckeds)
+        {
+            ParagraphMission mission = new ParagraphMission(name, text, new DateTime(year, month, day), true);
+            for (int i = 0; i < points.Length; ++i)
+                mission.Paragraph.AddPoint(new Point(points[i], isCheckeds[i], true));
+
+            ServerRealization.Database.Context.Mission dbMission = DBContext.Missions.Where(x => x.Id == mission.Id).First();
+            Assert.AreEqual(mission.Name, dbMission.Action.Note.Name);
+            Assert.AreEqual(mission.Text, dbMission.Action.Note.Text);
+            Assert.AreEqual(mission.Created, dbMission.Action.Note.Created);
+            List<Point> paragraph = mission.Paragraph.Items;
+            List<ServerRealization.Database.Context.Point> dbParagraph = DBContext.Points
+                .Where(y => y.ParagraphId ==
+                    DBContext.Collections
+                    .Where(x => x.Id == mission.Paragraph.Id)
+                    .First().Id)
+                .ToList();
+            for (int i = 0; i < points.Length; ++i)
+            {
+                Point point = paragraph[i];
+                ServerRealization.Database.Context.Point dbPoint = dbParagraph.Where(x => x.Id == point.Id).First();
+                Assert.AreEqual(point.Text, dbPoint.Name);
+                Assert.AreEqual(point.IsChecked, dbPoint.IsChecked);
+            }
+
+            mission.Name = newName;
+            mission.Text = newText;
+            for (int i = 0; i < points.Length; ++i)
+            {
+                mission.Paragraph.Items[i].Text = newPoints[i];
+                mission.Paragraph.Items[i].IsChecked = newIsCheckeds[i];
+            }
+
+            Thread.Sleep(10500);
+
+            dbMission = DBContext.Missions.Where(x => x.Id == mission.Id).First();
+            Assert.AreEqual(mission.Name, dbMission.Action.Note.Name);
+            Assert.AreEqual(mission.Text, dbMission.Action.Note.Text);
+            Assert.AreEqual(mission.Created, dbMission.Action.Note.Created);
+            paragraph = mission.Paragraph.Items;
+            dbParagraph = DBContext.Points
+                .Where(y => y.ParagraphId ==
+                    DBContext.Collections
+                    .Where(x => x.Id == mission.Paragraph.Id)
+                    .First().Id)
+                .ToList();
+            for (int i = 0; i < points.Length; ++i)
+            {
+                Point point = paragraph[i];
+                ServerRealization.Database.Context.Point dbPoint = dbParagraph.Where(x => x.Id == point.Id).First();
+                Assert.AreEqual(point.Text, dbPoint.Name);
+                Assert.AreEqual(point.IsChecked, dbPoint.IsChecked);
+            }
+        }
     }
 }

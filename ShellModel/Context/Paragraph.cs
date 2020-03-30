@@ -10,6 +10,12 @@ namespace ShellModel.Context
         private bool isAutoTiming = false;
         private ParagraphMission mission = null;
 
+        public delegate void PointHandler(Point point);
+        public event PointHandler OnAddedPoint;
+        public event PointHandler OnRemovedPoint;
+        public delegate void VoidHandler();
+        public event VoidHandler PointPropertyChanged;
+
         public Paragraph(int id, List<Point> items)
         {
             Id = id;
@@ -69,14 +75,21 @@ namespace ShellModel.Context
         public void AddPoint(Point point)
         {
             Items.Add(point);
-            if(isAutoTiming)            
+            if (isAutoTiming)
+            {
                 point.Id = DBHelper.AddPointToParagraphMissionStatic(mission, point);
+                if(point.IsChecked)
+                    DBHelper.SetCheckedPointStatic(point, true);
+                point.PropertyChanged += () => { PointPropertyChanged?.Invoke(); };
+            }
+            OnAddedPoint?.Invoke(point);
         }
 
         public void RemovePoint(int id)
         {
             if (isAutoTiming && mission != null)
                 DBHelper.RemovePointStatic(Items.Where(x => x.Id == id).First());
+            OnRemovedPoint?.Invoke(Items.Where(x => x.Id == id).First());
             Items.Remove(Items.Where(x => x.Id == id).First());
         }
 

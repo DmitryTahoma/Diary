@@ -12,7 +12,7 @@ namespace ShellModel.Context
         public event TimingAction Timing;
 
         bool isAutoTiming = false;
-        Timer updateTimer;
+        protected Timer updateTimer;
         NoteCommit commit;
 
         public Note(string name, string text, bool autoTiming = false)

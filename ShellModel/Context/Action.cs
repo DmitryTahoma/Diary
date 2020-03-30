@@ -5,8 +5,8 @@ namespace ShellModel.Context
 {
     public class Action : Note
     {
-        public Action(int id, int noteId, int stereotypeId, string name, string text, DateTime created, DateTime lastChanged, DateTime start, DateTime end)
-            : base(noteId, stereotypeId, name, text, created, lastChanged)
+        public Action(int id, int noteId, int stereotypeId, string name, string text, DateTime created, DateTime lastChanged, DateTime start, DateTime end, bool autoTiming = false)
+            : base(noteId, stereotypeId, name, text, created, lastChanged, autoTiming)
         {
             Id = id;
             Start = start;
