@@ -1,13 +1,12 @@
-﻿using ShellModel.Context.Commits;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ShellModel.Context
 {
-    public class ParagraphMission : Mission, IMission
+    public partial class ParagraphMission : Mission, IMission
     {
-        ParagraphCommit commit;
+        new ParagraphCommit commit;
 
         public ParagraphMission(int id, int contextId, int actionId, int noteId, int stereotypeId, string name, string text, DateTime created, DateTime lastChanged, DateTime start, DateTime end)
             : base(id, MissionType.Paragraph, contextId, actionId, noteId, stereotypeId, name, text, created, lastChanged, start, end)
@@ -20,9 +19,17 @@ namespace ShellModel.Context
         }
 
         public ParagraphMission(string name, string text, DateTime created, bool autoTiming = false)
-            : base (-1, MissionType.Paragraph, -1, -1, -1, 0, name, text, created, DateTime.Now, DateTime.MinValue, DateTime.MinValue, autoTiming)
         {
-            if (autoTiming)
+            Type = MissionType.Paragraph;
+            this.name = name;
+            this.text = text;
+            Created = created;
+            LastChanged = DateTime.Now;
+            Start = DateTime.MinValue;
+            End = DateTime.MaxValue;
+            isAutoTiming = autoTiming;
+
+            if (isAutoTiming)
             {
                 int[] ids = DBHelper.CreateParagraphMissionStatic(this);
                 NoteId = ids[0];
@@ -30,7 +37,10 @@ namespace ShellModel.Context
                 id = ids[2];
                 Context = new Paragraph(this, autoTiming);
                 Paragraph.Id = ids[3];
+
                 commit = new ParagraphCommit(Paragraph.Id, Paragraph.Items);
+                base.commit = new NoteCommit(name, text);
+                InitializeTimer();
                 updateTimer.Elapsed += (s, e) => 
                 {
                     try
@@ -42,7 +52,11 @@ namespace ShellModel.Context
                     }
                     catch (ArgumentException) { }
                 };
-                Paragraph.PointPropertyChanged += () => { updateTimer.Start(); };
+                Paragraph.PointPropertyChanged += () => 
+                {
+                    if (!updateTimer.Enabled)
+                        updateTimer.Start();
+                };
                 Paragraph.OnAddedPoint += (point) => { commit.Items.Add(new PointCommit(point.Id, point.Text, point.IsChecked)); };
                 Paragraph.OnRemovedPoint += (point) => { commit.Items.Remove(commit.Items.Where(x => x.Id == point.Id).First()); };
             }

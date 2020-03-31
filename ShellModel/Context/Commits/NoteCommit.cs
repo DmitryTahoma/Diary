@@ -1,17 +1,19 @@
-﻿namespace ShellModel.Context.Commits
+﻿namespace ShellModel.Context
 {
-    struct NoteCommit
+    public partial class Note
     {
-        public NoteCommit(string name, string text)
+        protected struct NoteCommit
         {
-            Name = name;
-            Text = text;
+            public NoteCommit(string name, string text)
+            {
+                Name = name;
+                Text = text;
+            }
+
+            public string Name { set; get; }
+            public string Text { set; get; }
+            
+            public static implicit operator Note(NoteCommit commit) => new Note(commit.Name, commit.Text);
         }
-
-        public string Name { set; get; }
-        public string Text { set; get; }
-
-
-        public static implicit operator Note(NoteCommit commit) => new Note(commit.Name, commit.Text);        
     }
 }

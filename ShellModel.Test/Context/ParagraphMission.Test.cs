@@ -17,7 +17,7 @@ namespace ShellModel.Context.Test
         [TestInitialize]
         public void TestInitialize()
         {
-            settings = new SocketSettings.SocketSettings("192.168.0.107", 11223, new int[] { 11221, 11222 }, 777);
+            settings = new SocketSettings.SocketSettings("192.168.0.107", 11223, new int[] { 11221, 11222 }, 10000);
             server = new ServerProgram(settings);
             server.Run();
             DBHelper helper = new DBHelper(settings);
@@ -211,7 +211,8 @@ namespace ShellModel.Context.Test
         }
 
         [DataTestMethod]
-        [DataRow("", "", 1, 1, 2020, new string[] { "point1", "point2", "point3" }, new bool[] { false, false, true }, "", "", new string[] { "point", "hello", "point" }, new bool[] { false, false, true })]
+        [DataRow("Name", "Text", 1, 1, 2020, new string[] { "point1", "point2", "point3" }, new bool[] { false, false, true }, "Name", "TextText", new string[] { "point", "hello", "point" }, new bool[] { false, true, true })]
+        [DataRow("Name2", "Lorem", 10, 12, 2019, new string[] { "setgs", "ssdf", "sdfhgdfh", "sdfhdfh", "dfhdfh" }, new bool[] { false, false, false, false, false }, "Name", "Lores impmum", new string[] { "asdgasd", "asdgh", "asdg", "sdgsda", "gdsgsd" }, new bool[] { true, true, false, false, true })]
         [DataRow("", "", 19, 4, 2020, new string[] { }, new bool[] { }, "", "", new string[] { }, new bool[] { })]
         public void AutoTimingTest(string name, string text, int day, int month, int year, string[] points, bool[] isCheckeds,
             string newName, string newText, string[] newPoints, bool[] newIsCheckeds)
@@ -247,7 +248,7 @@ namespace ShellModel.Context.Test
                 mission.Paragraph.Items[i].IsChecked = newIsCheckeds[i];
             }
 
-            Thread.Sleep(10500);
+            Thread.Sleep(11000);
 
             dbMission = DBContext.Missions.Where(x => x.Id == mission.Id).First();
             Assert.AreEqual(mission.Name, dbMission.Action.Note.Name);

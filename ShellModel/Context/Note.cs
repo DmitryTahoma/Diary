@@ -1,19 +1,18 @@
-﻿using ShellModel.Context.Commits;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Timers;
 
 namespace ShellModel.Context
 {
-    public class Note
+    public partial class Note
     {
         public delegate void TimingAction();
         public event TimingAction Timing;
 
-        bool isAutoTiming = false;
+        protected bool isAutoTiming = false;
         protected Timer updateTimer;
-        NoteCommit commit;
+        protected NoteCommit commit;
 
         public Note(string name, string text, bool autoTiming = false)
             : this(0, name, text, DateTime.Now, DateTime.Now, autoTiming) { }
@@ -72,7 +71,7 @@ namespace ShellModel.Context
             get => id;
         }
         public int StereotypeId { protected set; get; }
-        string name = "";
+        protected string name = "";
         public string Name
         {
             set
@@ -85,7 +84,7 @@ namespace ShellModel.Context
             }
             get => name;
         }
-        string text = "";
+        protected string text = "";
         public string Text
         {
             set
@@ -129,7 +128,7 @@ namespace ShellModel.Context
             return result;
         }
 
-        private void InitializeTimer()
+        protected void InitializeTimer()
         {
             updateTimer = new Timer();
             updateTimer.Interval = 10000;
