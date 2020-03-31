@@ -72,7 +72,7 @@ namespace ShellModel.Context
                             return x.Id == p.Id && x.IsChecked != p.IsChecked;
                         })
                         .Count() == 1)
-                    result.Add(new KeyValuePair<string, string[]>("scp", new string[] { oldParagraphMission.Paragraph.Items[i].Id.ToString(), oldParagraphMission.Paragraph.Items[i].IsChecked.ToString() }));
+                    result.Add(new KeyValuePair<string, string[]>("scp", new string[] { oldParagraphMission.Paragraph.Items[i].Id.ToString(), newParagraphMission.Paragraph.Items[i].IsChecked.ToString() }));
             }
             return result;
         }

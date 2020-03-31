@@ -169,7 +169,7 @@ namespace ShellModel.Context.Test
                             return x.Id == p.Id && x.IsChecked != p.IsChecked;
                         })
                         .Count() == 1)
-                    expectedResult.Add(new KeyValuePair<string, string[]>("scp", new string[] { oldPm.Paragraph.Items[i].Id.ToString(), oldPm.Paragraph.Items[i].IsChecked.ToString() }));
+                    expectedResult.Add(new KeyValuePair<string, string[]>("scp", new string[] { oldPm.Paragraph.Items[i].Id.ToString(), newPm.Paragraph.Items[i].IsChecked.ToString() }));
             }
 
             List<KeyValuePair<string, string[]>> result = ParagraphMission.GetChanges(newPm, oldPm);
