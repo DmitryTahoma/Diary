@@ -76,7 +76,7 @@
         private void OnAddParagraphNoteExecute()
         {
             ParagraphMissionNote note = new ParagraphMissionNote();
-            note.DataContext.Context = new ParagraphMission(-1, new Paragraph(), 0, 0, 0, "", "", DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now);
+            note.DataContext.Context = new ParagraphMission("", "", Date, true);
             Notes.Children.Add(note);
         }
 

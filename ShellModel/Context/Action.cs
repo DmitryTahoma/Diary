@@ -31,7 +31,11 @@ namespace ShellModel.Context
                 Id = int.Parse(values[0]);
                 Note baseNote = new Note(values[1]);
                 Start = DateTime.MinValue.AddDays(double.Parse(values[2]));
-                End = DateTime.MinValue.AddDays(double.Parse(values[3]));
+                double endDays = double.Parse(values[3]);
+                if (endDays >= 3652058)
+                    End = DateTime.MaxValue;
+                else
+                    End = DateTime.MinValue.AddDays(endDays);
 
                 base.Id = baseNote.Id;
                 StereotypeId = baseNote.StereotypeId;
