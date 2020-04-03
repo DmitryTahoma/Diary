@@ -32,7 +32,7 @@ namespace ShellModel.Context
             {
                 string[] values = StringsHelper.Split("\b<sm>\b", dbStr);
                 Action action = new Action(values[1]);
-                ParagraphMission paragraphMission = new ParagraphMission(int.Parse(values[0]) * -1, new Paragraph(values[2]), action.Id, action.NoteId, action.StereotypeId, action.Name, action.Text, action.Created, action.LastChanged, action.Start, action.End);
+                ParagraphMission paragraphMission = new ParagraphMission(int.Parse(values[0]) * -1, new Paragraph(values[2]), action.Id, action.NoteId, action.StereotypeId, action.Name, action.Text, action.Created, action.LastChanged, action.Start, action.End, true);
                 return paragraphMission;
             }
             throw new ArgumentException();

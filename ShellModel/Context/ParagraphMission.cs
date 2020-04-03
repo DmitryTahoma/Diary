@@ -12,10 +12,39 @@ namespace ShellModel.Context
             : base(id, MissionType.Paragraph, contextId, actionId, noteId, stereotypeId, name, text, created, lastChanged, start, end)
         { }
 
-        public ParagraphMission(int id, Paragraph paragraph, int actionId, int noteId, int stereotypeId, string name,string text, DateTime created, DateTime lastChanged, DateTime start, DateTime end)
+        public ParagraphMission(int id, Paragraph paragraph, int actionId, int noteId, int stereotypeId, string name, string text, DateTime created, DateTime lastChanged, DateTime start, DateTime end, bool isAutoTiming = false)
             : base (id, MissionType.Paragraph, paragraph.Id, actionId, noteId, stereotypeId, name, text, created, lastChanged, start, end)
         {
-            Context = paragraph;
+            if(isAutoTiming)
+            {
+                Context = new Paragraph(this, true) { Id = paragraph.Id };
+                for (int i = 0; i < paragraph.Items.Count; ++i)
+                    ((Paragraph)Context).Items.Add(paragraph.Items[i]);
+
+                commit = new ParagraphCommit(Paragraph.Id, Paragraph.Items);
+                base.commit = new NoteCommit(name, text);
+                InitializeTimer();
+                updateTimer.Elapsed += (s, e) =>
+                {
+                    try
+                    {
+                        if (DBHelper.SaveChangesAsync(GetChanges(this, new ParagraphMission(Id, commit, -1, -1, -1, "", "", DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue))).Result)
+                        {
+                            commit = new ParagraphCommit(Paragraph.Id, Paragraph.Items);
+                        }
+                    }
+                    catch (ArgumentException) { }
+                };
+                Paragraph.PointPropertyChanged += () =>
+                {
+                    if (!updateTimer.Enabled)
+                        updateTimer.Start();
+                };
+                Paragraph.OnAddedPoint += (point) => { commit.Items.Add(new PointCommit(point.Id, point.Text, point.IsChecked)); };
+                Paragraph.OnRemovedPoint += (point) => { commit.Items.Remove(commit.Items.Where(x => x.Id == point.Id).First()); };
+            }
+            else
+                Context = paragraph;
         }
 
         public ParagraphMission(string name, string text, DateTime created, bool autoTiming = false)

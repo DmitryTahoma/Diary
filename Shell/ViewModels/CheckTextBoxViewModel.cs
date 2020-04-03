@@ -7,7 +7,8 @@
     public class CheckTextBoxViewModel : ViewModelBase
     {
         public CheckTextBoxViewModel()
-        {            
+        {
+            ContextPoint = new ShellModel.Context.Point("", false);
         }
 
         #region Properties
@@ -15,7 +16,7 @@
         public bool IsChecked
         {
             get { return GetValue<bool>(IsCheckedProperty); }
-            set { SetValue(IsCheckedProperty, value); Decorations = IsChecked ? TextDecorations.Strikethrough : null; }
+            set { SetValue(IsCheckedProperty, value); Decorations = IsChecked ? TextDecorations.Strikethrough : null; ContextPoint.IsChecked = value; }
         }
         public static readonly PropertyData IsCheckedProperty = RegisterProperty(nameof(IsChecked), typeof(bool), false);
 
@@ -29,9 +30,11 @@
         public string Text
         {
             get { return GetValue<string>(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            set { SetValue(TextProperty, value); ContextPoint.Text = value; }
         }
         public static readonly PropertyData TextProperty = RegisterProperty(nameof(Text), typeof(string), null);
+
+        public ShellModel.Context.Point ContextPoint { set; get; }
 
         #endregion
 

@@ -4,6 +4,7 @@
     using Catel.MVVM;
     using Shell.Controls;
     using ShellModel.Context;
+    using System.Linq;
     using System.Windows.Controls;
 
     public class ParagraphMissionNoteViewModel : ViewModelBase
@@ -40,7 +41,10 @@
         public Command AddNew { get; private set; }
         private void OnAddNewExecute()
         {
-            points.Children.Insert(points.Children.Count - 1, new CheckTextBox());
+            Context.Paragraph.AddPoint(new Point("", true));
+            CheckTextBox pointControl = new CheckTextBox();
+            pointControl.DataContext.ContextPoint = Context.Paragraph.Items.Last();
+            points.Children.Insert(points.Children.Count - 1, pointControl);
         }
 
         public Command<StackPanel> BindStackPanel { get; private set; }
