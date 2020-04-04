@@ -13,11 +13,19 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-        <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <CheckBox x:Name="CheckBox" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBox Grid.Column="1" 
                  TextDecorations="{Binding Decorations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  BorderThickness="0, 0, 0, 1"
                  Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Column="2"
+                Content="X"
+                Foreground="Red"
+                Width="{Binding ElementName=CheckBox, Path=ActualWidth}"
+                Height="{Binding ElementName=CheckBox, Path=ActualWidth}"
+                VerticalAlignment="Top"
+                Command="{Binding ElementName=DataContext, Path=DeleteMe}"/>
     </Grid>
 </UserControl>

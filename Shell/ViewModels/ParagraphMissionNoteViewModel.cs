@@ -41,10 +41,16 @@
         public Command AddNew { get; private set; }
         private void OnAddNewExecute()
         {
-            Context.Paragraph.AddPoint(new Point("", true));
+            Point point = new Point("", true);
+            Context.Paragraph.AddPoint(point);
             CheckTextBox pointControl = new CheckTextBox();
             pointControl.DataContext.ContextPoint = Context.Paragraph.Items.Last();
             points.Children.Insert(points.Children.Count - 1, pointControl);
+            pointControl.DataContext.OnDeleteMe += () => 
+            {
+                Context.Paragraph.RemovePoint(point.Id);
+                points.Children.Remove(pointControl);
+            };
         }
 
         public Command<StackPanel> BindStackPanel { get; private set; }
@@ -61,9 +67,13 @@
             foreach(Point point in Context.Paragraph.Items)
             {
                 CheckTextBox check = new CheckTextBox();
-                check.DataContext.IsChecked = point.IsChecked;
-                check.DataContext.Text = point.Text;
+                check.DataContext.ContextPoint = point;
                 points.Children.Insert(points.Children.Count - 1, check);
+                check.DataContext.OnDeleteMe += () =>
+                {
+                    Context.Paragraph.RemovePoint(point.Id);
+                    points.Children.Remove(check);
+                };
             }
         }
     }

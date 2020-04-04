@@ -6,9 +6,13 @@
 
     public class CheckTextBoxViewModel : ViewModelBase
     {
+        public delegate void VoidHandler();
+        public event VoidHandler OnDeleteMe;
+
         public CheckTextBoxViewModel()
         {
             ContextPoint = new ShellModel.Context.Point("", false);
+            DeleteMe = new Command(OnDeleteMeExecute);
         }
 
         #region Properties
@@ -34,11 +38,27 @@
         }
         public static readonly PropertyData TextProperty = RegisterProperty(nameof(Text), typeof(string), null);
 
-        public ShellModel.Context.Point ContextPoint { set; get; }
+        private ShellModel.Context.Point contextPoint = null;
+        public ShellModel.Context.Point ContextPoint
+        {
+            set
+            {
+                contextPoint = value;
+                Text = contextPoint.Text;
+                IsChecked = contextPoint.IsChecked;
+            }
+            get => contextPoint;
+        }
 
         #endregion
 
         #region Commands
+
+        public Command DeleteMe { get; private set; }
+        private void OnDeleteMeExecute()
+        {
+            OnDeleteMe?.Invoke();
+        }
 
         #endregion
     }
