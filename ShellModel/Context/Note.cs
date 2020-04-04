@@ -98,7 +98,7 @@ namespace ShellModel.Context
             get => text;
         }
         public DateTime Created { protected set; get; }
-        public DateTime LastChanged { protected set; get; }
+        public DateTime LastChanged { set; get; }
         public string StringLastChanged { get => LastChanged.ToString("dddd, dd MMMM yyyy HH:mm:ss"); }
 
         public static List<KeyValuePair<string, string[]>> GetChanges(Note realNote, Note oldNote)

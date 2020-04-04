@@ -67,6 +67,8 @@
         private void OnBindBaseNoteExecute(SimpleNote simpleNote)
         {
             simpleNote.DataContext.Deleting += () => { Deleting?.Invoke(); };
+            simpleNote.DataContext.Note.LastChanged = Context.LastChanged;
+            simpleNote.DataContext.StringLastChanged = simpleNote.DataContext.Note.StringLastChanged;
         }
 
         #endregion
