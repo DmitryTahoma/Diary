@@ -78,6 +78,11 @@
             ParagraphMissionNote note = new ParagraphMissionNote();
             note.DataContext.Context = new ParagraphMission("", "", Date, true);
             Notes.Children.Add(note);
+            note.DataContext.Deleting += () =>
+            {
+                Notes.Children.Remove(note);
+                DBHelper.RemoveNoteCascadeStatic(note.DataContext.Context);
+            };
         }
 
         public Command<StackPanel> ChangeStackPanel { get; private set; }
@@ -97,6 +102,11 @@
                     ParagraphMissionNote note = new ParagraphMissionNote();
                     note.DataContext.Context = (ParagraphMission) n;
                     Notes.Children.Add(note);
+                    note.DataContext.Deleting += () =>
+                    {
+                        Notes.Children.Remove(note);
+                        DBHelper.RemoveNoteCascadeStatic(note.DataContext.Context);
+                    };
                 }
                 else
                 {

@@ -9,6 +9,8 @@
 
     public class ParagraphMissionNoteViewModel : ViewModelBase
     {
+        public delegate void VoidHandler();
+        public event VoidHandler Deleting;
         StackPanel points = null;
 
         public ParagraphMissionNoteViewModel()
@@ -16,6 +18,7 @@
             AddNew = new Command(OnAddNewExecute);
             Note = new SimpleNoteViewModel();
             BindStackPanel = new Command<StackPanel>(OnBindStackPanelExecute);
+            BindBaseNote = new Command<SimpleNote>(OnBindBaseNoteExecute);
         }
 
         #region Properties
@@ -58,6 +61,12 @@
         {
             points = stackPanel;
             LoadPoints();
+        }
+
+        public Command<SimpleNote> BindBaseNote { get; private set; }
+        private void OnBindBaseNoteExecute(SimpleNote simpleNote)
+        {
+            simpleNote.DataContext.Deleting += () => { Deleting?.Invoke(); };
         }
 
         #endregion
