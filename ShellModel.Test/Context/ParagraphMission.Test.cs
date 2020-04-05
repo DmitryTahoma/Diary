@@ -269,5 +269,24 @@ namespace ShellModel.Context.Test
                 Assert.AreEqual(point.IsChecked, dbPoint.IsChecked);
             }
         }
+
+        [DataTestMethod]
+        [DataRow(1000)]
+        [DataRow(5000)]
+        [DataRow(10000)]
+        [DataRow(20000)]
+        public void SetIntervalTimingTest(int mls)
+        {
+            ParagraphMission mission = new ParagraphMission("", "", DateTime.Now, true);
+            ServerRealization.Database.Context.Mission dbMission = DBContext.Missions.Where(x => x.Id == mission.Id).First();
+            mission.SetIntervalTiming(mls);
+            DateTime start = DateTime.Now;
+            mission.Name = "test";
+            while (mission.Name != dbMission.Action.Note.Name)
+                Thread.Sleep(100);
+            DateTime end = DateTime.Now;
+            Assert.IsTrue(mls > (int)(end - start).TotalMilliseconds - 150);
+            Assert.IsTrue(mls < (int)(end - start).TotalMilliseconds + 150);
+        }
     }
 }

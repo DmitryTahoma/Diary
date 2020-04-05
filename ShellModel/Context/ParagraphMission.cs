@@ -53,6 +53,12 @@ namespace ShellModel.Context
 
         public Paragraph Paragraph { get => (Paragraph)Context; }
 
+        public void SetIntervalTiming(int mls)
+        {
+            if(mls > 499)
+                updateTimer.Interval = mls;
+        }
+
         private void InitializeAutoTiming()
         {
             commit = new ParagraphCommit(Paragraph.Id, Paragraph.Items);
