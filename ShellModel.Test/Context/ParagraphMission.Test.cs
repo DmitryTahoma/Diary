@@ -287,6 +287,47 @@ namespace ShellModel.Context.Test
             DateTime end = DateTime.Now;
             Assert.IsTrue(mls > (int)(end - start).TotalMilliseconds - 150);
             Assert.IsTrue(mls < (int)(end - start).TotalMilliseconds + 150);
+
+            mission = new ParagraphMission("", "", DateTime.Now, true);
+            mission.SetIntervalTiming(mls);
+            dbMission = DBContext.Missions.Where(x => x.Id == mission.Id).First();
+            start = DateTime.Now;
+            mission.Text = "test";
+            while (mission.Text != dbMission.Action.Note.Text)
+                Thread.Sleep(100);
+            end = DateTime.Now;
+            Assert.IsTrue(mls > (int)(end - start).TotalMilliseconds - 150);
+            Assert.IsTrue(mls < (int)(end - start).TotalMilliseconds + 150);
+
+            mission = new ParagraphMission("", "", DateTime.Now, true);
+            mission.SetIntervalTiming(mls);
+            dbMission = DBContext.Missions.Where(x => x.Id == mission.Id).First();
+            Point point = new Point("", true);
+            mission.Paragraph.AddPoint(point);
+            ServerRealization.Database.Context.Point dbPoint = DBContext.Points.Where(x => x.Id == point.Id).First();
+
+            start = DateTime.Now;
+            point.Text = "test";
+            while (point.Text != dbPoint.Name)
+                Thread.Sleep(100);
+            end = DateTime.Now;
+            Assert.IsTrue(mls > (int)(end - start).TotalMilliseconds - 150);
+            Assert.IsTrue(mls < (int)(end - start).TotalMilliseconds + 150);
+
+            mission = new ParagraphMission("", "", DateTime.Now, true);
+            mission.SetIntervalTiming(mls);
+            dbMission = DBContext.Missions.Where(x => x.Id == mission.Id).First();
+            point = new Point("", true);
+            mission.Paragraph.AddPoint(point);
+            dbPoint = DBContext.Points.Where(x => x.Id == point.Id).First();
+
+            start = DateTime.Now;
+            point.IsChecked = true;
+            while (point.IsChecked != dbPoint.IsChecked)
+                Thread.Sleep(100);
+            end = DateTime.Now;
+            Assert.IsTrue(mls > (int)(end - start).TotalMilliseconds - 150);
+            Assert.IsTrue(mls < (int)(end - start).TotalMilliseconds + 150);
         }
     }
 }
