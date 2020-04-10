@@ -36,6 +36,32 @@
                 <Setter Property="Button.Background" Value="Black"/>
                 <Setter Property="Button.BorderThickness" Value="0"/>
             </Style>
+            <Style x:Key="RemoveBtn"
+                   TargetType="Button">
+                <Setter Property="Content" Value="×"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Foreground" Value="Red"/>
+                <Setter Property="FontSize" Value="20px"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Margin" Value="0, -8, 0, 0"/>
+                <Setter Property="ToolTip" Value="Remove"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" BorderThickness="0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>                            
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="Foreground" Value="DarkRed"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
