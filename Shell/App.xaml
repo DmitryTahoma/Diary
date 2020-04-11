@@ -36,6 +36,11 @@
                 <Setter Property="Button.Background" Value="Black"/>
                 <Setter Property="Button.BorderThickness" Value="0"/>
             </Style>
+            <!-- <SimpleNote> -->
+            <Style x:Key="SimpleNote"
+                   TargetType="UserControl">
+                <Setter Property="Background" Value="White"/>
+            </Style>
             <Style x:Key="RemoveBtn"
                    TargetType="Button">
                 <Setter Property="Content" Value="×"/>
@@ -62,6 +67,49 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            <Style x:Key="LastChangedBlock"
+                   TargetType="StackPanel">
+                <Setter Property="Orientation" Value="Horizontal"/>
+            </Style>
+            <Style x:Key="LastChangedText"
+                   TargetType="TextBlock">
+                <Setter Property="Margin" Value="5, 0, 0, 0"/>
+            </Style>
+            <Style x:Key="NameOfNotePlaceholder"
+                   TargetType="TextBlock">
+                <Setter Property="Foreground" Value="Gray"/>
+                <Setter Property="FontSize" Value="20px"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+            </Style>
+            <Style x:Key="NameOfNoteText"
+                   TargetType="TextBox"
+                   BasedOn="{StaticResource ResourceKey=TransparentInput}">
+                <Setter Property="BorderThickness" Value="0, 0, 0, 2"/>
+                <Setter Property="AcceptsTab" Value="True"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0, 0, 0, 5"/>
+                <Setter Property="MaxWidth" Value="300px"/>
+                <Setter Property="FontSize" Value="20px"/>
+            </Style>
+            <Style x:Key="TextOfNotePlaceholder"
+                   TargetType="TextBlock">
+                <Setter Property="Foreground" Value="Gray"/>
+                <Setter Property="FontSize" Value="12px"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Top"/>
+            </Style>
+            <Style x:Key="TextOfNoteText"
+                   TargetType="TextBox">
+                <Setter Property="AcceptsTab" Value="True"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+                <Setter Property="MaxWidth" Value="300px"/>
+                <Setter Property="Margin" Value="0, 0, 0, 5"/>
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
+            <!-- </SimpleNote> -->
         </ResourceDictionary>
     </Application.Resources>
 </Application>

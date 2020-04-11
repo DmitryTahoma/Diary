@@ -8,7 +8,7 @@
              xmlns:catel="http://schemas.catelproject.com"
              mc:Ignorable="d" 
              d:DesignHeight="150" d:DesignWidth="300"
-             Background="White">
+             Style="{StaticResource SimpleNote}">
     <UserControl.DataContext>
         <view:SimpleNoteViewModel x:Name="DataContext"/>
     </UserControl.DataContext>
@@ -18,11 +18,9 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0"
-                    Orientation="Horizontal">
-            <TextBlock>
-                    Last changed:
-            </TextBlock>
-            <TextBlock Margin="5, 0, 0, 0"
+                    Style="{StaticResource LastChangedBlock}">
+            <TextBlock Text="Last changed:"/>
+            <TextBlock Style="{StaticResource LastChangedText}"
                        Text="{Binding ElementName=DataContext, Path=StringLastChanged, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
         <Button Style="{StaticResource RemoveBtn}">
@@ -40,20 +38,10 @@
             </Grid.RowDefinitions>
             <TextBlock x:Name="NamePH"
                        Text="Name of note"
-                       Foreground="Gray"
-                       FontSize="20px"
-                       HorizontalAlignment="Center"
+                       Style="{StaticResource NameOfNotePlaceholder}"
                        Visibility="{Binding ElementName=DataContext, Path=VisibilityNamePH, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Style="{StaticResource TransparentInput}"
-                     BorderThickness="0, 0, 0, 2"
+            <TextBox Style="{StaticResource NameOfNoteText}"
                      Text="{Binding Note.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     AcceptsTab="True"
-                     TextWrapping="Wrap"
-                     VerticalScrollBarVisibility="Auto"
-                     TextAlignment="Center"
-                     Margin="0, 0, 0, 5"
-                     MaxWidth="300"
-                     FontSize="20px"
                      MinWidth="{Binding ElementName=NamePH, Path=ActualWidth}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="TextChanged">
@@ -66,19 +54,11 @@
             </TextBox>
             <TextBlock Grid.Row="1"
                        Text="Text of note"
-                       Foreground="Gray"
-                       FontSize="12px"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Top"
+                       Style="{StaticResource TextOfNotePlaceholder}"
                        Visibility="{Binding ElementName=DataContext, Path=VisibilityTextPH, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBox Grid.Row="1"
                      Text="{Binding Note.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     AcceptsTab="True"
-                     TextWrapping="Wrap"
-                     VerticalScrollBarVisibility="Auto"
-                     MaxWidth="300"
-                     Margin="0, 0, 0, 5"
-                     Background="Transparent">
+                     Style="{StaticResource TextOfNoteText}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="TextChanged">
                         <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=UpdateTextPH}"/>
