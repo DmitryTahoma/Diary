@@ -62,7 +62,7 @@
                 </Setter>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="Background" Value="Transparent"/>
                         <Setter Property="Foreground" Value="DarkRed"/>
                     </Trigger>
                 </Style.Triggers>
@@ -110,6 +110,56 @@
                 <Setter Property="Background" Value="Transparent"/>
             </Style>
             <!-- </SimpleNote> -->
+            <Style TargetType="CheckBox"
+                   x:Key="CircleCheckbox">
+                <Setter Property="Cursor" Value="Hand"></Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type CheckBox}">
+                            <Grid>
+                                <Ellipse Fill="Transparent"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Top"
+                                         Stroke="Black"
+                                         StrokeThickness="1"
+                                         Margin="5"
+                                         Height="{TemplateBinding FontSize}"
+                                         Width="{TemplateBinding FontSize}"/>
+                                <Path x:Name="bird" Stroke="Black"
+                                      Visibility="Collapsed">
+                                    <Path.Data>
+                                        <PathGeometry>
+                                            <PathFigure IsClosed="False" StartPoint="20, 3">
+                                                <ArcSegment Point="10, 13" Size="10, 10"/>
+                                                <ArcSegment Point="2, 6" Size="10, 10"/>
+                                            </PathFigure>
+                                        </PathGeometry>
+                                    </Path.Data>
+                                </Path>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="bird" Property="Visibility" Value="Visible"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter TargetName="bird" Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="RemovePointBtn"
+                   TargetType="Button"
+                   BasedOn="{StaticResource RemoveBtn}">
+                <Setter Property="VerticalAlignment" Value="Top"/>
+                <Setter Property="Margin" Value="0, -5, 0, 0"/>
+            </Style>
+            <Style x:Key="InputCheckTextBox"
+                   TargetType="TextBox">
+                <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
