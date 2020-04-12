@@ -54,6 +54,7 @@
                 Context.Paragraph.RemovePoint(point.Id);
                 points.Children.Remove(pointControl);
             };
+            pointControl.Input.Focus();
         }
 
         public Command<StackPanel> BindStackPanel { get; private set; }

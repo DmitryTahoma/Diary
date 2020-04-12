@@ -110,8 +110,9 @@
                 <Setter Property="Background" Value="Transparent"/>
             </Style>
             <!-- </SimpleNote> -->
-            <Style TargetType="CheckBox"
-                   x:Key="CircleCheckbox">
+            <!-- <CheckTextBox> -->
+            <Style x:Key="CircleCheckbox"
+                   TargetType="CheckBox">
                 <Setter Property="Cursor" Value="Hand"></Setter>
                 <Setter Property="Template">
                     <Setter.Value>
@@ -160,6 +161,28 @@
                 <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
                 <Setter Property="TextWrapping" Value="Wrap"/>
             </Style>
+            <!-- </CheckTextBox> -->
+            <!-- <ParagraphMissionNote> -->
+            <Style x:Key="PointItems"
+                   TargetType="StackPanel">
+                <Setter Property="Margin" Value="10"/>
+                <Setter Property="MaxWidth" Value="300px"/>
+            </Style>
+            <Style x:Key="VoidBtn"
+                   TargetType="Button">
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
+            <Style x:Key="AddPointBtnContent"
+                   TargetType="StackPanel">
+                <Setter Property="Orientation" Value="Horizontal"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
+            <Style x:Key="CenterText"
+                   TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <!-- </ParagraphMissionNote> -->
         </ResourceDictionary>
     </Application.Resources>
 </Application>

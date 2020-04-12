@@ -8,7 +8,7 @@
              xmlns:catel="http://schemas.catelproject.com"
              xmlns:view="clr-namespace:Shell.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="250" d:DesignWidth="800"
+             d:DesignHeight="250" d:DesignWidth="300"
              Background="White">
     <UserControl.DataContext>
         <view:ParagraphMissionNoteViewModel x:Name="DataContext" />
@@ -21,17 +21,22 @@
         <local:SimpleNote x:Name="BaseNote"
                           DataContext="{Binding Note, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <StackPanel Grid.Row="1"
-                    Margin="10"
-                    x:Name="Items">
-            <CheckBox Content="Add new..."
-                      Foreground="Blue"
-                      IsEnabled="False">
+                    x:Name="Items"
+                    Style="{StaticResource PointItems}">
+            <Button Style="{StaticResource VoidBtn}">
+                <StackPanel Style="{StaticResource AddPointBtnContent}"
+                            Width="{Binding ElementName=Items, Path=ActualWidth}">
+                    <CheckBox Style="{StaticResource CircleCheckbox}"
+                              IsEnabled="False"/>
+                    <TextBlock Style="{StaticResource CenterText}"
+                               Text="Add new..."/>
+                </StackPanel>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <catel:EventToCommand Command="{Binding AddNew}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-            </CheckBox>
+            </Button>
         </StackPanel>
     </Grid>
     <i:Interaction.Triggers>
