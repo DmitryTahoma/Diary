@@ -56,19 +56,29 @@
             };
         }
 
+        bool isBindedStackPanel = false;
         public Command<StackPanel> BindStackPanel { get; private set; }
         private void OnBindStackPanelExecute(StackPanel stackPanel)
         {
-            points = stackPanel;
-            LoadPoints();
+            if (!isBindedStackPanel)
+            {
+                points = stackPanel;
+                LoadPoints();
+                isBindedStackPanel = true;
+            }
         }
 
+        bool isBindedBaseNote = false;
         public Command<SimpleNote> BindBaseNote { get; private set; }
         private void OnBindBaseNoteExecute(SimpleNote simpleNote)
         {
-            simpleNote.DataContext.Deleting += () => { Deleting?.Invoke(); };
-            simpleNote.DataContext.Note.LastChanged = Context.LastChanged;
-            simpleNote.DataContext.StringLastChanged = simpleNote.DataContext.Note.StringLastChanged;
+            if (!isBindedBaseNote)
+            {
+                simpleNote.DataContext.Deleting += () => { Deleting?.Invoke(); };
+                simpleNote.DataContext.Note.LastChanged = Context.LastChanged;
+                simpleNote.DataContext.StringLastChanged = simpleNote.DataContext.Note.StringLastChanged;
+                isBindedBaseNote = true;
+            }
         }
 
         #endregion
