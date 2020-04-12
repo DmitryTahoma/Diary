@@ -21,6 +21,7 @@ namespace ShellModel.Context
                 for (int i = 0; i < paragraph.Items.Count; ++i)
                     ((Paragraph)Context).Items.Add(paragraph.Items[i]);
                 InitializeAutoTiming();
+                base.isAutoTiming = true;
             }
             else
                 Context = paragraph;
@@ -87,7 +88,7 @@ namespace ShellModel.Context
         public static List<KeyValuePair<string, string[]>> GetChanges(ParagraphMission newParagraphMission, ParagraphMission oldParagraphMission)
         {
             List<KeyValuePair<string, string[]>> result = new List<KeyValuePair<string, string[]>>();
-            for (int i = 0; i < oldParagraphMission.Paragraph.Count; ++i)
+            for (int i = 0; i < newParagraphMission.Paragraph.Count; ++i)
             {
                 if (newParagraphMission.Paragraph.Items
                         .Where((x) =>

@@ -54,7 +54,6 @@
                 Context.Paragraph.RemovePoint(point.Id);
                 points.Children.Remove(pointControl);
             };
-            pointControl.Input.Focus();
         }
 
         public Command<StackPanel> BindStackPanel { get; private set; }
@@ -76,8 +75,10 @@
 
         private void LoadPoints()
         {
-            foreach(Point point in Context.Paragraph.Items)
+            for(int i = 0; i < Context.Paragraph.Items.Count; ++i)
             {
+                Point point = Context.Paragraph.Items[i];
+                Context.Paragraph.AddPoint(point, false);
                 CheckTextBox check = new CheckTextBox();
                 check.DataContext.ContextPoint = point;
                 points.Children.Insert(points.Children.Count - 1, check);

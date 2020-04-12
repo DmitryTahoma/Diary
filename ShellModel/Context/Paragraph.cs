@@ -72,13 +72,15 @@ namespace ShellModel.Context
 
         public List<Point> Items { private set; get; }
 
-        public void AddPoint(Point point)
+        public void AddPoint(Point point, bool createInDb = true)
         {
-            Items.Add(point);
+            if(createInDb)
+                Items.Add(point);
             if (isAutoTiming)
             {
-                point.Id = DBHelper.AddPointToParagraphMissionStatic(mission, point);
-                if(point.IsChecked)
+                if(createInDb)
+                    point.Id = DBHelper.AddPointToParagraphMissionStatic(mission, point);
+                if(point.IsChecked && createInDb)
                     DBHelper.SetCheckedPointStatic(point, true);
                 point.PropertyChanged += () => { PointPropertyChanged?.Invoke(); };
             }
