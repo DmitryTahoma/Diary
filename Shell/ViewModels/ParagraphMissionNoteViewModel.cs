@@ -74,9 +74,8 @@
         {
             if (!isBindedBaseNote)
             {
+                simpleNote.DataContext.Note = Context;
                 simpleNote.DataContext.Deleting += () => { Deleting?.Invoke(); };
-                simpleNote.DataContext.Note.LastChanged = Context.LastChanged;
-                simpleNote.DataContext.StringLastChanged = simpleNote.DataContext.Note.StringLastChanged;
                 isBindedBaseNote = true;
             }
         }
