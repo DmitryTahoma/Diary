@@ -68,31 +68,29 @@
             <controls:RevealPasswordBox Grid.Row="3"
                                         x:Name="PasswordInput"
                                         DataContext="{Binding PasswordBoxContext}"/>
-            <Grid Grid.Row="4"
-                  Margin="0, 10, 0, 0">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="0.5*"/>
-                </Grid.RowDefinitions>
+            <StackPanel Grid.Row="4"
+                        Margin="0, 10, 0, 0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
                 <Button FontSize="{Binding HalfPageFontSize, UpdateSourceTrigger=PropertyChanged}"
-                        Style="{StaticResource ResourceKey=BlackWhiteBtn}">
+                        Template="{StaticResource BlackBtn}"
+                        Content="Sign in">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding SignIn}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    Enter
                 </Button>
-                <Button Grid.Row="1"
-                        Style="{StaticResource ResourceKey=TransparentBlueBtn}">
+                <Button Template="{StaticResource BlackBtn}"
+                        FontSize="{Binding HalfPageFontSize, UpdateSourceTrigger=PropertyChanged}"
+                        Content="Sign up">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding Register}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    Not registered?
                 </Button>
-            </Grid>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

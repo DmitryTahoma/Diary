@@ -22,20 +22,38 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            <Style x:Key="TransparentBlueBtn"
-                   TargetType="Button">
-                <Setter Property="Button.HorizontalAlignment" Value="Center"/>
-                <Setter Property="Button.Foreground" Value="Blue"/>
-                <Setter Property="Button.Background" Value="Transparent"/>
-                <Setter Property="Button.BorderThickness" Value="0"/>
-                <Setter Property="Button.Padding" Value="20, 0"/>
-            </Style>
-            <Style x:Key="BlackWhiteBtn"
-                   TargetType="Button">
-                <Setter Property="Button.Foreground" Value="White"/>
-                <Setter Property="Button.Background" Value="Black"/>
-                <Setter Property="Button.BorderThickness" Value="0"/>
-            </Style>
+            <ControlTemplate TargetType="Button"
+                             x:Key="BlackBtn">
+                <Border CornerRadius="7"
+                        BorderThickness="0"
+                        Background="Black"
+                        MaxWidth="150px"
+                        MinWidth="100px"
+                        Margin="10"
+                        x:Name="borderBB">
+                    <ContentPresenter Margin="5"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Content="{TemplateBinding Content}"
+                                      TextBlock.Foreground="White"
+                                      TextBlock.FontSize="{TemplateBinding FontSize}"
+                                      x:Name="contentPresenterBB"/>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="borderBB" Property="BorderThickness" Value="2"/>
+                        <Setter TargetName="borderBB" Property="Margin" Value="10, 8"/>
+                        <Setter TargetName="borderBB" Property="BorderBrush" Value="DarkBlue"/>
+                        <Setter TargetName="contentPresenterBB" Property="TextBlock.Foreground" Value="AliceBlue"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter TargetName="borderBB" Property="BorderThickness" Value="2"/>
+                        <Setter TargetName="borderBB" Property="Margin" Value="10, 8"/>
+                        <Setter TargetName="borderBB" Property="BorderBrush" Value="LightBlue"/>
+                        <Setter TargetName="contentPresenterBB" Property="TextBlock.Foreground" Value="LightBlue"/>                        
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
             <!-- <SimpleNote> -->
             <Style x:Key="SimpleNote"
                    TargetType="UserControl">
