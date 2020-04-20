@@ -5,6 +5,17 @@
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <!-- <LoginPage> -->
+            <Style x:Key="LoginPage"
+                   TargetType="UserControl">
+                <Setter Property="MinHeight" Value="340px"/>
+                <Setter Property="MinWidth" Value="270px"/>
+                <Setter Property="Background" Value="White"/>
+            </Style>
+            <Style x:Key="CenterGrid"
+                   TargetType="Grid">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
             <Style x:Key="HeaderBlock" 
                    TargetType="TextBlock">
                 <Setter Property="Control.Foreground" Value="Black"/>
@@ -14,13 +25,20 @@
                 <Setter Property="Control.Background" Value="Transparent"/>
                 <Setter Property="Control.Foreground" Value="Black"/>
                 <Setter Property="Control.HorizontalAlignment" Value="Center"/>
-                <Setter Property="Control.MinWidth" Value="100"/>
+                <Setter Property="Control.MinWidth" Value="200"/>
                 <Setter Property="Control.BorderThickness" Value="0, 0, 0, 3"/>
+                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
                 <Setter Property="Control.BorderBrush">
                     <Setter.Value>
                         <SolidColorBrush Color="Black"/>
                     </Setter.Value>
                 </Setter>
+            </Style>
+            <Style x:Key="ButtonStack"
+                   TargetType="StackPanel">
+                <Setter Property="Margin" Value="0, 10, 0, 0"/>
+                <Setter Property="Orientation" Value="Horizontal"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
             </Style>
             <ControlTemplate TargetType="Button"
                              x:Key="BlackBtn">
@@ -54,6 +72,7 @@
                     </Trigger>
                 </ControlTemplate.Triggers>
             </ControlTemplate>
+            <!-- </LoginPage> -->
             <!-- <SimpleNote> -->
             <Style x:Key="SimpleNote"
                    TargetType="UserControl">

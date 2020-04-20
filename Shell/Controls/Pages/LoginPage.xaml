@@ -8,89 +8,72 @@
              xmlns:view="clr-namespace:Shell.ViewModels"
              xmlns:controls="clr-namespace:Shell.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
-             MinHeight="300px"
-             MinWidth="300px"
-             Background="White">
+             d:DesignHeight="340" d:DesignWidth="270"
+             Style="{StaticResource LoginPage}">
     <UserControl.DataContext>
         <view:LoginPageViewModel x:Name="DataContext"/>
     </UserControl.DataContext>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.1*"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="0.1*"/>
-        </Grid.ColumnDefinitions>
+    <Grid Style="{StaticResource CenterGrid}"
+          FocusManager.FocusedElement="{Binding ElementName=LoginInput}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition/>
-            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid VerticalAlignment="Center" 
-              Grid.Column="1"
-              Grid.Row="0" 
-              FocusManager.FocusedElement="{Binding ElementName=LoginInput}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <TextBlock x:Name="LoginText"
-                       Style="{StaticResource HeaderBlock}"
-                       FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
-                       Text="{Binding LoginText}"/>
-            <TextBox x:Name="LoginInput"
-                     Style="{StaticResource TransparentInput}"
-                     FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
-                     Grid.Row="1" 
-                     MaxLength="32"
-                     Text="{Binding Login}">
+        <TextBlock x:Name="LoginText"
+                   Style="{StaticResource HeaderBlock}"
+                   FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
+                   Text="{Binding LoginText}"/>
+        <TextBox x:Name="LoginInput"
+                 Style="{StaticResource TransparentInput}"
+                 FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
+                 Grid.Row="1" 
+                 MaxLength="32"
+                 Text="{Binding Login}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="KeyDown">
+                    <catel:EventToCommand Command="{Binding LoginInputKeyDown}"
+                                          PassEventArgsToCommand="True"
+                                          DisableAssociatedObjectOnCannotExecute="False"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="KeyUp">
+                    <catel:EventToCommand Command="{Binding LoginInputKeyUp}"
+                                          CommandParameter="{Binding ElementName=PasswordInput}"
+                                          PassEventArgsToCommand="False"
+                                          DisableAssociatedObjectOnCannotExecute="False"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </TextBox>
+        <TextBlock x:Name="PasswordText"
+                   Grid.Row="2"
+                   Style="{StaticResource ResourceKey=HeaderBlock}"
+                   FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
+                   Text="{Binding PasswordText}"/>
+        <controls:RevealPasswordBox Grid.Row="3"
+                                    x:Name="PasswordInput"
+                                    DataContext="{Binding PasswordBoxContext}"/>
+        <StackPanel Grid.Row="4"
+                    Style="{StaticResource ButtonStack}">
+            <Button FontSize="{Binding HalfPageFontSize, UpdateSourceTrigger=PropertyChanged}"
+                    Template="{StaticResource BlackBtn}"
+                    Content="Sign in">
                 <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="KeyDown">
-                        <catel:EventToCommand Command="{Binding LoginInputKeyDown}"
-                                              PassEventArgsToCommand="True"
-                                              DisableAssociatedObjectOnCannotExecute="False"/>
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="KeyUp">
-                        <catel:EventToCommand Command="{Binding LoginInputKeyUp}"
-                                              CommandParameter="{Binding ElementName=PasswordInput}"
-                                              PassEventArgsToCommand="False"
-                                              DisableAssociatedObjectOnCannotExecute="False"/>
+                    <i:EventTrigger EventName="Click">
+                        <catel:EventToCommand Command="{Binding SignIn}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-            </TextBox>
-            <TextBlock x:Name="PasswordText"
-                       Grid.Row="2"
-                       Style="{StaticResource ResourceKey=HeaderBlock}"
-                       FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
-                       Text="{Binding PasswordText}"/>
-            <controls:RevealPasswordBox Grid.Row="3"
-                                        x:Name="PasswordInput"
-                                        DataContext="{Binding PasswordBoxContext}"/>
-            <StackPanel Grid.Row="4"
-                        Margin="0, 10, 0, 0"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Center">
-                <Button FontSize="{Binding HalfPageFontSize, UpdateSourceTrigger=PropertyChanged}"
-                        Template="{StaticResource BlackBtn}"
-                        Content="Sign in">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <catel:EventToCommand Command="{Binding SignIn}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-                <Button Template="{StaticResource BlackBtn}"
-                        FontSize="{Binding HalfPageFontSize, UpdateSourceTrigger=PropertyChanged}"
-                        Content="Sign up">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <catel:EventToCommand Command="{Binding Register}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-            </StackPanel>
-        </Grid>
+            </Button>
+            <Button Template="{StaticResource BlackBtn}"
+                    FontSize="{Binding HalfPageFontSize, UpdateSourceTrigger=PropertyChanged}"
+                    Content="Sign up">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <catel:EventToCommand Command="{Binding Register}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </StackPanel>
     </Grid>
 </UserControl>
