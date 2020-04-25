@@ -44,7 +44,7 @@
             set { SetValue(PageFontSizeProperty, value); OnPageFontSizeSet(); }
         }
         public static readonly PropertyData PageFontSizeProperty = RegisterProperty(nameof(PageFontSize), typeof(double));
-        
+
         public string UserName
         {
             get { return GetValue<string>(UserNameProperty); }
@@ -120,7 +120,18 @@
         #region Commands
 
         public Command DoBack { private set; get; }
-        private void OnDoBackExecute() => BackToSignIn?.Invoke();
+        private void OnDoBackExecute()
+        {
+            UserName = "";
+            Email = "";
+            PasswordBoxContext.ClearPassword();
+            ConfirmPasswordBoxContext.ClearPassword();
+            BackToSignIn?.Invoke();
+            EtNameBetweenVisibility = Visibility.Hidden;
+            EtEmailWrongVisibility = Visibility.Hidden;
+            EtPasswordBetweenVisibility = Visibility.Hidden;
+            EtPasswordConfirmVisibility = Visibility.Hidden;
+        }
 
         public Command SignUp { private set; get; }
         private void OnSignUpExecute()

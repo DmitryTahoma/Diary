@@ -150,5 +150,13 @@
         }
 
         public string GetPassword() => password;
+
+        public void ClearPassword()
+        {
+            password = "";
+            textBox.Text = "";
+            passwordBox.Password = "";
+            IsShown = false;
+        }
     }
 }
