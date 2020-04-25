@@ -1,7 +1,7 @@
 ﻿<Application x:Class="Shell.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Shell"
+             xmlns:localControls="clr-namespace:Shell.Controls"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -45,7 +45,7 @@
                 <Border CornerRadius="7"
                         BorderThickness="0"
                         Background="Black"
-                        MaxWidth="150px"
+                        MaxWidth="450px"
                         MinWidth="100px"
                         Margin="10"
                         x:Name="borderBB">
@@ -73,6 +73,37 @@
                 </ControlTemplate.Triggers>
             </ControlTemplate>
             <!-- </LoginPage> -->
+            <!-- <RegistrationPage> -->
+            <Style x:Key="RegistrationPage"
+                   TargetType="UserControl">
+                <Setter Property="Background" Value="White"/>
+            </Style>
+            <Style x:Key="CenterGrid2"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource CenterGrid}">
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+            </Style>
+            <Style x:Key="RegistrationPassword"
+                   TargetType="localControls:RevealPasswordBox">
+                <Setter Property="VerticalAlignment" Value="Bottom"/>
+            </Style>
+            <Style x:Key="RegistrationTextError"
+                   TargetType="TextBlock">
+                <Setter Property="Foreground" Value="Red"/>
+                <Setter Property="FontSize" Value="10"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Top"/>
+            </Style>
+            <Style x:Key="RegistrationInput"
+                   TargetType="TextBox"
+                   BasedOn="{StaticResource TransparentInput}">
+                <Setter Property="VerticalAlignment" Value="Bottom"/>
+            </Style>
+            <Style x:Key="RegistrationInputRow"
+                   TargetType="RowDefinition">
+                <Setter Property="MinHeight" Value="42"/>
+            </Style>
+            <!-- </RegistrationPage> -->
             <!-- <SimpleNote> -->
             <Style x:Key="SimpleNote"
                    TargetType="UserControl">
