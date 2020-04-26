@@ -7,6 +7,8 @@
 
     public class RegistrationPageViewModel : ViewModelBase
     {
+        private bool dynamicValidationUserName = false, dynamicValidationEmail = false, dynamicValidationPassword = false, dynamicValidationConfirm = false;
+
         public delegate void BackToSignInContainer();
         public delegate bool SignUpContainer(string email, string password, string name);
 
@@ -20,6 +22,8 @@
             PasswordBoxContext = new RevealPasswordBoxViewModel();
             ConfirmPasswordBoxContext = new RevealPasswordBoxViewModel();
             PageFontSize = 25;
+            PasswordBoxContext.PasswordChanged += PasswordSet;
+            ConfirmPasswordBoxContext.PasswordChanged += ConfirmPasswordSet;
         }
 
         #region Properties
@@ -48,14 +52,14 @@
         public string UserName
         {
             get { return GetValue<string>(UserNameProperty); }
-            set { SetValue(UserNameProperty, value); }
+            set { SetValue(UserNameProperty, value); UserNameSet(); }
         }
         public static readonly PropertyData UserNameProperty = RegisterProperty(nameof(UserName), typeof(string), "");
 
         public string Email
         {
             get { return GetValue<string>(EmailProperty); }
-            set { SetValue(EmailProperty, value); }
+            set { SetValue(EmailProperty, value); EmailSet(); }
         }
         public static readonly PropertyData EmailProperty = RegisterProperty(nameof(Email), typeof(string), "");
 
@@ -131,6 +135,10 @@
             EtEmailWrongVisibility = Visibility.Hidden;
             EtPasswordBetweenVisibility = Visibility.Hidden;
             EtPasswordConfirmVisibility = Visibility.Hidden;
+            dynamicValidationUserName = false;
+            dynamicValidationEmail = false;
+            dynamicValidationPassword = false;
+            dynamicValidationConfirm = false;
         }
 
         public Command SignUp { private set; get; }
@@ -142,6 +150,52 @@
 
         #endregion
 
+        private void UserNameSet()
+        {
+            if (dynamicValidationUserName)
+                if (UserName.Length < 2 || UserName.Length > 64)
+                    EtNameBetweenVisibility = Visibility.Visible;
+                else
+                    EtNameBetweenVisibility = Visibility.Collapsed;
+            else if (UserName.Length > 1 && UserName.Length < 63)
+                dynamicValidationUserName = true;
+        }
+
+        private void EmailSet()
+        {
+            if(dynamicValidationEmail)
+            {
+                string pattern = @"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$";
+                if (!Regex.IsMatch(Email, pattern))
+                    EtEmailWrongVisibility = Visibility.Visible;
+                else                
+                    EtEmailWrongVisibility = Visibility.Collapsed;
+            }
+        }
+
+        private void PasswordSet()
+        {
+            if (dynamicValidationPassword)
+                if (PasswordBoxContext.GetPassword().Length < 8 || PasswordBoxContext.GetPassword().Length > 64)
+                    EtPasswordBetweenVisibility = Visibility.Visible;
+                else
+                    EtPasswordBetweenVisibility = Visibility.Collapsed;
+            else if (PasswordBoxContext.GetPassword().Length > 7 && PasswordBoxContext.GetPassword().Length < 63)
+                dynamicValidationPassword = true;
+        }
+
+        private void ConfirmPasswordSet()
+        {
+            if (dynamicValidationConfirm && dynamicValidationPassword)
+                if (PasswordBoxContext.GetPassword() != ConfirmPasswordBoxContext.GetPassword())
+                    EtPasswordConfirmVisibility = Visibility.Visible;
+                else
+                    EtPasswordConfirmVisibility = Visibility.Collapsed;
+            else if (PasswordBoxContext.GetPassword() == ConfirmPasswordBoxContext.GetPassword())
+                dynamicValidationConfirm = true;
+        }
+
         public void OnPageFontSizeSet()
         {
             PasswordBoxContext.Size = PageFontSize;
@@ -150,6 +204,10 @@
 
         public bool Validate()
         {
+            dynamicValidationUserName = true;
+            dynamicValidationEmail = true;
+            dynamicValidationPassword = true;
+            dynamicValidationConfirm = true;
             bool result = UserName.Length > 1 && UserName.Length < 65;
             if (!result)
             {

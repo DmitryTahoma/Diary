@@ -10,7 +10,10 @@
     public class RevealPasswordBoxViewModel : ViewModelBase
     {
         public delegate void OnEnterKeyUpContainer();
+        public delegate void VoidHandler();
+
         public event OnEnterKeyUpContainer OnEnterKeyUp;
+        public event VoidHandler PasswordChanged;
 
         private TextBox textBox;
         private PasswordBox passwordBox;
@@ -79,6 +82,7 @@
                 }
                 isUpdating = false;
             }
+            PasswordChanged?.Invoke();
         }
 
         public Command<KeyEventArgs> BoxKeyUp { get; private set; }
