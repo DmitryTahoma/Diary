@@ -30,8 +30,15 @@
             };
             RegistrationPageContext.OnSignUp += (e, p, n) => 
             {
+                if(dbHelper.Registration(e, p, n))
+                {
+                    DBHelper.Login = e;
+                    DBHelper.Password = p;
+                    SelectedTabItemId = 2;
+                    return true;
+                }
                 SelectedTabItemId = 0;
-                return dbHelper.Registration(e, p, n);
+                return false;
             };
         }
 
