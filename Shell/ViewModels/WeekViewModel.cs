@@ -1,6 +1,7 @@
 ﻿namespace Shell.ViewModels
 {
     using Catel.MVVM;
+    using ShellModel;
     using System;
     using System.Windows.Controls;
 
@@ -40,7 +41,8 @@
                         MinHeight = 100
                     };
                     day.DataContext.Date = date.AddDays(i);
-                    day.DataContext.LoadDayFromDB();
+                    if(!DBHelper.IsNewUser)
+                        day.DataContext.LoadDayFromDB();
                     wrapPanel.Children.Add(day);
                 }
                 isLoaded = true;

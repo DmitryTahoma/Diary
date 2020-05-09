@@ -34,6 +34,7 @@
                 {
                     DBHelper.Login = e;
                     DBHelper.Password = p;
+                    DBHelper.IsNewUser = true;
                     SelectedTabItemId = 2;
                     return true;
                 }
