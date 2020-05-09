@@ -32,7 +32,18 @@
         <TextBox Grid.Row="1"  
                  Style="{StaticResource ResourceKey=RegistrationInput}"
                  FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                 Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="KeyDown">
+                    <catel:EventToCommand Command="{Binding NameKeyDown}"
+                                          PassEventArgsToCommand="True"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="KeyUp">
+                    <catel:EventToCommand Command="{Binding NameKeyUp}"
+                                          CommandParameter="{Binding ElementName=etb}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </TextBox>
         <TextBlock Grid.Row="1" 
                    Text="{Binding EtNameBeetween, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                    Style="{StaticResource RegistrationTextError}"
@@ -41,10 +52,18 @@
                    Style="{StaticResource ResourceKey=HeaderBlock}"
                    FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                    Text="Your email"/>
-        <TextBox Grid.Row="3" 
+        <TextBox x:Name="etb"
+                 Grid.Row="3" 
                  Style="{StaticResource ResourceKey=RegistrationInput}"
                  FontSize="{Binding PageFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                 Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="KeyUp">
+                    <catel:EventToCommand Command="{Binding EmailKeyUp}"
+                                          PassEventArgsToCommand="True"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </TextBox>
         <TextBlock Grid.Row="3"
                    Style="{StaticResource RegistrationTextError}"
                    Text="{Binding EtEmailWrong, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

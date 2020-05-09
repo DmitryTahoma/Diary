@@ -9,10 +9,10 @@
 
     public class RevealPasswordBoxViewModel : ViewModelBase
     {
-        public delegate void OnEnterKeyUpContainer();
         public delegate void VoidHandler();
 
-        public event OnEnterKeyUpContainer OnEnterKeyUp;
+        public event VoidHandler OnEnterKeyUp;
+        public event VoidHandler OnEscapeKeyUp;
         public event VoidHandler PasswordChanged;
 
         private TextBox textBox;
@@ -89,6 +89,8 @@
         {
             if (e.Key == Key.Enter && OnEnterKeyUp != null)
                 OnEnterKeyUp();
+            else if (e.Key == Key.Escape && OnEscapeKeyUp != null)
+                OnEscapeKeyUp();
         }
 
         public Command<Grid> FindBoxes { private set; get; }

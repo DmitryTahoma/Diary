@@ -4,6 +4,8 @@
     using Catel.MVVM;
     using System.Text.RegularExpressions;
     using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
 
     public class RegistrationPageViewModel : ViewModelBase
     {
@@ -19,8 +21,15 @@
         {
             DoBack = new Command(OnDoBackExecute);
             SignUp = new Command(OnSignUpExecute);
+            NameKeyDown = new Command<KeyEventArgs>(OnNameKeyDownExecute);
+            NameKeyUp = new Command<TextBox>(OnNameKeyUpExecute);
+            EmailKeyUp = new Command<KeyEventArgs>(OnEmailKeyUpExecute);
             PasswordBoxContext = new RevealPasswordBoxViewModel();
+            PasswordBoxContext.OnEnterKeyUp += () => { ConfirmPasswordBoxContext.Focus(); };
+            PasswordBoxContext.OnEscapeKeyUp += OnDoBackExecute;
             ConfirmPasswordBoxContext = new RevealPasswordBoxViewModel();
+            ConfirmPasswordBoxContext.OnEnterKeyUp += OnSignUpExecute;
+            ConfirmPasswordBoxContext.OnEscapeKeyUp += OnDoBackExecute;
             PageFontSize = 25;
             PasswordBoxContext.PasswordChanged += PasswordSet;
             ConfirmPasswordBoxContext.PasswordChanged += ConfirmPasswordSet;
@@ -146,6 +155,31 @@
         {
             if(Validate())
                 OnSignUp?.Invoke(Email, PasswordBoxContext.GetPassword(), UserName);
+        }
+
+        bool isEnter_ntb = false;
+        public Command<KeyEventArgs> NameKeyDown { get; private set; }
+        private void OnNameKeyDownExecute(KeyEventArgs e)
+        {
+            isEnter_ntb = e.Key == Key.Enter;
+            if (e.Key == Key.Escape)
+                OnDoBackExecute();
+        }
+
+        public Command<TextBox> NameKeyUp { get; private set; }
+        private void OnNameKeyUpExecute(TextBox etb)
+        {
+            if (isEnter_ntb)
+                etb.Focus();
+        }
+
+        public Command<KeyEventArgs> EmailKeyUp { get; private set; }
+        private void OnEmailKeyUpExecute(KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                PasswordBoxContext.Focus();
+            else if (e.Key == Key.Escape)
+                OnDoBackExecute();
         }
 
         #endregion
