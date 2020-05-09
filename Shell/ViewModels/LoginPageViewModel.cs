@@ -21,6 +21,7 @@
             SignIn = new Command(OnSignInExecute);
             PasswordBoxContext.Size = 40;
             PageFontSize = 40;
+            PasswordBoxContext.OnEnterKeyUp += () => { OnSignIn?.Invoke(Login, PasswordBoxContext.GetPassword()); };
         }
 
         #region Properties
@@ -78,8 +79,8 @@
         public Command<RevealPasswordBox> LoginInputKeyUp { get; private set; }
         private void OnLoginInputKeyUpExecute(RevealPasswordBox passwordBox)
         {
-            if(isEnter)
-                passwordBox.Focus();
+            if (isEnter)
+                PasswordBoxContext.Focus();
         }
 
         public Command Register { get; private set; }

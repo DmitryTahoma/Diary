@@ -23,7 +23,6 @@
         {
             UpdatePassword = new Command(OnUpdatePasswordExecute);
             BoxKeyUp = new Command<KeyEventArgs>(OnBoxKeyUpExecute);
-            MyGotFocus = new Command(OnMyGotFocusExecute);
             FindBoxes = new Command<Grid>(OnFindBoxesExecute);
             MouseEnter = new Command<Image>(OnMouseEnterExecute);
             MouseLeave = new Command<Image>(OnMouseLeaveExecute);
@@ -92,15 +91,6 @@
                 OnEnterKeyUp();
         }
 
-        public Command MyGotFocus { get; private set; }
-        private void OnMyGotFocusExecute()
-        {
-            if (IsShown)
-                textBox.Focus();
-            else
-                passwordBox.Focus();
-        }
-
         public Command<Grid> FindBoxes { private set; get; }
         private void OnFindBoxesExecute(Grid content)
         {
@@ -161,6 +151,14 @@
             textBox.Text = "";
             passwordBox.Password = "";
             IsShown = false;
+        }
+
+        public void Focus()
+        {
+            if (IsShown)
+                textBox.Focus();
+            else
+                passwordBox.Focus();
         }
     }
 }
