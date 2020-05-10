@@ -51,6 +51,10 @@
                    Style="{StaticResource ResourceKey=HeaderBlock}"
                    FontSize="{Binding PageFontSize, UpdateSourceTrigger=PropertyChanged}"
                    Text="{Binding PasswordText}"/>
+        <TextBlock Style="{StaticResource RegistrationTextError}"
+                   Visibility="{Binding ErrorTextVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                   Text="Incorrect login or password"
+                   Grid.Row="3"/>
         <controls:RevealPasswordBox Grid.Row="3"
                                     x:Name="PasswordInput"
                                     DataContext="{Binding PasswordBoxContext}"/>

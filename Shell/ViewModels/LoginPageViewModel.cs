@@ -3,6 +3,7 @@
     using Catel.Data;
     using Catel.MVVM;
     using Shell.Controls;
+    using System.Windows;
     using System.Windows.Input;
 
     public class LoginPageViewModel : ViewModelBase
@@ -22,6 +23,7 @@
             PasswordBoxContext.Size = 40;
             PageFontSize = 40;
             PasswordBoxContext.OnEnterKeyUp += () => { OnSignIn?.Invoke(Login, PasswordBoxContext.GetPassword()); };
+            ErrorTextVisibility = Visibility.Collapsed;
         }
 
         #region Properties
@@ -66,6 +68,13 @@
             get { return PageFontSize / 2; }
         }
 
+        public Visibility ErrorTextVisibility
+        {
+            get { return GetValue<Visibility>(ErrorTextVisibilityProperty); }
+            set { SetValue(ErrorTextVisibilityProperty, value); }
+        }
+        public static readonly PropertyData ErrorTextVisibilityProperty = RegisterProperty(nameof(ErrorTextVisibility), typeof(Visibility), null);
+        
         #endregion
 
         #region Commands
@@ -87,7 +96,14 @@
         private void OnRegisterExecute() => IfNotRegistered?.Invoke();
 
         public Command SignIn { get; private set; }
-        private void OnSignInExecute() => OnSignIn?.Invoke(Login, PasswordBoxContext.GetPassword());
+        private void OnSignInExecute()
+        {
+            if (OnSignIn != null)
+                if (Login.Length < 6 || PasswordBoxContext.GetPassword().Length < 8)
+                    ErrorTextVisibility = Visibility.Visible;
+                else if (!OnSignIn.Invoke(Login, PasswordBoxContext.GetPassword()))
+                        ErrorTextVisibility = Visibility.Visible;
+        }
 
         #endregion
     }
