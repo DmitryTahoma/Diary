@@ -251,6 +251,46 @@
                 <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
             <!-- </ParagraphMissionNote> -->
+            <!-- <DayOfWeek> -->
+            <ControlTemplate TargetType="Button"
+                             x:Key="WhiteBtn">
+                <Border CornerRadius="7"
+                        BorderThickness="1"
+                        BorderBrush="Gray"
+                        Background="White"
+                        MaxWidth="450px"
+                        MinWidth="100px"
+                        Margin="10"
+                        x:Name="borderBB">
+                    <ContentPresenter Margin="5"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Content="{TemplateBinding Content}"
+                                      TextBlock.Foreground="Black"
+                                      TextBlock.FontSize="{TemplateBinding FontSize}"
+                                      x:Name="contentPresenterBB"/>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="borderBB" Property="BorderThickness" Value="1"/>
+                        <Setter TargetName="borderBB" Property="Margin" Value="10, 8"/>
+                        <Setter TargetName="borderBB" Property="BorderBrush" Value="DarkBlue"/>
+                        <Setter TargetName="contentPresenterBB" Property="TextBlock.Foreground" Value="Black"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter TargetName="borderBB" Property="BorderThickness" Value="1"/>
+                        <Setter TargetName="borderBB" Property="Margin" Value="10, 8"/>
+                        <Setter TargetName="borderBB" Property="BorderBrush" Value="DarkBlue"/>
+                        <Setter TargetName="contentPresenterBB" Property="TextBlock.Foreground" Value="Gray"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+            <Style x:Key="TodayMark"
+                   TargetType="TextBlock">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Foreground" Value="Blue"/>
+            </Style>
+            <!-- </DayOfWeek> -->
         </ResourceDictionary>
     </Application.Resources>
 </Application>

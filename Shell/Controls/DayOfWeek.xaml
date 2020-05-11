@@ -22,8 +22,7 @@
                    Text="{Binding DateString, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Text="today"
                    Visibility="{Binding TodayTextVisibility, UpdateSourceTrigger=PropertyChanged}"
-                   HorizontalAlignment="Right"
-                   Foreground="Blue" />
+                   Style="{StaticResource TodayMark}"/>
         <StackPanel Grid.Row="1"
                     x:Name="Notes" />
         <Grid Grid.Row="2">
@@ -32,7 +31,8 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Button x:Name="AddNoteBtn"
-                    Content="Add note">
+                    Content="Add note"
+                    Template="{StaticResource WhiteBtn}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <catel:EventToCommand Command="{Binding AddNote}"
@@ -41,7 +41,8 @@
                 </i:Interaction.Triggers>
             </Button>
             <Button Grid.Column="1"
-                    Content="Add paragraph note">
+                    Content="Add paragraph note"
+                    Template="{StaticResource WhiteBtn}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <catel:EventToCommand Command="{Binding AddParagraphNote}"
