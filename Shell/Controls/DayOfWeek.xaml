@@ -23,8 +23,10 @@
         <TextBlock Text="today"
                    Visibility="{Binding TodayTextVisibility, UpdateSourceTrigger=PropertyChanged}"
                    Style="{StaticResource TodayMark}"/>
-        <StackPanel Grid.Row="1"
-                    x:Name="Notes" />
+        <ScrollViewer Grid.Row="1"
+                      Style="{StaticResource ScrollViewerDay}">
+            <StackPanel x:Name="Notes"/>
+        </ScrollViewer>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

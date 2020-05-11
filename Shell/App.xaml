@@ -290,6 +290,10 @@
                 <Setter Property="HorizontalAlignment" Value="Right"/>
                 <Setter Property="Foreground" Value="Blue"/>
             </Style>
+            <Style x:Key="ScrollViewerDay"
+                   TargetType="ScrollViewer">
+                <Setter Property="MaxHeight" Value="300px"/>
+            </Style>
             <!-- </DayOfWeek> -->
         </ResourceDictionary>
     </Application.Resources>
