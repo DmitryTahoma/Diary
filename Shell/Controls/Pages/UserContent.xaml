@@ -25,7 +25,8 @@
             <StackPanel Grid.Column="1"
                         Orientation="Horizontal">
                 <Button x:Name="JanBtn"
-                        Content="January">
+                        Content="January"
+                        Template="{StaticResource TabButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
@@ -34,7 +35,8 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="FebBtn"
-                        Content="February">
+                        Content="February"
+                        Template="{StaticResource TabButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
@@ -43,7 +45,8 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="MarBtn"
-                        Content="March">
+                        Content="March"
+                        Template="{StaticResource TabButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
@@ -52,7 +55,8 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="AprBtn"
-                        Content="April">
+                        Content="April"
+                        Template="{StaticResource TabButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
@@ -61,7 +65,8 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="MayBtn"
-                        Content="May">
+                        Content="May"
+                        Template="{StaticResource TabButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
@@ -70,7 +75,8 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="JunBtn"
-                        Content="June">
+                        Content="June"
+                        Template="{StaticResource TabButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
@@ -79,7 +85,8 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="JulBtn"
-                        Content="July">
+                        Content="July"
+                        Template="{StaticResource TabButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
@@ -88,7 +95,8 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="AugBtn"
-                        Content="August">
+                        Content="August"
+                        Template="{StaticResource TabButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
@@ -97,7 +105,8 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="SepBtn"
-                        Content="September">
+                        Content="September"
+                        Template="{StaticResource TabButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
@@ -106,7 +115,8 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="OctBtn"
-                        Content="October">
+                        Content="October"
+                        Template="{StaticResource TabButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
@@ -115,7 +125,8 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="NovBtn"
-                        Content="November">
+                        Content="November"
+                        Template="{StaticResource TabButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
@@ -124,7 +135,8 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="DecBtn"
-                        Content="December">
+                        Content="December"
+                        Template="{StaticResource TabButtonLast}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=SetMonth}"
