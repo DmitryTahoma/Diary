@@ -530,5 +530,42 @@ namespace ServerRealization.Test
                 Assert.IsTrue(DBContext.Points.Where(x => x.Id == pointId).Count() == 0);
             Assert.AreEqual(expectedResult, result);
         }
+
+        [DataTestMethod]
+        [DataRow("Alex92", "pass1234", "Name", "Text", "13", "5", "2020", "13", "4", "2020", "[id]")]
+        [DataRow("Alex92", "pass1234", "Lorem", "ipsum", "1", "1", "2019", "17", "5", "2020", "[id]")]
+        [DataRow("Alex923", "pass1234", "Lorem", "ipsum", "1", "1", "2019", "17", "5", "2020", "False")]
+        [DataRow("Alex92", "pass12345", "Lorem", "ipsum", "1", "1", "2019", "17", "5", "2020", "False")]
+        [DataRow("", "pass1234", "Name", "Text", "13", "5", "2020", "13", "4", "2020", "ae")]
+        [DataRow("Alex92", "", "Name", "Text", "13", "5", "2020", "13", "4", "2020", "ae")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", "13", "5", "2020", "", "4", "2020", "ae")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", "13", "5", "2020", "13", "", "2020", "ae")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", "13", "5", "2020", "13", "4", "", "ae")]
+        [DataRow("Tahoma", "password", "Name", "Text", "13", "5", "2020", "13", "4", "2020", "ane")]
+        public void DuplicateNoteTest(string login, string password, string name, string text, string createdDay, string createdMonth, string createdYear, string newDay, string newMonth, string newYear, string expectedResult)
+        {
+            int noteId = int.Parse(server.ExecuteCommand("cnn", new string[] { correctLogin, correctPassword, name, text, createdDay, createdMonth, createdYear }));
+
+            DateTime before = DateTime.Now;
+            string result = server.ExecuteCommand("dn", new string[] { login, password, noteId.ToString(), newDay, newMonth, newYear });
+            DateTime after = DateTime.Now;
+            if (expectedResult != "[id]")
+                Assert.AreEqual(expectedResult, result);
+            else
+            {
+                Assert.IsTrue(int.TryParse(result, out int dNoteId));
+                Assert.AreNotEqual(noteId, dNoteId);
+                Note note = DBContext.Notes.Where(x => x.Id == noteId).First();
+                Note dNote = DBContext.Notes.Where(x => x.Id == dNoteId).First();
+
+                Assert.AreEqual(name, dNote.Name);
+                Assert.AreEqual(text, dNote.Text);
+                Assert.AreEqual(note.UserId, dNote.UserId);
+                Assert.AreEqual(newDay, dNote.Created.Day.ToString());
+                Assert.AreEqual(newMonth, dNote.Created.Month.ToString());
+                Assert.AreEqual(newYear, dNote.Created.Year.ToString());
+                Assert.IsTrue(before <= dNote.LastChanged && dNote.LastChanged <= after);
+            }
+        }
     }
 }

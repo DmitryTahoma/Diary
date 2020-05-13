@@ -29,6 +29,7 @@ namespace ServerRealization
                 case "gd": return GetDay(args);
                 case "rnc": return RemoveNoteCascade(args);
                 case "rp": return RemovePoint(args);
+                case "dn": return DuplicateNote(args);
                 case "generate1000notes": return Generate1000Notes();
             }
         }
@@ -367,6 +368,31 @@ namespace ServerRealization
             DBContext.Points.Where(x => x.Id == pointId).First().Paragraph.Count--;
             DBContext.Points.Remove(DBContext.Points.Where(x => x.Id == pointId).First());
             return "True";
+        }
+
+        public string DuplicateNote(string[] args)
+        {
+            if (!ArgsHelper.CheckArgs(args, 6, 2, 3, 4, 5))
+                return "ae";
+            if (!ArgsHelper.CheckLoginPassword(args[0], args[1]))
+                return "False";
+            int id = int.Parse(args[2]);
+            if (!ArgsHelper.NoteIsExist(id))
+                return "ae";
+            if (ArgsHelper.IsAne(args[0], args[1], id))
+                return "ane";
+
+            int day = int.Parse(args[3]);
+            int month = int.Parse(args[4]);
+            int year = int.Parse(args[5]);
+            DateTime newCreated;
+            try { newCreated = new DateTime(int.Parse(args[5]), int.Parse(args[4]), int.Parse(args[3])); }
+            catch { return "ae"; }
+
+            Note note = DBContext.Notes.Where(x => x.Id == id).First();
+            Note dNote = new Note(note.User, DBContext.Collections.Where(x => x.Id == 1).First(), note.Name, note.Text, new DateTime(year, month, day), DateTime.Now);
+            DBContext.Notes.Add(dNote);
+            return dNote.Id.ToString();
         }
 
         public string Generate1000Notes()
