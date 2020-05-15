@@ -205,6 +205,16 @@ namespace ShellModel
             throw new ArgumentException();
         }
 
+        public Note DuplicateNote(Note note, DateTime dateNewCreated)
+        {
+            object result = DoLockedProcess(() => { return client.SendCommand("dn", new string[] { DBHelper.Login, DBHelper.Password, note.Id.ToString(), dateNewCreated.Day.ToString(), dateNewCreated.Month.ToString(), dateNewCreated.Year.ToString() }); });
+            if (result != null)
+                if (result is string res)
+                    if (int.TryParse(res, out int r))
+                        return new Note(r, 0, note.Name, note.Text, dateNewCreated, DateTime.Now, true);
+            throw new ArgumentException();
+        }
+
         public static async Task<List<Note>> GetDayAsync(string login, string password, int day, int month, int year)
         {
             return await Task<List<Note>>.Run(() =>
@@ -277,5 +287,8 @@ namespace ShellModel
 
         public static bool SetCheckedPointStatic(Point point, bool isChecked)
             => new DBHelper(lastSettings).SetCheckedPoint(point, isChecked);
+
+        public static Note DuplicateNoteStatic(Note note, DateTime dateNewCreated)
+            => new DBHelper(lastSettings).DuplicateNote(note, dateNewCreated);
     }
 }

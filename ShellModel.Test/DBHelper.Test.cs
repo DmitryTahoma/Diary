@@ -357,5 +357,35 @@ namespace ShellModel.Test
             Assert.IsTrue(helper.SetCheckedPoint(mission.Paragraph.Items.First(), !isChecked));
             Assert.AreEqual(!isChecked, DBContext.Points.Where(x => x.Id == mission.Paragraph.Items.First().Id).First().IsChecked);
         }
+
+        [DataTestMethod]
+        [DataRow("Name", "Text", "13", "5", "2020", "13", "4", "2020")]
+        [DataRow("Lorem", "ipsum", "1", "1", "2019", "17", "5", "2020")]
+        public void DuplicateNoteTest(string name, string text, string createdDay, string createdMonth, string createdYear, string newDay, string newMonth, string newYear)
+        {
+            Note note = new Note(-1, -1, name, text, new DateTime(int.Parse(createdYear), int.Parse(createdMonth), int.Parse(createdDay)), DateTime.Now, true);
+
+            DateTime before = DateTime.Now;
+            Note dNote = helper.DuplicateNote(note, new DateTime(int.Parse(newYear), int.Parse(newMonth), int.Parse(newDay)));
+            DateTime after = DateTime.Now;
+
+            Assert.AreNotEqual(note.Id, dNote.Id);
+            ServerRealization.Database.Context.Note dbNote = DBContext.Notes.Where(x => x.Id == note.Id).First();
+            ServerRealization.Database.Context.Note DbDNote = DBContext.Notes.Where(x => x.Id == dNote.Id).First();
+
+            Assert.AreEqual(name, dNote.Name);
+            Assert.AreEqual(name, DbDNote.Name);
+            Assert.AreEqual(text, dNote.Text);
+            Assert.AreEqual(text, DbDNote.Text);
+            Assert.AreEqual(dbNote.UserId, DbDNote.UserId);
+            Assert.AreEqual(newDay, dNote.Created.Day.ToString());
+            Assert.AreEqual(newDay, DbDNote.Created.Day.ToString());
+            Assert.AreEqual(newMonth, dNote.Created.Month.ToString());
+            Assert.AreEqual(newMonth, DbDNote.Created.Month.ToString());
+            Assert.AreEqual(newYear, dNote.Created.Year.ToString());
+            Assert.AreEqual(newYear, DbDNote.Created.Year.ToString());
+            Assert.IsTrue(before <= dNote.LastChanged && dNote.LastChanged <= after);
+            Assert.IsTrue(before <= DbDNote.LastChanged && DbDNote.LastChanged <= after);
+        }
     }
 }
