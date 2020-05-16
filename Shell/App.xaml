@@ -124,7 +124,7 @@
                         <ControlTemplate TargetType="{x:Type Button}">
                             <Border Background="{TemplateBinding Background}" BorderThickness="0">
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>                            
+                            </Border>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -135,9 +135,11 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            <Style x:Key="LastChangedBlock"
-                   TargetType="StackPanel">
-                <Setter Property="Orientation" Value="Horizontal"/>
+            <Style x:Key="OptionBtn"
+                   TargetType="Button"
+                   BasedOn="{StaticResource RemoveBtn}">
+                <Setter Property="Content" Value="≡"/>
+                <Setter Property="ToolTip" Value="Menu"/>
             </Style>
             <Style x:Key="LastChangedText"
                    TargetType="TextBlock">

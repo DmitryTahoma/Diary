@@ -17,19 +17,21 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0"
-                    Style="{StaticResource LastChangedBlock}">
+        <StackPanel Grid.Row="0">
             <TextBlock Text="Last changed:"/>
             <TextBlock Style="{StaticResource LastChangedText}"
                        Text="{Binding ElementName=DataContext, Path=StringLastChanged, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
-        <Button Style="{StaticResource RemoveBtn}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=Delete}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Button>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource OptionBtn}"/>
+            <Button Style="{StaticResource RemoveBtn}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=Delete}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </StackPanel>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
