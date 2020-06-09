@@ -4,6 +4,7 @@
     using Catel.MVVM;
     using ShellModel.Context;
     using System;
+    using System.Timers;
     using System.Windows;
 
     public class SimpleNoteViewModel : ViewModelBase
@@ -16,7 +17,12 @@
             Delete = new Command(OnDeleteExecute);
             UpdateNamePH = new Command(OnUpdateNamePHExecute);
             UpdateTextPH = new Command(OnUpdateTextPHExecute);
+            ShowOptionMenu = new Command(OnShowOptionMenuExecute);
+            MouseEnterOptionMenu = new Command(OnMouseEnterOptionMenuExecute);
+            MouseLeaveOptionMenu = new Command(OnMouseLeaveOptionMenuExecute);
             Note = new Note(-1, "", "", DateTime.MinValue, DateTime.MinValue);
+            VisibilityOptionMenu = Visibility.Collapsed;
+            colapsingOptionMenu.Elapsed += (s, e) => { VisibilityOptionMenu = Visibility.Collapsed; };
         }
 
         public SimpleNoteViewModel(Note note)
@@ -24,7 +30,12 @@
             Delete = new Command(OnDeleteExecute);
             UpdateNamePH = new Command(OnUpdateNamePHExecute);
             UpdateTextPH = new Command(OnUpdateTextPHExecute);
+            ShowOptionMenu = new Command(OnShowOptionMenuExecute);
+            MouseEnterOptionMenu = new Command(OnMouseEnterOptionMenuExecute);
+            MouseLeaveOptionMenu = new Command(OnMouseLeaveOptionMenuExecute);
             Note = note;
+            VisibilityOptionMenu = Visibility.Collapsed;
+            colapsingOptionMenu.Elapsed += (s, e) => { VisibilityOptionMenu = Visibility.Collapsed; };
         }
 
         #region Properties
@@ -64,6 +75,13 @@
         }
         public static readonly PropertyData VisibilityTextPHProperty = RegisterProperty(nameof(VisibilityTextPH), typeof(Visibility), null);
 
+        public Visibility VisibilityOptionMenu
+        {
+            get { return GetValue<Visibility>(VisibilityOptionMenuProperty); }
+            set { SetValue(VisibilityOptionMenuProperty, value); }
+        }
+        public static readonly PropertyData VisibilityOptionMenuProperty = RegisterProperty(nameof(VisibilityOptionMenu), typeof(Visibility), null);
+
         #endregion
 
         #region Commands
@@ -84,6 +102,33 @@
         private void OnUpdateTextPHExecute()
         {
             VisibilityTextPH = Note.Text == "" ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public Command ShowOptionMenu { get; private set; }
+        private void OnShowOptionMenuExecute()
+        {
+            VisibilityOptionMenu = VisibilityOptionMenu == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            colapsingOptionMenu.Interval = 1500;
+            if (!colapsingOptionMenu.Enabled)
+                colapsingOptionMenu.Start();            
+        }
+
+        Timer colapsingOptionMenu = new Timer(750);
+        public Command MouseEnterOptionMenu { get; private set; }
+        private void OnMouseEnterOptionMenuExecute()
+        {
+            if (colapsingOptionMenu.Enabled)
+                colapsingOptionMenu.Stop();
+        }
+
+        public Command MouseLeaveOptionMenu { get; private set; }
+        private void OnMouseLeaveOptionMenuExecute()
+        {
+            if (!colapsingOptionMenu.Enabled)
+            {
+                colapsingOptionMenu.Interval = 750;
+                colapsingOptionMenu.Start();
+            }
         }
 
         #endregion

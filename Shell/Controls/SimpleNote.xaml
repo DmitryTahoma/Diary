@@ -23,7 +23,13 @@
                        Text="{Binding ElementName=DataContext, Path=StringLastChanged, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource OptionBtn}"/>
+            <Button Style="{StaticResource OptionBtn}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=ShowOptionMenu}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
             <Button Style="{StaticResource RemoveBtn}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -70,6 +76,32 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </TextBox>
+        </Grid>
+        <Grid Grid.RowSpan="2"
+              Margin="0, 4, 0, 0"
+              Visibility="{Binding ElementName=DataContext, Path=VisibilityOptionMenu, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.25*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="1"
+                    BorderThickness="1"
+                    BorderBrush="Blue">
+            <StackPanel Orientation="Vertical"                        
+                        Background="White">
+                    <Button Style="{StaticResource VoidBtn}"
+                            Content="Copy"/>
+                </StackPanel>
+            </Border>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseEnter">
+                    <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=MouseEnterOptionMenu}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseLeave">
+                    <catel:EventToCommand Command="{Binding ElementName=DataContext, Path=MouseLeaveOptionMenu}"/>                    
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </Grid>
     </Grid>
 </UserControl>
