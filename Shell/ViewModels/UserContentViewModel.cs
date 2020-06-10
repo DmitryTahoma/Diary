@@ -8,11 +8,21 @@
 
     public class UserContentViewModel : ViewModelBase
     {
+        public delegate void VoidHandler();
+        public delegate void DateTimeHandler(DateTime selected);
+        public event VoidHandler OnCancel;
+        public event DateTimeHandler OnSelected;
+
         public UserContentViewModel()
         {
             SelectedMonthId = DateTime.Now.Month - 1;
+            SelectedDate = DateTime.Now;
             SetMonth = new Command<string>(OnSetMonthExecute);
             InitializeMonths = new Command<ItemCollection>(OnInitializeMonthsExecute);
+            AddDay = new Command(OnAddDayExecute);
+            RemoveDay = new Command(OnRemoveDayExecute);
+            CancelSelecting = new Command(OnCancelSelectingExecute);
+            SelectDate = new Command(OnSelectDateExecute);
         }
 
         #region Properties
@@ -23,7 +33,15 @@
             set { SetValue(SelectedMonthIdProperty, value); }
         }
         public static readonly PropertyData SelectedMonthIdProperty = RegisterProperty(nameof(SelectedMonthId), typeof(int), null);
+        
+        public DateTime SelectedDate
+        {
+            get { return GetValue<DateTime>(SelectedDateProperty); }
+            set { SetValue(SelectedDateProperty, value); }
+        }
 
+        public static readonly PropertyData SelectedDateProperty = RegisterProperty(nameof(SelectedDate), typeof(DateTime), null);
+        
         #endregion
 
         #region Commands
@@ -60,6 +78,32 @@
                 item.Content = month;
                 m++;
             }
+        }
+
+        public Command AddDay { get; private set; }
+        private void OnAddDayExecute()
+        {
+            SelectedDate = SelectedDate.AddDays(1);
+        }
+
+        public Command RemoveDay { get; private set; }
+        private void OnRemoveDayExecute()
+        {
+            SelectedDate = SelectedDate.AddDays(-1);
+        }
+
+        public Command CancelSelecting { get; private set; }
+        private void OnCancelSelectingExecute()
+        {
+            OnCancel?.Invoke();
+        }
+
+        public Command SelectDate { get; private set; }
+        private void OnSelectDateExecute()
+        {
+            OnSelected?.Invoke(SelectedDate);
+            SelectedDate = DateTime.Now;
+            OnCancel?.Invoke();
         }
 
         #endregion
