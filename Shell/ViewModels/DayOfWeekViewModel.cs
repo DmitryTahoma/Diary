@@ -12,6 +12,9 @@
 
     public class DayOfWeekViewModel : ViewModelBase
     {
+        public delegate void NoteHandler(Note note);
+        public event NoteHandler SelectDate;
+
         private StackPanel Notes = null;
 
         public DayOfWeekViewModel()
@@ -70,6 +73,10 @@
                 Notes.Children.Remove(note);
                 DBHelper.RemoveNoteCascadeStatic(note.DataContext.Note);
             };
+            note.DataContext.SelectDate += (n) =>
+            {
+                SelectDate?.Invoke(n);
+            };
         }
 
         public Command AddParagraphNote { get; private set; }
@@ -117,6 +124,10 @@
                     {
                         Notes.Children.Remove(note);
                         DBHelper.RemoveNoteCascadeStatic(note.DataContext.Note);
+                    };
+                    note.DataContext.SelectDate += (n) =>
+                    {
+                        SelectDate?.Invoke(n);
                     };
                 }
         }

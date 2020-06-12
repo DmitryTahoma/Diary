@@ -11,6 +11,8 @@
     {
         public delegate void DeletingHandler();
         public event DeletingHandler Deleting;
+        public delegate void NoteHandler(Note note);
+        public event NoteHandler SelectDate;
 
         public SimpleNoteViewModel()
         {
@@ -20,6 +22,7 @@
             ShowOptionMenu = new Command(OnShowOptionMenuExecute);
             MouseEnterOptionMenu = new Command(OnMouseEnterOptionMenuExecute);
             MouseLeaveOptionMenu = new Command(OnMouseLeaveOptionMenuExecute);
+            CopyNote = new Command(OnCopyNoteExecute);
             Note = new Note(-1, "", "", DateTime.MinValue, DateTime.MinValue);
             VisibilityOptionMenu = Visibility.Collapsed;
             colapsingOptionMenu.Elapsed += (s, e) => { VisibilityOptionMenu = Visibility.Collapsed; };
@@ -33,6 +36,7 @@
             ShowOptionMenu = new Command(OnShowOptionMenuExecute);
             MouseEnterOptionMenu = new Command(OnMouseEnterOptionMenuExecute);
             MouseLeaveOptionMenu = new Command(OnMouseLeaveOptionMenuExecute);
+            CopyNote = new Command(OnCopyNoteExecute);
             Note = note;
             VisibilityOptionMenu = Visibility.Collapsed;
             colapsingOptionMenu.Elapsed += (s, e) => { VisibilityOptionMenu = Visibility.Collapsed; };
@@ -129,6 +133,12 @@
                 colapsingOptionMenu.Interval = 750;
                 colapsingOptionMenu.Start();
             }
+        }
+
+        public Command CopyNote { get; private set; }
+        private void OnCopyNoteExecute()
+        {
+            SelectDate?.Invoke(Note);
         }
 
         #endregion

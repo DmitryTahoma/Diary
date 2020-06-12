@@ -3,20 +3,21 @@
     using Catel.Data;
     using Catel.MVVM;
     using Shell.Controls;
+    using ShellModel;
+    using ShellModel.Context;
     using System;
+    using System.Windows;
     using System.Windows.Controls;
 
     public class UserContentViewModel : ViewModelBase
     {
-        public delegate void VoidHandler();
-        public delegate void DateTimeHandler(DateTime selected);
-        public event VoidHandler OnCancel;
-        public event DateTimeHandler OnSelected;
+        private Note selectedNote = null;
 
         public UserContentViewModel()
         {
             SelectedMonthId = DateTime.Now.Month - 1;
             SelectedDate = DateTime.Now;
+            SelectDateVisibility = Visibility.Collapsed;
             SetMonth = new Command<string>(OnSetMonthExecute);
             InitializeMonths = new Command<ItemCollection>(OnInitializeMonthsExecute);
             AddDay = new Command(OnAddDayExecute);
@@ -39,9 +40,15 @@
             get { return GetValue<DateTime>(SelectedDateProperty); }
             set { SetValue(SelectedDateProperty, value); }
         }
-
         public static readonly PropertyData SelectedDateProperty = RegisterProperty(nameof(SelectedDate), typeof(DateTime), null);
-        
+
+        public Visibility SelectDateVisibility
+        {
+            get { return GetValue<Visibility>(SelectDateVisibilityProperty); }
+            set { SetValue(SelectDateVisibilityProperty, value); }
+        }
+        public static readonly PropertyData SelectDateVisibilityProperty = RegisterProperty(nameof(SelectDateVisibility), typeof(Visibility), null);
+
         #endregion
 
         #region Commands
@@ -75,6 +82,11 @@
                 Month month = new Month();
                 month.DataContext.Month = m;
                 month.DataContext.Year = DateTime.Now.Year;
+                month.DataContext.SelectDate += (cpNote) => 
+                {
+                    SelectDateVisibility = Visibility.Visible;
+                    selectedNote = cpNote;
+                };
                 item.Content = month;
                 m++;
             }
@@ -95,15 +107,15 @@
         public Command CancelSelecting { get; private set; }
         private void OnCancelSelectingExecute()
         {
-            OnCancel?.Invoke();
+            SelectedDate = DateTime.Now;
+            SelectDateVisibility = Visibility.Collapsed;
         }
 
         public Command SelectDate { get; private set; }
         private void OnSelectDateExecute()
         {
-            OnSelected?.Invoke(SelectedDate);
-            SelectedDate = DateTime.Now;
-            OnCancel?.Invoke();
+            DBHelper.DuplicateNoteStatic(selectedNote, SelectedDate);
+            OnCancelSelectingExecute();
         }
 
         #endregion

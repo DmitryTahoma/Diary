@@ -2,11 +2,15 @@
 {
     using Catel.MVVM;
     using ShellModel;
+    using ShellModel.Context;
     using System;
     using System.Windows.Controls;
 
     public class WeekViewModel : ViewModelBase
     {
+        public delegate void NoteHandler(Note note);
+        public event NoteHandler SelectDate;
+
         bool isLoaded = false;
 
         public WeekViewModel()
@@ -41,6 +45,7 @@
                         MinHeight = 100
                     };
                     day.DataContext.Date = date.AddDays(i);
+                    day.DataContext.SelectDate += (note) => { SelectDate?.Invoke(note); };
                     if(!DBHelper.IsNewUser)
                         day.DataContext.LoadDayFromDB();
                     wrapPanel.Children.Add(day);

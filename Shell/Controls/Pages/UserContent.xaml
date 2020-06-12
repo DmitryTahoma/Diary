@@ -172,7 +172,8 @@
         </ScrollViewer>
         <Grid Grid.RowSpan="2"
               HorizontalAlignment="Center"
-              VerticalAlignment="Center">
+              VerticalAlignment="Center"
+              Visibility="{Binding ElementName=DataContext, Path=SelectDateVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Grid Background="Gray"
                   Height="100cm"
                   Width="100cm"

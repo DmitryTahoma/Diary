@@ -2,11 +2,15 @@
 {
     using Catel.MVVM;
     using Shell.Controls;
+    using ShellModel.Context;
     using System;
     using System.Windows.Controls;
 
     public class MonthViewModel : ViewModelBase
     {
+        public delegate void NoteHandler(Note note);
+        public event NoteHandler SelectDate;
+
         bool isLoaded = false;
 
         public MonthViewModel()
@@ -37,6 +41,7 @@
                 {
                     Week w = new Week();
                     w.DataContext.Start = start.AddDays(7 * i);
+                    w.DataContext.SelectDate += (note) => { SelectDate?.Invoke(note); };
                     stackPanel.Children.Add(w);
                 }
                 isLoaded = true;
