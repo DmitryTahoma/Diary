@@ -131,5 +131,21 @@
                     };
                 }
         }
+
+        public void Paste(Note context)
+        {
+            SimpleNote note = new SimpleNote();
+            note.DataContext.Note = context;
+            Notes.Children.Add(note);
+            note.DataContext.Deleting += () =>
+            {
+                Notes.Children.Remove(note);
+                DBHelper.RemoveNoteCascadeStatic(note.DataContext.Note);
+            };
+            note.DataContext.SelectDate += (n) =>
+            {
+                SelectDate?.Invoke(n);
+            };
+        }
     }
 }

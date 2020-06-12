@@ -6,12 +6,15 @@
     using ShellModel;
     using ShellModel.Context;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
 
     public class UserContentViewModel : ViewModelBase
     {
         private Note selectedNote = null;
+        List<Month> months = null;
 
         public UserContentViewModel()
         {
@@ -76,6 +79,7 @@
         public Command<ItemCollection> InitializeMonths { get; private set; }
         private void OnInitializeMonthsExecute(ItemCollection items)
         {
+            months = new List<Month>();
             int m = 1;
             foreach(TabItem item in items)
             {
@@ -88,6 +92,7 @@
                     selectedNote = cpNote;
                 };
                 item.Content = month;
+                months.Add(month);
                 m++;
             }
         }
@@ -114,10 +119,32 @@
         public Command SelectDate { get; private set; }
         private void OnSelectDateExecute()
         {
-            DBHelper.DuplicateNoteStatic(selectedNote, SelectedDate);
+            selectedNote = DBHelper.DuplicateNoteStatic(selectedNote, SelectedDate);
+            UpdateDuplicated();
             OnCancelSelectingExecute();
         }
 
         #endregion
+
+        public void UpdateDuplicated()
+        {
+            List<Month> selMonths = months.Where(x => {
+                int month = SelectedDate.Month;
+                int needed = x.DataContext.Month;
+                if (month == 1)
+                    return (needed == month || needed == 12 || needed == month + 1) && x.DataContext.Year == SelectedDate.Year;
+                if (month == 12)
+                    return (needed == month || needed == 1 || needed == month - 1) && x.DataContext.Year == SelectedDate.Year;
+                return (needed == month || needed == month - 1 || needed == month + 1) && x.DataContext.Year == SelectedDate.Year;
+            }).ToList();
+
+            foreach(Month month in selMonths)
+            {
+                if(month.DataContext.IsLoaded)
+                {
+                    month.DataContext.FindAndPaste(selectedNote, SelectedDate);
+                }
+            }
+        }
     }
 }

@@ -4,10 +4,13 @@
     using ShellModel;
     using ShellModel.Context;
     using System;
+    using System.Collections.Generic;
     using System.Windows.Controls;
 
     public class WeekViewModel : ViewModelBase
     {
+        private List<Controls.DayOfWeek> days = null;
+
         public delegate void NoteHandler(Note note);
         public event NoteHandler SelectDate;
 
@@ -35,6 +38,7 @@
         {
             if (!isLoaded)
             {
+                days = new List<Controls.DayOfWeek>();
                 DateTime date = Start;
                 for (int i = 0; i < Length; ++i)
                 {
@@ -49,11 +53,24 @@
                     if(!DBHelper.IsNewUser)
                         day.DataContext.LoadDayFromDB();
                     wrapPanel.Children.Add(day);
+                    days.Add(day);
                 }
                 isLoaded = true;
             }
         }
 
         #endregion
+
+        public void FindAndPaste(Note note, DateTime date)
+        {
+            foreach(Controls.DayOfWeek day in days)
+            {
+                if (day.DataContext.Date.Date == date.Date)
+                {
+                    day.DataContext.Paste(note);
+                    break;
+                }
+            }
+        }
     }
 }

@@ -4,14 +4,18 @@
     using Shell.Controls;
     using ShellModel.Context;
     using System;
+    using System.Collections.Generic;
     using System.Windows.Controls;
 
     public class MonthViewModel : ViewModelBase
     {
+        private List<Week> weeks = null;
+
         public delegate void NoteHandler(Note note);
         public event NoteHandler SelectDate;
 
         bool isLoaded = false;
+        public bool IsLoaded { get => isLoaded; }
 
         public MonthViewModel()
         {
@@ -33,6 +37,7 @@
         {
             if (!isLoaded)
             {
+                weeks = new List<Week>();
                 DateTime start = new DateTime(Year, Month, 1);
                 while (start.DayOfWeek != System.DayOfWeek.Monday)
                     start = start.AddDays(-1);
@@ -43,11 +48,26 @@
                     w.DataContext.Start = start.AddDays(7 * i);
                     w.DataContext.SelectDate += (note) => { SelectDate?.Invoke(note); };
                     stackPanel.Children.Add(w);
+                    weeks.Add(w);
                 }
                 isLoaded = true;
             }
         }
 
         #endregion
+
+        public void FindAndPaste(Note note, DateTime date)
+        {
+            foreach(Week week in weeks)
+            {
+                DateTime start = week.DataContext.Start;
+                DateTime end = start.AddDays(week.DataContext.Length);
+                if (start < date && date < end)
+                {
+                    week.DataContext.FindAndPaste(note, date);
+                    break;
+                }
+            }
+        }
     }
 }
