@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Logger;
 using System.Collections.Generic;
 using ClientCore;
+using System.Text;
 
 namespace ServerCore.Test
 {
@@ -13,19 +14,40 @@ namespace ServerCore.Test
     public partial class ServerTest
     {
         [DataTestMethod]
-        [DataRow("hello, server", 11222, "192.168.0.107", 11221, "hello, client")]
-        [DataRow("hi, server", 11322, "127.0.0.1", 11321, "message is received")]
-        public void ServerIsRunning(string message, int clientPort, string serverIP, int serverPort, string expectedResponce)
+        [DataRow("hello, server", "192.168.0.107", 11221, "hello, client")]
+        [DataRow("hi, server", "127.0.0.1", 11321, "message is received")]
+        public void ServerIsRunning(string message, string serverIP, int serverPort, string expectedResponce)
         {
-            Server server = new Server(new TestCommands(), serverIP, serverPort, new int[] { clientPort }, 100);
+            Server server = new Server(new TestCommands(), serverIP, serverPort, 100);
             Thread serverThread = new Thread(new ThreadStart(server.Run));
             serverThread.Start();
 
             TcpClient client = null;
             try
             {
-                client = new TcpClient(serverIP, serverPort);
-                Assert.AreEqual(expectedResponce, Send(message, client, serverIP, clientPort));
+                client = new TcpClient();
+                client.Connect(serverIP, serverPort);
+
+                DateTime startWaiting = DateTime.Now;
+                while(!client.Connected || !client.GetStream().CanWrite)
+                    if ((DateTime.Now - startWaiting).TotalSeconds > 5)
+                        Assert.Fail("Server did not response.");
+
+                byte[] msg = Encoding.Unicode.GetBytes(message);
+                client.GetStream().Write(msg, 0, msg.Length);
+
+                startWaiting = DateTime.Now;
+                while(!client.GetStream().DataAvailable || !client.GetStream().CanRead)                
+                    if ((DateTime.Now - startWaiting).TotalSeconds > 5)
+                        Assert.Fail("Server did not response.");
+
+                List<byte> response = new List<byte>();
+                while (client.GetStream().DataAvailable)
+                    response.Add((byte)client.GetStream().ReadByte());
+                string res = Encoding.Unicode.GetString(response.ToArray());
+                client.Close();
+
+                Assert.AreEqual(expectedResponce, res);
             }
             finally
             {

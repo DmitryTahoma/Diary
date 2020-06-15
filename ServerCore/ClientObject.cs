@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace ServerCore
 {
@@ -16,7 +17,7 @@ namespace ServerCore
             this.commands = commands;
         }
 
-        public void Process(Logger.Logger logger, int[] defaultClientPorts, int delay)
+        public void Process(Logger.Logger logger, int delay)
         {
             NetworkStream stream = null;
             try
@@ -52,34 +53,32 @@ namespace ServerCore
                             queryArgs[i] = query[i + 2];
                     }
 
-                    int port = -1;
-                    if (query[0].Split(new char[] { ':' }).Length == 2)
-                        port = int.Parse(query[0].Split(new char[] { ':' })[1]);
-
                     try
                     {
                         if (commands != null)
-                            message = commands.ExecuteCommand(query[1], queryArgs);
+                            message = commands.ExecuteCommand(query[0], queryArgs);
                         else
                             message = "c0";
-                        logger.Log("CLIENT: " + query[0] + " REQUEST: " + query[1] + " RESPONSE: " + message, Logger.EntryLevel.User);
+                        logger.Log("CLIENT-T-" + Thread.CurrentThread.ManagedThreadId.ToString() + " REQUEST: " + query[0] + " RESPONSE: " + message, Logger.EntryLevel.User);
                     } catch (IndexOutOfRangeException) { break; }
 
-                    string clientIP = query[0].Split(new char[] { ':' })[0];
-                    MiniClient miniClient = null;
-                    if (port != -1)
-                        try
-                        {
-                            miniClient = new MiniClient(clientIP, port);
-                        }
-                        catch(SocketException)
-                        {
-                            logger.Log("CLIENT: " + query[0] + " didn't respond", Logger.EntryLevel.User);
-                        }
-                    else
-                        miniClient = new MiniClient(clientIP, defaultClientPorts);
-                    if (miniClient != null && !miniClient.SendNoWaitAnswer(message, delay / 3))
-                        logger.Log("CLIENT: " + query[0] + " didn't respond", Logger.EntryLevel.User);
+                    byte[] response = Encoding.Unicode.GetBytes(message);
+                    client.GetStream().Write(response, 0, response.Length);
+                    //string clientIP = query[0].Split(new char[] { ':' })[0];
+                    //MiniClient miniClient = null;
+                    //if (port != -1)
+                    //    try
+                    //    {
+                    //        miniClient = new MiniClient(clientIP, port);
+                    //    }
+                    //    catch(SocketException)
+                    //    {
+                    //        logger.Log("CLIENT: " + query[0] + " didn't respond", Logger.EntryLevel.User);
+                    //    }
+                    //else
+                    //    miniClient = new MiniClient(clientIP, defaultClientPorts);
+                    //if (miniClient != null && !miniClient.SendNoWaitAnswer(message, delay / 3))
+                    //    logger.Log("CLIENT: " + query[0] + " didn't respond", Logger.EntryLevel.User);
                 }
             }
             finally

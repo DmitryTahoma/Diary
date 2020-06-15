@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="ClientObject.cs" />
     <Compile Include="ICommands.cs" />
-    <Compile Include="MiniClient.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

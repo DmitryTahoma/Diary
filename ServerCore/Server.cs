@@ -33,6 +33,9 @@ namespace ServerCore
         public Server(ICommands commands, string serverIP, int serverPort, int[] defaultClientPorts, int mlsOfDelay)
             : this(commands, new SocketSettings.SocketSettings(serverIP, serverPort, defaultClientPorts, mlsOfDelay)) { }
 
+        public Server(ICommands commands, string serverIP, int serverPort, int mlsOfDelay)
+            : this(commands, new SocketSettings.SocketSettings(serverIP, serverPort, new int[] { 0 }, mlsOfDelay)) { }
+
         public void Run()
         {
             if (IsStarted)
@@ -53,7 +56,7 @@ namespace ServerCore
                     {
                         client = listener.AcceptTcpClient();
                         ClientObject clientObject = new ClientObject(client, commands);
-                        Thread clientThread = new Thread(new ThreadStart(()=> { clientObject.Process(logger, settings.DefaultClientPorts, settings.MlsOfDelay); }));
+                        Thread clientThread = new Thread(new ThreadStart(()=> { clientObject.Process(logger, settings.MlsOfDelay); }));
                         clientThread.Start();
                     } catch(SocketException) { }
                 }
