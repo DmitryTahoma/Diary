@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -29,76 +31,38 @@ namespace ServerCore.Test
             }
         }
 
-        private string getLocalIP()
+        private string Send(string msg, int delay = 0)
         {
-            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (IPAddress ip in host.AddressList)
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                    return ip.ToString();
-            throw new Exception("No network adapters with an IPv4 address in the system!");
-        }
+            TcpClient client = new TcpClient();
+            client.Connect(correctSettings.ServerIP, correctSettings.ServerPort);
 
-        private string Send(string message, TcpClient client, string ip, int port = 11222)
-        {
-            byte[] data = Encoding.Unicode.GetBytes(ip + ":" + port + "|" + message);
-            NetworkStream stream = client.GetStream();
-            stream.Write(data, 0, data.Length);
-            return StartAcceptAnswer(ip, port);
-        }
+            DateTime startWaiting = DateTime.Now;
+            while (!client.Connected || !client.GetStream().CanWrite)
+                if ((DateTime.Now - startWaiting).TotalSeconds > 5)
+                    Assert.Fail("Server did not response.");
 
-        private string SendAndWaitResponseWithDelay(string message, string ip, int serverPort, int clientPort, int delay)
-        {
-            SendNoWaitResponse(message, ip, serverPort, clientPort);
+            byte[] msg_b = Encoding.Unicode.GetBytes(msg);
+            client.GetStream().Write(msg_b, 0, msg_b.Length);
+
+            if (delay < 0)
+            {
+                client.Close();
+                return "";
+            }
             Thread.Sleep(delay);
-            return StartAcceptAnswer(ip, clientPort);
-        }
 
-        private void SendNoWaitResponse(string message, string ip, int serverPort, int clientPort)
-        {
-            byte[] data = Encoding.Unicode.GetBytes(ip + (clientPort != -1? ":" + clientPort.ToString() : "") + "|" + message);
-            TcpClient client = new TcpClient(ip, serverPort);
-            NetworkStream stream = client.GetStream();
-            stream.Write(data, 0, data.Length);
-            client.Dispose();
-        }
+            startWaiting = DateTime.Now;
+            while (!client.GetStream().DataAvailable || !client.GetStream().CanRead)
+                if ((DateTime.Now - startWaiting).TotalSeconds > 50000)
+                    Assert.Fail("Server did not response.");
 
-        private string StartAcceptAnswer(string ip, int port)
-        {
-            TcpListener listener = new TcpListener(IPAddress.Parse(ip), port);
-            NetworkStream stream = null;
-            try
-            {
-                bool t = true;
-                while (t)
-                {
-                    try
-                    {
-                        listener.Start();
-                        t = false;
-                    }
-                    catch { Thread.Sleep(1000); }
-                }
-                TcpClient client = listener.AcceptTcpClient();
-                stream = client.GetStream();
-                byte[] data = new byte[64];
+            List<byte> response = new List<byte>();
+            while (client.GetStream().DataAvailable)
+                response.Add((byte)client.GetStream().ReadByte());
+            string res = Encoding.Unicode.GetString(response.ToArray());
+            client.Close();
 
-                StringBuilder builder = new StringBuilder();
-                int bytes = 0;
-                do
-                {
-                    bytes = stream.Read(data, 0, data.Length);
-                    builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                }
-                while (stream.DataAvailable);
-                return builder.ToString();
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Close();
-                if (listener != null)
-                    listener.Stop();
-            }
+            return res;
         }
     }
 }

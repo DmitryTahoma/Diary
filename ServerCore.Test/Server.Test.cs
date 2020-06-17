@@ -1,93 +1,74 @@
-﻿using System;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Logger;
-using System.Collections.Generic;
-using ClientCore;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ServerCore.Test
 {
     [TestClass]
     public partial class ServerTest
     {
+        SocketSettings.SocketSettings correctSettings = null;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            correctSettings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 0 }, 1000);
+        }
+
         [DataTestMethod]
         [DataRow("hello, server", "192.168.0.107", 11221, "hello, client")]
         [DataRow("hi, server", "127.0.0.1", 11321, "message is received")]
         public void ServerIsRunning(string message, string serverIP, int serverPort, string expectedResponce)
         {
+            correctSettings = new SocketSettings.SocketSettings(serverIP, serverPort, new int[] { 0 }, 1000);
             Server server = new Server(new TestCommands(), serverIP, serverPort, 100);
             Thread serverThread = new Thread(new ThreadStart(server.Run));
             serverThread.Start();
-
-            TcpClient client = null;
             try
             {
-                client = new TcpClient();
-                client.Connect(serverIP, serverPort);
-
-                DateTime startWaiting = DateTime.Now;
-                while(!client.Connected || !client.GetStream().CanWrite)
-                    if ((DateTime.Now - startWaiting).TotalSeconds > 5)
-                        Assert.Fail("Server did not response.");
-
-                byte[] msg = Encoding.Unicode.GetBytes(message);
-                client.GetStream().Write(msg, 0, msg.Length);
-
-                startWaiting = DateTime.Now;
-                while(!client.GetStream().DataAvailable || !client.GetStream().CanRead)                
-                    if ((DateTime.Now - startWaiting).TotalSeconds > 5)
-                        Assert.Fail("Server did not response.");
-
-                List<byte> response = new List<byte>();
-                while (client.GetStream().DataAvailable)
-                    response.Add((byte)client.GetStream().ReadByte());
-                string res = Encoding.Unicode.GetString(response.ToArray());
-                client.Close();
-
-                Assert.AreEqual(expectedResponce, res);
+                Assert.AreEqual(expectedResponce, Send(message));
             }
             finally
             {
-                if(client != null)
-                    client.Dispose();
                 server.Stop();
             }
         }
 
         [TestMethod]
+        [ExpectedException(typeof(SocketException))]
         public void ServerIsStops()
         {
-            Server server = new Server(new TestCommands(), new SocketSettings.SocketSettings("127.0.0.1", 11221, new int[] { 11222 }, 300));
+            Server server = new Server(new TestCommands(), correctSettings);
             Thread serverThread = new Thread(new ThreadStart(server.Run));
             serverThread.Start();
             Thread.Sleep(100);
+
             Thread serverThread2 = new Thread(new ThreadStart(server.Stop));
             serverThread2.Start();
-            Thread.Sleep(400);
-            try
-            {
-                Assert.AreNotEqual("message is received",
-                    Send("are you here?", new TcpClient(getLocalIP(), 11221), getLocalIP()));
-            }
-            catch(SocketException)
-            {
-                Assert.IsTrue(true);
-            }
+            Thread.Sleep(1100);
+
+            TcpClient client = new TcpClient();
+            client.Connect(correctSettings.ServerIP, correctSettings.ServerPort);
+
+            byte[] msg = Encoding.Unicode.GetBytes("are you here?");
+            client.GetStream().Write(msg, 0, msg.Length);
+
+            if(client != null)
+                client.Close();
         }
 
         [TestMethod]
         public void VoidCommands()
         {
-            Server server = new Server(null, new SocketSettings.SocketSettings("127.0.0.1", 11221, new int[] { 11222 }, 300));
+            Server server = new Server(null, correctSettings);
             Thread serverThread = new Thread(new ThreadStart(server.Run));
             serverThread.Start();
             try
             {
-                Assert.AreEqual("c0", 
-                    Send("what you can?", new TcpClient("127.0.0.1", 11221), "127.0.0.1"));
+                Assert.AreEqual("c0", Send("what you can?"));
             }
             finally
             {
@@ -96,12 +77,12 @@ namespace ServerCore.Test
         }
 
         [DataTestMethod]
-        [DataRow("192.168.0.106", 11221, 11222)]
-        [DataRow("192.168.0.116", 11223, 11250)]
-        public void IsSingleton(string ip, int serverPort, int clientPort)
+        [DataRow("192.168.0.107", 11221)]
+        [DataRow("192.168.0.117", 11223)]
+        public void IsSingleton(string ip, int serverPort)
         {
-            Server server = new Server(null, new SocketSettings.SocketSettings(ip, serverPort, new int[] { clientPort }, 300));
-            Server server2 = new Server(null, new SocketSettings.SocketSettings(ip, serverPort, new int[] { clientPort }, 300));
+            Server server = new Server(null, new SocketSettings.SocketSettings(ip, serverPort, new int[] { 0 }, 300));
+            Server server2 = new Server(null, new SocketSettings.SocketSettings(ip, serverPort, new int[] { 0 }, 300));
             try
             {
                 Thread serverThread = new Thread(new ThreadStart(() => { server.Run(); }));
@@ -123,48 +104,28 @@ namespace ServerCore.Test
         }
 
         [TestMethod]
-        public void ServerRespondsToAnotherPort()
+        public void ServerIsLogging()
         {
-            Server server = new Server(null, new SocketSettings.SocketSettings("127.0.0.1", 11221, new int[] { 11222 }, 300));
+            Server server = new Server(new TestCommands(), correctSettings);
             Thread serverThread = new Thread(new ThreadStart(server.Run));
             serverThread.Start();
             Thread.Sleep(100);
             try
             {
-                //standard port
-                Task client1 = Task.Factory.StartNew(() => { 
-                    Assert.AreEqual("c0",
-                        Send("test1", new TcpClient("127.0.0.1", 11221), "127.0.0.1"));
-                });
-                client1.Wait(2000);
-                Assert.IsTrue(client1.IsCompleted);
-                //another ports
-                Task client2 = Task.Factory.StartNew(() => {
-                    Assert.AreEqual("c0",
-                        Send("test1", new TcpClient("127.0.0.1", 11221), "127.0.0.1", 12345));
-                });
-                client2.Wait(2000);
-                Assert.IsTrue(client2.IsCompleted);
+                Logger.Logger serverLogger = server.GetLogger();
 
-                Task client3 = Task.Factory.StartNew(() => {
-                    Assert.AreEqual("c0",
-                    Send("test1", new TcpClient("127.0.0.1", 11221), "127.0.0.1", 18535));
-                });
-                client3.Wait(2000);
-                Assert.IsTrue(client3.IsCompleted);
+                Assert.IsTrue(serverLogger.Logs[0].Text.Contains("Server started"));
+                Assert.AreEqual(EntryLevel.Server, serverLogger.Logs[0].Level);
+                Assert.AreEqual(1, serverLogger.Logs.Count());
             }
             finally
             {
-                if(server != null)
+                if (server != null)
                     server.Stop();
             }
-        }
 
-        [TestMethod]
-        public void ServerIsLogging()
-        {
-            Server server = new Server(null, new SocketSettings.SocketSettings("127.0.0.1", 11221, new int[] { 11222 }, 300));
-            Thread serverThread = new Thread(new ThreadStart(server.Run));
+            server = new Server(null, correctSettings);
+            serverThread = new Thread(new ThreadStart(server.Run));
             serverThread.Start();
             Thread.Sleep(100);
             try
@@ -176,12 +137,10 @@ namespace ServerCore.Test
                 Assert.AreEqual("Commands slot is void", serverLogger.Logs[1].Text);
                 Assert.AreEqual(EntryLevel.Server, serverLogger.Logs[1].Level);
 
-                Task client = Task.Factory.StartNew(() => {
-                    Send("test", new TcpClient("127.0.0.1", 11221), "127.0.0.1");
-                });
-                client.Wait(2000);
+                Send("test");
 
-                Assert.AreEqual("CLIENT: " + "127.0.0.1" + ":11222 REQUEST: test RESPONSE: c0", serverLogger.Logs.LastByTime().Text);
+                Regex regex = new Regex("CLIENT-T-\\d+ REQUEST: test RESPONSE: c0");
+                Assert.IsTrue(regex.IsMatch(serverLogger.Logs.LastByTime().Text));
                 Assert.AreEqual(EntryLevel.User, serverLogger.Logs.LastByTime().Level);
             }
             finally
@@ -192,28 +151,17 @@ namespace ServerCore.Test
         }
 
         [DataTestMethod]
-        [DataRow("smth", "192.168.0.107", 10000, 10001, 550)]
-        [DataRow("message", "127.0.0.1", 5067, 5066, 300)]
-        [DataRow("smth", "192.168.0.107", 10000, -1, 100)]
-        [DataRow("message", "127.0.0.1", 5067, -1, 300)]
-        public void ClientWaitResponseWithDelayTest(string message, string ip, int port, int clientPort, int mls)
+        [DataRow("smth", "192.168.0.107", 10000, 5000, 4500)]
+        [DataRow("test", "127.0.0.1", 5067, 3000, 2750)]
+        public void ClientWaitResponseWithDelayTest(string message, string ip, int port, int serverWait, int clientWait)
         {
-            if (clientPort == -1)
-                clientPort = 11222;
-            Server server = new Server(null, ip, port, new int[] { clientPort }, mls);
+            correctSettings = new SocketSettings.SocketSettings(ip, port, new int[] { 0 }, serverWait);
+            Server server = new Server(null, correctSettings);
             Thread serverThread = new Thread(new ThreadStart(server.Run));
             serverThread.Start();
-
             try
             {
-                string result = "";
-
-                Task client = Task.Factory.StartNew(() => {
-                    result = SendAndWaitResponseWithDelay(message, ip, port, clientPort, mls / 2);
-                });
-                client.Wait(2000);
-
-                Assert.AreEqual("c0", result);
+                Assert.AreEqual("c0", Send(message, clientWait));
             }
             finally
             {
@@ -221,70 +169,24 @@ namespace ServerCore.Test
                     server.Stop();
             }
         }
-
+        
         [DataTestMethod]
-        [DataRow("smth", "192.168.0.107", 10000, 10001, 550)]
-        [DataRow("message", "127.0.0.1", 5067, 5066, 600)]
-        [DataRow("smth", "192.168.0.107", 10000, -1, 100)]
-        [DataRow("message", "127.0.0.1", 5067, -1, 600)]
-        public void ClientNotWaitResponseTest(string message, string ip, int port, int clientPort, int mls)
+        [DataRow("multiplyAll", new string[] { "2", "8", "4", "3" }, "192")]
+        [DataRow("multiplyAll", new string[] { "5", "5", "5", "3" }, "375")]
+        public void ServerIsProcessesParameters(string command, string[] parameters, string expectedResult)
         {
-            List<int> ports = new List<int>();
-            if (clientPort == -1)
-            {
-                ports.Add(123); ports.Add(234); ports.Add(456); ports.Add(567);
-            }
-            else
-                ports.Add(clientPort);
-            Server server = new Server(null, ip, port, ports.ToArray(), mls);
-            Thread serverThread = new Thread(new ThreadStart(server.Run));
-            serverThread.Start();
-            Thread.Sleep(100);
-
-            try
-            {
-                Task client = Task.Factory.StartNew(() => {
-                    SendNoWaitResponse(message, ip, port, clientPort);
-                });
-                Thread.Sleep(3 * mls);
-            }
-            finally
-            {
-                if (server != null)
-                    server.Stop();
-            }
-
-            Logger.Logger logger = server.GetLogger();
-            Assert.AreEqual("CLIENT: " + ip + (clientPort != -1? ":" + clientPort.ToString() : "") + " didn't respond", logger.Logs.LastAdded().Text);
-            Assert.AreEqual(EntryLevel.User, logger.Logs.LastAdded().Level);
-            Assert.IsTrue(new TimeSpan(0, 0, 0, 5, 0) > DateTime.Now - logger.Logs.LastAdded().Time);
-        }
-
-        [DataTestMethod]
-        [DataRow("192.168.192.2", 11011, 11111, "multiplyAll", new string[] { "2", "8", "4", "3" }, "192")]
-        [DataRow("127.0.0.1", 11211, 11311, "multiplyAll", new string[] { "5", "5", "5", "3" }, "375")]
-        public void ServerIsProcessesParameters(string ip, int port, int clientPort, string command, string[] parameters, string expectedResult)
-        {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings(ip, port, new int[] { clientPort }, 100);
-            Server server = new Server(new TestCommands(), settings);
+            Server server = new Server(new TestCommands(), correctSettings);
             Thread serverThread = new Thread(server.Run);
             serverThread.Start();
-
+            Thread.Sleep(100);
             try
             {
-                Client client = new Client(settings);
                 string message = command;
                 if(parameters != null)
                     for (int i = 0; i < parameters.Length; ++i)
                         message += "|" + parameters[i];
 
-                string result = "";
-                Task clientTask = Task.Factory.StartNew(() => { 
-                    result = client.Send(message);
-                });
-                clientTask.Wait(2000);
-
-                Assert.AreEqual(expectedResult, result);
+                Assert.AreEqual(expectedResult, Send(message));
             }
             finally
             {
