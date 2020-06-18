@@ -12,7 +12,6 @@ namespace ClientCore
     {
         ISocketSettings settings;
         TcpClient client;
-        int port, serverPort;
 
         delegate string SendHandler(string msg);
         Queue<SendHandler> sendQueue;
@@ -20,22 +19,15 @@ namespace ClientCore
         public Client(ISocketSettings clientSettings)
         {
             settings = clientSettings;
-            port = -1;
-            serverPort = settings.ServerPort;
             sendQueue = new Queue<SendHandler>();
         }
 
         public string Send(string message)
         {
-            if (port == -1)
-            {
-                DetermineFreePort();
-            }
-
             SendHandler handler = new SendHandler((msg) => 
             {  
-                byte[] data = Encoding.Unicode.GetBytes(GetLocalIP() + ":" + port.ToString() + "|" + msg);
-                client = new TcpClient(settings.ServerIP, serverPort);
+                byte[] data = Encoding.Unicode.GetBytes(msg);
+                client = new TcpClient(settings.ServerIP, settings.ServerPort);
                 NetworkStream stream = client.GetStream();
                 stream.Write(data, 0, data.Length);
                 return ListenResponse();
@@ -65,24 +57,17 @@ namespace ClientCore
             return Send(message);
         }
 
-        private string GetLocalIP()
-        {
-            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (IPAddress ip in host.AddressList)
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                    return ip.ToString();
-            throw new Exception("No network adapters with an IPv4 address in the system!");
-        }
-
         private string ListenResponse()
         {
-            TcpListener listener = new TcpListener(IPAddress.Parse(GetLocalIP()), port);
-            NetworkStream stream = null;
+            NetworkStream stream = client.GetStream();
             try
             {
-                listener.Start();
-                TcpClient client = listener.AcceptTcpClient();
-                stream = client.GetStream();
+                DateTime start = DateTime.Now;
+                while (!stream.DataAvailable && (DateTime.Now - start).TotalMilliseconds < settings.MlsOfDelay)
+                    Thread.Sleep(100);
+                if (!stream.DataAvailable)
+                    return "Server didn't respond";
+
                 byte[] data = new byte[64];
 
                 StringBuilder builder = new StringBuilder();
@@ -99,28 +84,6 @@ namespace ClientCore
             {
                 if (stream != null)
                     stream.Close();
-                if (listener != null)
-                    listener.Stop();
-            }
-        }
-
-        private void DetermineFreePort()
-        {
-            for (int i = 0; i < settings.DefaultClientPorts.Length; ++i)
-            {
-                if (port != -1)
-                    break;
-                port = settings.DefaultClientPorts[i];
-                TcpListener tempServer = new TcpListener(IPAddress.Parse(GetLocalIP()), port);
-                try
-                {
-                    tempServer.Start();
-                    tempServer.Stop();
-                }
-                catch 
-                {
-                    port = -1;
-                }
             }
         }
     }

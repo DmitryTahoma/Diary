@@ -11,28 +11,35 @@ namespace ClientCore.Test
     [TestClass]
     public partial class ClientTest
     {
-        [DataTestMethod]
-        [DataRow("192.168.0.107", 4000, new int[] { 1001, 2002, 3003 }, 4004, "hello, server", "hello, client")]
-        [DataRow("127.0.0.1", 4500, new int[] { 1201, 2302, 3403 }, 4504, "hello", "message is received")]
-        public void SendTest(string ip, int port, int[] busyPortsForClient, int freeClientPort, string message, string expectedRespnse)
+        SocketSettings.SocketSettings correctSettings = null;
+
+        [TestInitialize]
+        public void TestInitialize()
         {
+            correctSettings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 0 }, 1000);
+        }
+
+        [DataTestMethod]
+        [DataRow("192.168.0.107", 4000, "hello, server", "hello, client")]
+        [DataRow("127.0.0.1", 4500, "hello", "message is received")]
+        public void SendTest(string ip, int port, string message, string expectedRespnse)
+        {
+            correctSettings = new SocketSettings.SocketSettings(ip, port, new int[] { 0 }, 1000);
+            Server server = new Server(new TestCommands(), correctSettings);
+            Thread serverThread = new Thread(new ThreadStart(server.Run));
+            serverThread.Start();
+            Thread.Sleep(100);
             try
             {
-                for (int i = 0; i < busyPortsForClient.Length; ++i)
-                    PortsHelper.OccupyPort(busyPortsForClient[i]);
+                Client client = new Client(correctSettings);
 
-                List<int> clientPorts = new List<int>(busyPortsForClient);
-                clientPorts.Add(freeClientPort);
-
-                Server server = new Server(new TestCommands(), new SocketSettings.SocketSettings(ip, port, new int[] { freeClientPort }, 500));
-                Thread serverThread = new Thread(new ThreadStart(server.Run));
-                serverThread.Start();
-                Thread.Sleep(100);
-
-                Client client = new Client(new SocketSettings.SocketSettings(ip, port,  clientPorts.ToArray(), 300));
-
-                for (int i = 0; i < 10; ++i)
-                    Assert.AreEqual(expectedRespnse, client.Send(message));
+                Task clients = new Task(new Action(() => { 
+                    for (int i = 0; i < 10; ++i)
+                        Assert.AreEqual(expectedRespnse, client.Send(message));
+                }));
+                clients.Start();
+                clients.Wait(5000);
+                Assert.IsTrue(clients.IsCompleted);
             }
             catch(Exception exc)
             {
@@ -40,14 +47,14 @@ namespace ClientCore.Test
             }
             finally
             {
-                PortsHelper.Dispose();
+                server.Stop();
             }
         }
 
         [TestMethod]
         public void ServerIsMissingTest()
         {
-            Client client = new Client(new SocketSettings.SocketSettings());
+            Client client = new Client(correctSettings);
             string result = "";
             bool isThrown = false;
             Task connection = Task.Factory.StartNew(() => {
@@ -67,23 +74,23 @@ namespace ClientCore.Test
         }
 
         [DataTestMethod]
-        [DataRow("192.168.192.2", 3036, 3037, 150, "showMyParams", "hello", "param", "param3", "hello,param,param3")]
-        [DataRow("192.168.192.2", 3038, 3039, 500, "showMyParams", "hi", "by", "ggwqas", "hi,by,ggwqas")]
-        [DataRow("127.0.0.1", 10101, 10102, 100, "plus", "12", "4", "5", "21")]
-        [DataRow("127.0.0.1", 1360, 1370, 300, "plus", "10", "40", "15", "65")]
-        [DataRow("127.0.0.1", 1011, 1102, 400, "plus", "one", "8", "500", "ArgumentError")]
-        [DataRow("127.0.0.1", 1012, 1103, 400, "plus", "1", "eight", "500", "ArgumentError")]
-        [DataRow("127.0.0.1", 1013, 1104, 400, "plus", "1", "8", "five hundred", "ArgumentError")]
-        public void SendCommandTest(string ip, int port, int clientPort, int mls, string cmd, string param1, string param2, string param3, string expectedResult)
+        [DataRow("192.168.192.2", 3036, 150, "showMyParams", "hello", "param", "param3", "hello,param,param3")]
+        [DataRow("192.168.192.2", 3038, 500, "showMyParams", "hi", "by", "ggwqas", "hi,by,ggwqas")]
+        [DataRow("127.0.0.1", 10101, 100, "plus", "12", "4", "5", "21")]
+        [DataRow("127.0.0.1", 1360, 300, "plus", "10", "40", "15", "65")]
+        [DataRow("127.0.0.1", 1011, 400, "plus", "one", "8", "500", "ArgumentError")]
+        [DataRow("127.0.0.1", 1012, 400, "plus", "1", "eight", "500", "ArgumentError")]
+        [DataRow("127.0.0.1", 1013, 400, "plus", "1", "8", "five hundred", "ArgumentError")]
+        public void SendCommandTest(string ip, int port, int mls, string cmd, string param1, string param2, string param3, string expectedResult)
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings(ip, port, new int[] { clientPort }, mls);
-            Server server = new Server(new TestCommands(), settings);
+            correctSettings = new SocketSettings.SocketSettings(ip, port, new int[] { 0 }, mls);
+            Server server = new Server(new TestCommands(), correctSettings);
             Thread serverThread = new Thread(server.Run);
             serverThread.Start();
-
+            Thread.Sleep(100);
             try
             {
-                Client client = new Client(settings);
+                Client client = new Client(correctSettings);
                 string result = "";
                 Thread clientThread = new Thread(() =>
                 {
