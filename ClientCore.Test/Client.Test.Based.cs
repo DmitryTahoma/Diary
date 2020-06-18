@@ -1,9 +1,4 @@
 ﻿using ServerCore;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
 
 namespace ClientCore.Test
 {
@@ -46,42 +41,6 @@ namespace ClientCore.Test
                     }
                 }
                 return "message is received";
-            }
-        }
-
-        private static class PortsHelper
-        {
-            static List<TcpListener> listeners;
-
-            static PortsHelper()
-            {
-                listeners = new List<TcpListener>();
-            }
-
-
-            public static void OccupyPort(int port)
-            {
-                TcpListener listener = new TcpListener(GetLocalIP(), port);
-                listener.Start();
-                Thread thread = new Thread(()=> { listener.AcceptTcpClient(); });
-                listeners.Add(listener);
-                thread.Start();
-            }
-
-            public static void Dispose()
-            {
-                for (int i = 0; i < listeners.Count; ++i) 
-                    if (listeners[i] != null)
-                        listeners[i].Stop();
-            }
-
-            private static IPAddress GetLocalIP()
-            {
-                IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-                foreach (IPAddress ip in host.AddressList)
-                    if (ip.AddressFamily == AddressFamily.InterNetwork)
-                        return ip;
-                throw new Exception("No network adapters with an IPv4 address in the system!");
             }
         }
     }
