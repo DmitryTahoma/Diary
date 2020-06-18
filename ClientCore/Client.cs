@@ -64,7 +64,7 @@ namespace ClientCore
             {
                 DateTime start = DateTime.Now;
                 while (!stream.DataAvailable && (DateTime.Now - start).TotalMilliseconds < settings.MlsOfDelay)
-                    Thread.Sleep(100);
+                    Thread.Sleep(10);
                 if (!stream.DataAvailable)
                     return "Server didn't respond";
 
