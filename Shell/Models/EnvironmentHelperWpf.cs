@@ -14,5 +14,24 @@ namespace Shell.Models
             diaryEHData.SetValue("password", password);
             diaryEHData.SetValue("time", DateTime.Now.ToString());
         }
+
+        public bool CheckSignData()
+        {
+            RegistryKey registryKey = Registry.CurrentUser;
+            RegistryKey diaryEHData = registryKey.CreateSubKey("DiaryEHData", false);
+            string login = diaryEHData.GetValue("login").ToString();
+            string password = diaryEHData.GetValue("password").ToString();
+            DateTime time = DateTime.Parse(diaryEHData.GetValue("time").ToString());
+
+            if(login == "" || password == "") 
+                return false;    
+            if(time < DateTime.Now.AddDays(-30) || time > DateTime.Now)
+            {
+                SaveSignData("", "");
+                return false;
+            }
+
+            return true;
+        }
     }
 }

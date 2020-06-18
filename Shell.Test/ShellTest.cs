@@ -31,5 +31,34 @@ namespace ShellTest
             Assert.IsTrue(before.Minute <= time.Minute && time.Minute <= after.Minute);
             Assert.IsTrue(before.Second <= time.Second && time.Second <= after.Second);
         }
+
+        [TestMethod]
+        public void CheckSignDataTest()
+        {
+            ShellModel.IEnvironmentHelper environmentHelper = new Shell.Models.EnvironmentHelperWpf();
+            environmentHelper.SaveSignData("Login", "Password");
+
+            Assert.IsTrue(environmentHelper.CheckSignData());
+
+            RegistryKey registryKey = Registry.CurrentUser;
+            RegistryKey dehd = registryKey.CreateSubKey("DiaryEHData", true);
+
+            dehd.SetValue("time", DateTime.Now.AddDays(-29).ToString());
+            Assert.IsTrue(environmentHelper.CheckSignData());
+
+            dehd.SetValue("time", DateTime.Now.AddDays(-30.1).ToString());
+            Assert.IsFalse(environmentHelper.CheckSignData());
+
+            dehd.SetValue("time", DateTime.Now.AddHours(0.5).ToString());
+            Assert.IsFalse(environmentHelper.CheckSignData());
+
+            dehd.SetValue("time", DateTime.Now.AddDays(2).ToString());
+            Assert.IsFalse(environmentHelper.CheckSignData());
+
+            dehd.SetValue("login", "");
+            dehd.SetValue("password", "");
+            dehd.SetValue("time", DateTime.Now.ToString());
+            Assert.IsFalse(environmentHelper.CheckSignData());
+        }
     }
 }
