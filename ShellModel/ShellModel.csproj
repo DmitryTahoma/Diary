@@ -56,6 +56,7 @@
     <Compile Include="Context\Progress.cs" />
     <Compile Include="Context\ProgressMission.cs" />
     <Compile Include="DBHelper.cs" />
+    <Compile Include="IEnvironmentHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringsHelper.cs" />
   </ItemGroup>

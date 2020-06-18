@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellModel.Test", "ShellMod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleServer", "ConsoleServer\ConsoleServer.csproj", "{5E480E36-C79A-4B29-B8A7-35E79E98F876}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shell.Test", "Shell.Test\Shell.Test.csproj", "{FD7E0A4A-3596-4260-B85B-7EF7EED8C7A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{5E480E36-C79A-4B29-B8A7-35E79E98F876}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E480E36-C79A-4B29-B8A7-35E79E98F876}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E480E36-C79A-4B29-B8A7-35E79E98F876}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD7E0A4A-3596-4260-B85B-7EF7EED8C7A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD7E0A4A-3596-4260-B85B-7EF7EED8C7A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD7E0A4A-3596-4260-B85B-7EF7EED8C7A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD7E0A4A-3596-4260-B85B-7EF7EED8C7A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

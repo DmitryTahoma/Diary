@@ -204,6 +204,7 @@
     <Compile Include="Controls\Year.xaml.cs">
       <DependentUpon>Year.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\EnvironmentHelperWpf.cs" />
     <Compile Include="ViewModels\CheckTextBoxViewModel.cs" />
     <Compile Include="ViewModels\DayOfWeekViewModel.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
@@ -258,5 +259,6 @@
     <Resource Include="Resources\Images\RPBbgCheckedEntered.png" />
     <Resource Include="Resources\Images\RPBbgEntered.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
