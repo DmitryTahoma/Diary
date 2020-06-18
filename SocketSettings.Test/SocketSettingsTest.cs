@@ -8,38 +8,34 @@ namespace SocketSettings.Test
     public partial class SocketSettingsTest
     {
         [DataTestMethod]
-        [DataRow("192.168.0.120", 1, new int[] { 4, 5, 6 }, 367)]
-        [DataRow("192.168.0.121", 2, new int[] { 4, 5, 6, 7 }, 3677)]
-        public void EqualsTest(string ip, int port, int[] ports, int mls)
+        [DataRow("192.168.0.120", 1, 367)]
+        [DataRow("192.168.0.121", 2, 3677)]
+        public void EqualsTest(string ip, int port, int mls)
         {
-            SocketSettings settings1 = new SocketSettings(ip, port, ports, mls);
-            SocketSettings settings2 = new SocketSettings(ip, port, ports, mls);
+            SocketSettings settings1 = new SocketSettings(ip, port, mls);
+            SocketSettings settings2 = new SocketSettings(ip, port, mls);
 
             Assert.AreEqual(settings1, settings2);
         }
 
         [DataTestMethod]
-        [DataRow("192.168.0.120", 1, new int[] { 4, 5, 6 }, 367, "192.168.0.121", 1, new int[] { 4, 5, 6 }, 367)]
-        [DataRow("192.168.0.120", 1, new int[] { 4, 5, 6 }, 367, "192.168.0.121", 1, new int[] { 4, 5, 6 }, 367)]
-        [DataRow("192.168.0.120", 1, new int[] { 4, 5, 6 }, 367,"192.168.0.120", 2, new int[] { 4, 5, 6 }, 367)]
-        [DataRow("192.168.0.120", 1, new int[] { 4, 5, 6 }, 367,"192.168.0.120", 1, new int[] { 4, 5 }, 367)]
-        [DataRow("192.168.0.120", 1, new int[] { 4, 5, 6 }, 367,"192.168.0.120", 1, new int[] { 4, 5, 7 }, 367)]
-        [DataRow("192.168.0.120", 1, new int[] { 4, 5, 6 }, 367,"192.168.0.120", 1, new int[] { 4, 5, 6, 7 }, 367)]
-        [DataRow("192.168.0.120", 1, new int[] { 4, 5, 6 }, 367,"192.168.0.120", 1, new int[] { 4, 5, 6 }, 368)]
-        public void NotEqualsTest(string firstIP, int firstPort, int[] firstPorts, int firstMls, 
-            string secondIP, int secondPort, int[] secondPorts, int secondMls)
+        [DataRow("192.168.0.120", 1, 367, "192.168.0.121", 1, 367)]
+        [DataRow("192.168.0.120", 1, 367, "192.168.0.120", 2, 367)]
+        [DataRow("192.168.0.120", 1, 367, "192.168.0.120", 1, 368)]
+        public void NotEqualsTest(string firstIP, int firstPort, int firstMls, 
+                                  string secondIP, int secondPort, int secondMls)
         {
-            Assert.AreNotEqual(new SocketSettings(firstIP, firstPort, firstPorts, firstMls),
-                new SocketSettings(secondIP, secondPort, secondPorts, secondMls));
+            Assert.AreNotEqual(new SocketSettings(firstIP, firstPort, firstMls),
+                new SocketSettings(secondIP, secondPort, secondMls));
         }
         
         [DataTestMethod]
-        [DataRow("ss1.bin", "192.168.0.120", 1, new int[] { 20, 4 }, 100, "192.168.0.120,1,20.4,100")]
-        [DataRow("ss2.bin", "193.169.1.121", 11, new int[] { 204 }, 404, "193.169.1.121,11,204,404")]
-        public void SaveTest(string path, string ip, int port, int[] ports, int mls, string expectedResult)
+        [DataRow("ss1.bin", "192.168.0.120", 1, 100, "192.168.0.120,1,100")]
+        [DataRow("ss2.bin", "193.169.1.121", 11, 404, "193.169.1.121,11,404")]
+        public void SaveTest(string path, string ip, int port, int mls, string expectedResult)
         {
             ISaverSettings saver = new MySaverSettings(path);
-            SocketSettings settings = new SocketSettings(ip, port, ports, mls);
+            SocketSettings settings = new SocketSettings(ip, port, mls);
             settings.Save(saver);
 
             BinaryReader reader = null;
@@ -68,11 +64,11 @@ namespace SocketSettings.Test
         }
 
         [DataTestMethod]
-        [DataRow("ss1.bin", "192.168.0.120", 1, new int[] { 20, 4 }, 100, "192.168.0.120|1|20,4|100")]
-        [DataRow("ss2.bin", "193.169.1.121", 11, new int[] { 204 }, 404, "193.169.1.121|11|204|404")]
-        public void DefaultSaveTest(string path, string ip, int port, int[] ports, int mls, string expectedResult)
+        [DataRow("ss1.bin", "192.168.0.120", 1, 100, "192.168.0.120|1|100")]
+        [DataRow("ss2.bin", "193.169.1.121", 11, 404, "193.169.1.121|11|404")]
+        public void DefaultSaveTest(string path, string ip, int port, int mls, string expectedResult)
         {
-            SocketSettings settings = new SocketSettings(ip, port, ports, mls);
+            SocketSettings settings = new SocketSettings(ip, port, mls);
             settings.Save(path);
 
             BinaryReader reader = null;
@@ -102,11 +98,11 @@ namespace SocketSettings.Test
         }
 
         [DataTestMethod]
-        [DataRow("123.bin", "100.200.100.200", 11221, new int[] { 11, 22, 1, 33 }, 20000)]
-        [DataRow("5fg43.bin", "192.222.76.5", 11, new int[] { 121, 322, 51, 3773 }, 2067000)]
-        public void LoadTest(string path ,string ip, int port, int[] ports, int mls)
+        [DataRow("123.bin", "100.200.100.200", 11221, 20000)]
+        [DataRow("5fg43.bin", "192.222.76.5", 11, 2067000)]
+        public void LoadTest(string path ,string ip, int port, int mls)
         {
-            ISocketSettings settings = new SocketSettings(ip, port, ports, mls);
+            ISocketSettings settings = new SocketSettings(ip, port, mls);
             settings.Save(new MySaverSettings(path));
 
             ILoaderSettings loader = new MyLoaderSettings(path);
@@ -116,11 +112,11 @@ namespace SocketSettings.Test
         }
 
         [DataTestMethod]
-        [DataRow("123.bin", "100.200.100.200", 11221, new int[] { 11, 22, 1, 33 }, 20000)]
-        [DataRow("5fg43.bin", "192.222.76.5", 11, new int[] { 121, 322, 51, 3773 }, 2067000)]
-        public void DefaultLoadTest(string path, string ip, int port, int[] ports, int mls)
+        [DataRow("123.bin", "100.200.100.200", 11221, 20000)]
+        [DataRow("5fg43.bin", "192.222.76.5", 11, 2067000)]
+        public void DefaultLoadTest(string path, string ip, int port, int mls)
         {
-            SocketSettings settings = new SocketSettings(ip, port, ports, mls);
+            SocketSettings settings = new SocketSettings(ip, port, mls);
             settings.Save(path);
 
             SocketSettings loadedSettings = new SocketSettings(path);

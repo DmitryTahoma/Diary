@@ -13,16 +13,9 @@ namespace SocketSettings.Test
                 this.path = path;
             }
 
-            public void Save(string ip, int serverPort, int[] clientPorts, int mls)
+            public void Save(string ip, int serverPort, int mls)
             {
-                string buf = ip + "," + serverPort.ToString() + ",";
-
-                for(int i = 0; i < clientPorts.Length; ++ i)
-                {
-                    buf += clientPorts[i].ToString() + (i == clientPorts.Length - 1 ? "," : ".");
-                }
-
-                buf += mls.ToString();
+                string buf = ip + "," + serverPort.ToString() + "," + mls.ToString();
 
                 using(FileStream f = new FileStream(path, FileMode.OpenOrCreate))
                 {
@@ -56,15 +49,9 @@ namespace SocketSettings.Test
                 string[] values = buf.Split(new char[] { ',' });
                 string ip = values[0];
                 int port = int.Parse(values[1]);
+                int mls = int.Parse(values[2]);
 
-                string[] strPorts = values[2].Split(new char[] { '.' });
-                int[] ports = new int[strPorts.Length];
-                for (int i = 0; i < ports.Length; ++i)
-                    ports[i] = int.Parse(strPorts[i]);
-
-                int mls = int.Parse(values[3]);
-
-                return new SocketSettings(ip, port, ports, mls);
+                return new SocketSettings(ip, port, mls);
             }
         }
     }
