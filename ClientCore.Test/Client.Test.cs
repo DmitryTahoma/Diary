@@ -15,7 +15,7 @@ namespace ClientCore.Test
         [TestInitialize]
         public void TestInitialize()
         {
-            correctSettings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 0 }, 1000);
+            correctSettings = new SocketSettings.SocketSettings("192.168.0.107", 11221, 1000);
         }
 
         [DataTestMethod]
@@ -23,7 +23,7 @@ namespace ClientCore.Test
         [DataRow("127.0.0.1", 4500, "hello", "message is received")]
         public void SendTest(string ip, int port, string message, string expectedRespnse)
         {
-            correctSettings = new SocketSettings.SocketSettings(ip, port, new int[] { 0 }, 1000);
+            correctSettings = new SocketSettings.SocketSettings(ip, port, 1000);
             Server server = new Server(new TestCommands(), correctSettings);
             Thread serverThread = new Thread(new ThreadStart(server.Run));
             serverThread.Start();
@@ -82,7 +82,7 @@ namespace ClientCore.Test
         [DataRow("127.0.0.1", 1013, 400, "plus", "1", "8", "five hundred", "ArgumentError")]
         public void SendCommandTest(string ip, int port, int mls, string cmd, string param1, string param2, string param3, string expectedResult)
         {
-            correctSettings = new SocketSettings.SocketSettings(ip, port, new int[] { 0 }, mls);
+            correctSettings = new SocketSettings.SocketSettings(ip, port, mls);
             Server server = new Server(new TestCommands(), correctSettings);
             Thread serverThread = new Thread(server.Run);
             serverThread.Start();

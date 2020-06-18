@@ -15,7 +15,7 @@ namespace ServerCore.Test
         [TestInitialize]
         public void TestInitialize()
         {
-            correctSettings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 0 }, 1000);
+            correctSettings = new SocketSettings.SocketSettings("192.168.0.107", 11221, 1000);
         }
 
         [DataTestMethod]
@@ -23,7 +23,7 @@ namespace ServerCore.Test
         [DataRow("hi, server", "127.0.0.1", 11321, "message is received")]
         public void ServerIsRunning(string message, string serverIP, int serverPort, string expectedResponce)
         {
-            correctSettings = new SocketSettings.SocketSettings(serverIP, serverPort, new int[] { 0 }, 1000);
+            correctSettings = new SocketSettings.SocketSettings(serverIP, serverPort, 1000);
             Server server = new Server(new TestCommands(), serverIP, serverPort, 100);
             Thread serverThread = new Thread(new ThreadStart(server.Run));
             serverThread.Start();
@@ -81,8 +81,8 @@ namespace ServerCore.Test
         [DataRow("192.168.0.117", 11223)]
         public void IsSingleton(string ip, int serverPort)
         {
-            Server server = new Server(null, new SocketSettings.SocketSettings(ip, serverPort, new int[] { 0 }, 300));
-            Server server2 = new Server(null, new SocketSettings.SocketSettings(ip, serverPort, new int[] { 0 }, 300));
+            Server server = new Server(null, new SocketSettings.SocketSettings(ip, serverPort, 300));
+            Server server2 = new Server(null, new SocketSettings.SocketSettings(ip, serverPort, 300));
             try
             {
                 Thread serverThread = new Thread(new ThreadStart(() => { server.Run(); }));
@@ -155,7 +155,7 @@ namespace ServerCore.Test
         [DataRow("test", "127.0.0.1", 5067, 3000, 2750)]
         public void ClientWaitResponseWithDelayTest(string message, string ip, int port, int serverWait, int clientWait)
         {
-            correctSettings = new SocketSettings.SocketSettings(ip, port, new int[] { 0 }, serverWait);
+            correctSettings = new SocketSettings.SocketSettings(ip, port, serverWait);
             Server server = new Server(null, correctSettings);
             Thread serverThread = new Thread(new ThreadStart(server.Run));
             serverThread.Start();

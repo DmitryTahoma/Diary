@@ -25,16 +25,13 @@ namespace ServerCore
             IsStarted = false;
             logger = new Logger.Logger();
             if (settings.ServerIP == "current")
-                this.settings = new SocketSettings.SocketSettings(getLocalIp(), settings.ServerPort, settings.DefaultClientPorts, settings.MlsOfDelay);
+                this.settings = new SocketSettings.SocketSettings(getLocalIp(), settings.ServerPort, settings.MlsOfDelay);
             else
                 this.settings = settings;
         }
 
-        public Server(ICommands commands, string serverIP, int serverPort, int[] defaultClientPorts, int mlsOfDelay)
-            : this(commands, new SocketSettings.SocketSettings(serverIP, serverPort, defaultClientPorts, mlsOfDelay)) { }
-
         public Server(ICommands commands, string serverIP, int serverPort, int mlsOfDelay)
-            : this(commands, new SocketSettings.SocketSettings(serverIP, serverPort, new int[] { 0 }, mlsOfDelay)) { }
+            : this(commands, new SocketSettings.SocketSettings(serverIP, serverPort, mlsOfDelay)) { }
 
         public void Run()
         {
