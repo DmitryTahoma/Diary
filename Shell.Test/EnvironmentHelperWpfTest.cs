@@ -1,11 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 
 namespace ShellTest
 {
     [TestClass]
-    public class ShellTest
+    public class EnvironmentHelperWpfTest
     {
         [DataTestMethod]
         [DataRow("Login", "Password")]
@@ -59,6 +60,19 @@ namespace ShellTest
             dehd.SetValue("password", "");
             dehd.SetValue("time", DateTime.Now.ToString());
             Assert.IsFalse(environmentHelper.CheckSignData());
+        }
+
+        [DataTestMethod]
+        [DataRow("Login", "Password")]
+        [DataRow("dghshfasf", "agsdgadghassf254Sf-f")]
+        public void GetSignDataTest(string login, string password)
+        {
+            ShellModel.IEnvironmentHelper environmentHelper = new Shell.Models.EnvironmentHelperWpf();
+            environmentHelper.SaveSignData(login, password);
+
+            KeyValuePair<string, string> signData = environmentHelper.GetSignData();
+            Assert.AreEqual(login, signData.Key);
+            Assert.AreEqual(password, signData.Value);
         }
     }
 }

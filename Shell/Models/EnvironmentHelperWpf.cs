@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using ShellModel;
 using System;
+using System.Collections.Generic;
 
 namespace Shell.Models
 {
@@ -32,6 +33,19 @@ namespace Shell.Models
             }
 
             return true;
+        }
+
+        public KeyValuePair<string, string> GetSignData()
+        {
+            if (!CheckSignData())
+                return new KeyValuePair<string, string>("", "");
+
+            RegistryKey registryKey = Registry.CurrentUser;
+            RegistryKey diaryEHData = registryKey.CreateSubKey("DiaryEHData", false);
+            string login = diaryEHData.GetValue("login").ToString();
+            string password = diaryEHData.GetValue("password").ToString();
+
+            return new KeyValuePair<string, string>(login, password);
         }
     }
 }
