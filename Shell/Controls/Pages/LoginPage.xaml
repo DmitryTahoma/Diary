@@ -8,7 +8,7 @@
              xmlns:view="clr-namespace:Shell.ViewModels"
              xmlns:controls="clr-namespace:Shell.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="340" d:DesignWidth="270"
+             d:DesignHeight="380" d:DesignWidth="270"
              Style="{StaticResource LoginPage}">
     <UserControl.DataContext>
         <view:LoginPageViewModel x:Name="DataContext"/>
@@ -19,6 +19,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
             <RowDefinition Height="auto"/>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -58,7 +59,13 @@
         <controls:RevealPasswordBox Grid.Row="3"
                                     x:Name="PasswordInput"
                                     DataContext="{Binding PasswordBoxContext}"/>
-        <StackPanel Grid.Row="4"
+        <CheckBox Grid.Row="4" 
+                  Content="Remember me"
+                  HorizontalAlignment="Center"
+                  Margin="5"
+                  ToolTip="Your username and password will be saved in the system and you will not need to enter them at the next time."
+                  IsChecked="{Binding IsRememberMe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <StackPanel Grid.Row="5"
                     Style="{StaticResource ButtonStack}">
             <Button FontSize="{Binding HalfPageFontSize, UpdateSourceTrigger=PropertyChanged}"
                     Template="{StaticResource BlackBtn}"

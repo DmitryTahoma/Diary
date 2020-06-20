@@ -3,6 +3,8 @@
     using Catel.Data;
     using Catel.MVVM;
     using Shell.Controls;
+    using Shell.Models;
+    using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Input;
 
@@ -22,8 +24,13 @@
             SignIn = new Command(OnSignInExecute);
             PasswordBoxContext.Size = 40;
             PageFontSize = 40;
+            IsRememberMe = false;
             PasswordBoxContext.OnEnterKeyUp += () => { OnSignIn?.Invoke(Login, PasswordBoxContext.GetPassword()); };
             ErrorTextVisibility = Visibility.Collapsed;
+
+            KeyValuePair<string, string> signData = new EnvironmentHelperWpf().GetSignData();
+            Login = signData.Key;
+            PasswordBoxContext.SetPassword(signData.Value);
         }
 
         #region Properties
@@ -74,7 +81,14 @@
             set { SetValue(ErrorTextVisibilityProperty, value); }
         }
         public static readonly PropertyData ErrorTextVisibilityProperty = RegisterProperty(nameof(ErrorTextVisibility), typeof(Visibility), null);
-        
+
+        public bool IsRememberMe
+        {
+            get { return GetValue<bool>(IsRememberMeProperty); }
+            set { SetValue(IsRememberMeProperty, value); }
+        }
+        public static readonly PropertyData IsRememberMeProperty = RegisterProperty(nameof(IsRememberMe), typeof(bool), null);
+
         #endregion
 
         #region Commands
@@ -101,8 +115,13 @@
             if (OnSignIn != null)
                 if (Login.Length < 6 || PasswordBoxContext.GetPassword().Length < 8)
                     ErrorTextVisibility = Visibility.Visible;
-                else if (!OnSignIn.Invoke(Login, PasswordBoxContext.GetPassword()))
+                else
+                {
+                    if (!OnSignIn.Invoke(Login, PasswordBoxContext.GetPassword()))
                         ErrorTextVisibility = Visibility.Visible;
+                    else if (IsRememberMe)
+                        new EnvironmentHelperWpf().SaveSignData(Login, PasswordBoxContext.GetPassword());
+                }
         }
 
         #endregion

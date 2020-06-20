@@ -97,7 +97,9 @@
         private void OnFindBoxesExecute(Grid content)
         {
             passwordBox = (PasswordBox)content.Children[0];
+            passwordBox.Password = password;
             textBox = (TextBox)content.Children[1];
+            textBox.Text = password;
         }
 
         public Command<Image> MouseEnter { private set; get; }
@@ -146,6 +148,11 @@
         }
 
         public string GetPassword() => password;
+
+        public void SetPassword(string password)
+        {
+            this.password = password;
+        }
 
         public void ClearPassword()
         {
