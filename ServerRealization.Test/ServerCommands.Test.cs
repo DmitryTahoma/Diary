@@ -567,5 +567,92 @@ namespace ServerRealization.Test
                 Assert.IsTrue(before <= dNote.LastChanged && dNote.LastChanged <= after);
             }
         }
+
+        [DataTestMethod]
+        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "first", "second" }, "1", "1", "2020", "10", "2", "2020", "[id]")]
+        [DataRow("Alex92", "pass1234", "qwetyuiop", "l,nbvcx", new string[] { "asdghdfjh", "sszdgsdzfhdfjh", "ssdgsdfhsdfh", "asfhsdfjsdfj", "dfzsjhdfjdfgj" }, "15", "3", "2019", "12", "8", "2018", "[id]")]
+        [DataRow("Alex923", "pass1234", "Name", "Text", new string[] { "first", "second" }, "1", "1", "2020", "10", "2", "2020", "False")]
+        [DataRow("Alex92", "pfass1234", "Name", "Text", new string[] { "first", "second" }, "1", "1", "2020", "10", "2", "2020", "False")]
+        [DataRow("", "pass1234", "Name", "Text", new string[] { "first", "second" }, "1", "1", "2020", "10", "2", "2020", "ae")]
+        [DataRow("Alex92", "", "Name", "Text", new string[] { "first", "second" }, "1", "1", "2020", "10", "2", "2020", "ae")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "first", "second" }, "1", "1", "2020", "", "2", "2020", "ae")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "first", "second" }, "1", "1", "2020", "10", "", "2020", "ae")]
+        [DataRow("Alex92", "pass1234", "Name", "Text", new string[] { "first", "second" }, "1", "1", "2020", "10", "2", "", "ae")]
+        [DataRow("Tahoma", "password", "Name", "Text", new string[] { "first", "second" }, "1", "1", "2020", "10", "2", "2020", "ane")]
+        public void DuplicateParagraphMissionTest(string login, string password, string name, string text, string[] points, string createdDay, string createdMonth, string createdYear, string newDay, string newMonth, string newYear, string expectedResult)
+        {
+            string id = server.ExecuteCommand("cnpm", new string[] { correctLogin, correctPassword, name, text, createdDay, createdMonth, createdYear });
+            foreach(string point in points)
+                server.ExecuteCommand("aptpm", new string[] { correctLogin, correctPassword, id.Split('|')[2], point });
+
+            DateTime before = DateTime.Now;
+            string result = server.ExecuteCommand("dpm", new string[] { login, password, id.Split('|')[2], newDay, newMonth, newYear });
+            DateTime after = DateTime.Now;
+            if (expectedResult != "[id]")
+                Assert.AreEqual(expectedResult, result);
+            else
+            {
+                string[] ids = id.Split('|');
+                Assert.IsTrue(ids.Length == 4);
+                Assert.IsTrue(int.TryParse(ids[0], out int noteId));
+                Assert.IsTrue(int.TryParse(ids[1], out int actionId));
+                Assert.IsTrue(int.TryParse(ids[2], out int missionId));
+                Assert.IsTrue(int.TryParse(ids[3], out int paragraphId));
+
+                string[] newIds = result.Split('|');
+                Assert.IsTrue(newIds.Length == 4 + points.Length);
+                Assert.IsTrue(int.TryParse(newIds[0], out int newNoteId));
+                Assert.IsTrue(int.TryParse(newIds[1], out int newActionId));
+                Assert.IsTrue(int.TryParse(newIds[2], out int newMissionId));
+                Assert.IsTrue(int.TryParse(newIds[3], out int newParagraphId));
+
+                Note noteDb = DBContext.Notes.Where(x => x.Id == noteId).First();
+                Note newNoteDb = DBContext.Notes.Where(x => x.Id == newNoteId).First();
+                Database.Context.Action actionDb = DBContext.Actions.Where(x => x.Id == actionId).First();
+                Database.Context.Action newActionDb = DBContext.Actions.Where(x => x.Id == newActionId).First();
+                Mission missionDb = DBContext.Missions.Where(x => x.Id == missionId).First();
+                Mission newMissionDb = DBContext.Missions.Where(x => x.Id == newMissionId).First();
+                Collection paragraphDb = DBContext.Collections.Where(x => x.Id == paragraphId).First();
+                Collection newParagraphDb = DBContext.Collections.Where(x => x.Id == newParagraphId).First();
+                List<Point> pointsDb = DBContext.Points.Where(x => x.ParagraphId == paragraphId).ToList();
+                List<Point> newPointsDb = DBContext.Points.Where(x => x.ParagraphId == newParagraphId).ToList();
+
+                Assert.AreNotEqual(noteDb.Id, newNoteDb.Id);
+                Assert.AreEqual(noteDb.UserId, newNoteDb.UserId);
+                Assert.AreEqual(noteDb.Name, newNoteDb.Name);
+                Assert.AreEqual(noteDb.Text, newNoteDb.Text);
+                Assert.AreNotEqual(noteDb.Created, newNoteDb.Created);
+                Assert.AreEqual(newDay, newNoteDb.Created.Day.ToString());
+                Assert.AreEqual(newMonth, newNoteDb.Created.Month.ToString());
+                Assert.AreEqual(newYear, newNoteDb.Created.Year.ToString());
+                Assert.IsTrue(before <= newNoteDb.LastChanged && newNoteDb.LastChanged <= after);
+
+                Assert.AreNotEqual(actionDb.Id, newActionDb.Id);
+                Assert.AreNotEqual(actionDb.NoteId, newActionDb.NoteId);
+                Assert.AreEqual(newNoteDb.Id, newActionDb.NoteId);
+                Assert.AreEqual(actionDb.Start, newActionDb.Start);
+                Assert.AreEqual(actionDb.End, newActionDb.End);
+
+                Assert.AreNotEqual(missionDb.Id, newMissionDb.Id);
+                Assert.AreNotEqual(missionDb.ActionId, newMissionDb.ActionId);
+                Assert.AreEqual(newActionDb.Id, newMissionDb.Id);
+                Assert.AreEqual(false, newMissionDb.IsProgressType);
+                Assert.AreNotEqual(missionDb.ContextId, newMissionDb.ContextId);
+                Assert.AreEqual(newParagraphDb.Id, newMissionDb.ContextId);
+
+                Assert.AreNotEqual(paragraphDb.Id, newParagraphDb.Id);
+                Assert.AreEqual(paragraphDb.Count, newParagraphDb.Count);
+                Assert.AreEqual(pointsDb.Count, newPointsDb.Count);
+                for(int i = 0; i < pointsDb.Count; ++i)
+                {
+                    Assert.AreNotEqual(pointsDb[i].Id, newPointsDb[i].Id);
+                    Assert.AreEqual(newParagraphDb.Id, newPointsDb[i].ParagraphId);
+                    Assert.AreEqual(pointsDb[i].Name, newPointsDb[i].Name);
+                    Assert.AreEqual(pointsDb[i].IsChecked, newPointsDb[i].IsChecked);
+                }
+                for (int i = 4; i < newIds.Length; ++i)
+                    Assert.IsTrue(DBContext.Points.Where(x => x.Id == int.Parse(newIds[i])).Count() == 1);
+            }
+        }
     }
 }

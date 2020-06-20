@@ -30,6 +30,7 @@ namespace ServerRealization
                 case "rnc": return RemoveNoteCascade(args);
                 case "rp": return RemovePoint(args);
                 case "dn": return DuplicateNote(args);
+                case "dpm": return DuplicateParagraphMission(args);
                 case "generate1000notes": return Generate1000Notes();
             }
         }
@@ -393,6 +394,51 @@ namespace ServerRealization
             Note dNote = new Note(note.User, DBContext.Collections.Where(x => x.Id == 1).First(), note.Name, note.Text, new DateTime(year, month, day), DateTime.Now);
             DBContext.Notes.Add(dNote);
             return dNote.Id.ToString();
+        }
+
+        private string DuplicateParagraphMission(string[] args)
+        {
+            if (!ArgsHelper.CheckArgs(args, 6, 2, 3, 4, 5))
+                return "ae";
+            if (!ArgsHelper.CheckLoginPassword(args[0], args[1]))
+                return "False";
+            int id = int.Parse(args[2]);
+            Mission mission = DBContext.Missions.Where(x => x.Id == id).First();
+            if (!ArgsHelper.NoteIsExist(mission.Action.NoteId))
+                return "ae";
+            if (ArgsHelper.IsAne(args[0], args[1], mission.Action.NoteId))
+                return "ane";
+
+            int day = int.Parse(args[3]);
+            int month = int.Parse(args[4]);
+            int year = int.Parse(args[5]);
+            DateTime newCreated;
+            try { newCreated = new DateTime(int.Parse(args[5]), int.Parse(args[4]), int.Parse(args[3])); }
+            catch { return "ae"; }
+
+            Note note = new Note(DBContext.Users.Where(x => x.Login == args[0] && x.Password == args[1]).First(),
+                DBContext.Collections.Where(x => x.Id == 1).First(),
+                mission.Action.Note.Name, 
+                mission.Action.Note.Text, 
+                newCreated,
+                DateTime.Now);
+            DBContext.Notes.Add(note);
+            Database.Context.Action action = new Database.Context.Action(note, DateTime.MinValue, DateTime.MaxValue);
+            DBContext.Actions.Add(action);
+            Collection collection = new Collection();
+            collection.Count = ((Collection)mission.Context).Count;
+            DBContext.Collections.Add(collection);
+            Mission dMission = new Mission(action, false, collection);
+            DBContext.Missions.Add(dMission);
+            List<Point> points = DBContext.Points.Where(x => x.ParagraphId == mission.ContextId).ToList();
+            string result = note.Id.ToString() + "|" + action.Id.ToString() + "|" + dMission.Id.ToString() + "|" + collection.Id.ToString();
+            foreach(Point point in points)
+            {
+                Point dPoint = new Point(dMission.ContextId, point.Name, point.IsChecked);
+                DBContext.Points.Add(dPoint);
+                result += "|" + dPoint.Id.ToString();
+            }
+            return result;
         }
 
         public string Generate1000Notes()
