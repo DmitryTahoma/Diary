@@ -9,5 +9,7 @@ namespace ShellModel
         bool CheckSignData();
 
         KeyValuePair<string, string> GetSignData();
+
+        void ClearSignData();
     }
 }

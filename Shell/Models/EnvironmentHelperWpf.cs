@@ -47,5 +47,7 @@ namespace Shell.Models
 
             return new KeyValuePair<string, string>(login, password);
         }
+
+        public void ClearSignData() => SaveSignData("", "");        
     }
 }
