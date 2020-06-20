@@ -215,6 +215,25 @@ namespace ShellModel
             throw new ArgumentException();
         }
 
+        public ParagraphMission DuplicateParagraphMission(ParagraphMission paragraphMission, DateTime dateNewCreated)
+        {
+            object result = DoLockedProcess(() => { return client.SendCommand("dpm", new string[] { DBHelper.Login, DBHelper.Password, paragraphMission.Id.ToString(), dateNewCreated.Day.ToString(), dateNewCreated.Month.ToString(), dateNewCreated.Year.ToString() }); });
+            if(result != null)
+                if(result is string res)
+                {
+                    string[] strIds = res.Split('|');
+                    int[] ids = new int[strIds.Length];
+                    for (int i = 0; i < ids.Length; ++i)
+                        ids[i] = int.Parse(strIds[i]);
+                    List<Point> items = new List<Point>();
+                    for (int i = 0; i < paragraphMission.Paragraph.Items.Count; ++i)
+                        items.Add(new Point(ids[i + 4], items[i].Text, items[i].IsChecked));
+
+                    return new ParagraphMission(ids[2], new Paragraph(ids[3], items), ids[1], ids[0], 1, paragraphMission.Name, paragraphMission.Text, dateNewCreated, DateTime.Now, DateTime.MinValue, DateTime.MaxValue, true);
+                }
+            throw new ArgumentException();
+        }
+
         public static async Task<List<Note>> GetDayAsync(string login, string password, int day, int month, int year)
         {
             return await Task<List<Note>>.Run(() =>
