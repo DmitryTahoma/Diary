@@ -18,10 +18,10 @@ namespace ServerRealization
             server = new Server(commands, settings);
         }
 
-        public ServerProgram(string ip, int port, int[] defaultClientPorts, int mlsOfdelay)
+        public ServerProgram(string ip, int port, int mlsOfdelay)
         {
             commands = new ServerCommands();
-            server = new Server(commands, ip, port, defaultClientPorts, mlsOfdelay);
+            server = new Server(commands, ip, port, mlsOfdelay);
             mlsToStop = mlsOfdelay;
         }
 

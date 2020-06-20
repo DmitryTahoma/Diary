@@ -13,7 +13,7 @@ namespace ShellModel.Test
     [TestClass]
     public class DBHelperTest
     {
-        SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222, 11224, 12550 }, 1000);
+        SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, 1000);
         ServerProgram server = null;
         DBHelper helper = null;
 

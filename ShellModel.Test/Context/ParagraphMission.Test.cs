@@ -17,7 +17,7 @@ namespace ShellModel.Context.Test
         [TestInitialize]
         public void TestInitialize()
         {
-            settings = new SocketSettings.SocketSettings("192.168.0.107", 11223, new int[] { 11221, 11222 }, 10000);
+            settings = new SocketSettings.SocketSettings("192.168.0.107", 11223, 10000);
             server = new ServerProgram(settings);
             server.Run();
             DBHelper helper = new DBHelper(settings);

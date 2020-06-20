@@ -120,7 +120,7 @@ namespace ShellModel.Context.Test
         [DataRow("old name", "text is string", "new name", "text is new")]
         public void AutoTimingTest(string name, string text, string newName, string newText)
         {
-            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, new int[] { 11222 }, 300);
+            SocketSettings.SocketSettings settings = new SocketSettings.SocketSettings("192.168.0.107", 11221, 300);
             ServerProgram server = new ServerProgram(settings);
             server.Run();
             server.ExecuteCommand("rnu", new string[] { "Login", "Password", "Name" });

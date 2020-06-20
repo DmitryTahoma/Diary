@@ -15,7 +15,7 @@ namespace ServerRealization.Test
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-            server = new ServerProgram("192.168.0.107", 11221, new int[] { 11222, 11223, 11224 }, 1000);
+            server = new ServerProgram("192.168.0.107", 11221, 1000);
         }
 
         [DataTestMethod]
