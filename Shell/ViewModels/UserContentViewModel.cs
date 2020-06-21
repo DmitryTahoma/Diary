@@ -119,7 +119,11 @@
         public Command SelectDate { get; private set; }
         private void OnSelectDateExecute()
         {
-            selectedNote = DBHelper.DuplicateNoteStatic(selectedNote, SelectedDate);
+            if (selectedNote is ParagraphMission)
+                selectedNote = DBHelper.DuplicateParagraphMissionStatic((ParagraphMission)selectedNote, SelectedDate);
+            else            
+                selectedNote = DBHelper.DuplicateNoteStatic(selectedNote, SelectedDate);
+
             UpdateDuplicated();
             OnCancelSelectingExecute();
         }

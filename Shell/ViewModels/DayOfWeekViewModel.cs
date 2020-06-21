@@ -90,6 +90,10 @@
                 Notes.Children.Remove(note);
                 DBHelper.RemoveNoteCascadeStatic(note.DataContext.Context);
             };
+            note.DataContext.SelectDate += (n) =>
+            {
+                SelectDate?.Invoke(n);
+            };
         }
 
         public Command<StackPanel> ChangeStackPanel { get; private set; }
@@ -114,6 +118,10 @@
                         Notes.Children.Remove(note);
                         DBHelper.RemoveNoteCascadeStatic(note.DataContext.Context);
                     };
+                    note.DataContext.SelectDate += (n) =>
+                    {
+                        SelectDate?.Invoke(n);
+                    };
                 }
                 else
                 {
@@ -134,18 +142,36 @@
 
         public void Paste(Note context)
         {
-            SimpleNote note = new SimpleNote();
-            note.DataContext.Note = context;
-            Notes.Children.Add(note);
-            note.DataContext.Deleting += () =>
+            if (context is ParagraphMission)
             {
-                Notes.Children.Remove(note);
-                DBHelper.RemoveNoteCascadeStatic(note.DataContext.Note);
-            };
-            note.DataContext.SelectDate += (n) =>
+                ParagraphMissionNote note = new ParagraphMissionNote();
+                note.DataContext.Context = (ParagraphMission)context;
+                Notes.Children.Add(note);
+                note.DataContext.Deleting += () =>
+                {
+                    Notes.Children.Remove(note);
+                    DBHelper.RemoveNoteCascadeStatic(note.DataContext.Context);
+                };
+                note.DataContext.SelectDate += (n) =>
+                {
+                    SelectDate?.Invoke(n);
+                };
+            }
+            else
             {
-                SelectDate?.Invoke(n);
-            };
+                SimpleNote note = new SimpleNote();
+                note.DataContext.Note = context;
+                Notes.Children.Add(note);
+                note.DataContext.Deleting += () =>
+                {
+                    Notes.Children.Remove(note);
+                    DBHelper.RemoveNoteCascadeStatic(note.DataContext.Note);
+                };
+                note.DataContext.SelectDate += (n) =>
+                {
+                    SelectDate?.Invoke(n);
+                };
+            }
         }
     }
 }

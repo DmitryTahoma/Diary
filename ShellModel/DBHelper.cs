@@ -227,7 +227,7 @@ namespace ShellModel
                         ids[i] = int.Parse(strIds[i]);
                     List<Point> items = new List<Point>();
                     for (int i = 0; i < paragraphMission.Paragraph.Items.Count; ++i)
-                        items.Add(new Point(ids[i + 4], items[i].Text, items[i].IsChecked));
+                        items.Add(new Point(ids[i + 4], paragraphMission.Paragraph.Items[i].Text, paragraphMission.Paragraph.Items[i].IsChecked));
 
                     return new ParagraphMission(ids[2], new Paragraph(ids[3], items), ids[1], ids[0], 1, paragraphMission.Name, paragraphMission.Text, dateNewCreated, DateTime.Now, DateTime.MinValue, DateTime.MaxValue, true);
                 }
@@ -309,5 +309,8 @@ namespace ShellModel
 
         public static Note DuplicateNoteStatic(Note note, DateTime dateNewCreated)
             => new DBHelper(lastSettings).DuplicateNote(note, dateNewCreated);
+
+        public static ParagraphMission DuplicateParagraphMissionStatic(ParagraphMission paragraphMission, DateTime dateNewCreated)
+            => new DBHelper(lastSettings).DuplicateParagraphMission(paragraphMission, dateNewCreated);
     }
 }

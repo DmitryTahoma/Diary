@@ -11,6 +11,9 @@
     {
         public delegate void VoidHandler();
         public event VoidHandler Deleting;
+        public delegate void NoteHandler(Note note);
+        public event NoteHandler SelectDate;
+
         StackPanel points = null;
 
         public ParagraphMissionNoteViewModel()
@@ -76,6 +79,7 @@
             {
                 simpleNote.DataContext.Note = Context;
                 simpleNote.DataContext.Deleting += () => { Deleting?.Invoke(); };
+                simpleNote.DataContext.SelectDate += (n) => { SelectDate?.Invoke(Context); };
                 isBindedBaseNote = true;
             }
         }
