@@ -117,10 +117,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\NoteCollection.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Pages\LoginPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -153,10 +149,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Year.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -173,9 +165,6 @@
     </Compile>
     <Compile Include="Controls\Month.xaml.cs">
       <DependentUpon>Month.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\NoteCollection.xaml.cs">
-      <DependentUpon>NoteCollection.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Pages\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
@@ -201,16 +190,12 @@
     <Compile Include="Controls\Week.xaml.cs">
       <DependentUpon>Week.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Year.xaml.cs">
-      <DependentUpon>Year.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Models\EnvironmentHelperWpf.cs" />
     <Compile Include="ViewModels\CheckTextBoxViewModel.cs" />
     <Compile Include="ViewModels\DayOfWeekViewModel.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowVewModel.cs" />
     <Compile Include="ViewModels\MonthViewModel.cs" />
-    <Compile Include="ViewModels\NoteCollectionViewModel.cs" />
     <Compile Include="ViewModels\ParagraphMissionNoteViewModel.cs" />
     <Compile Include="ViewModels\ProgressMissionNoteViewModel.cs" />
     <Compile Include="ViewModels\RegistrationPageViewModel.cs" />
@@ -218,7 +203,6 @@
     <Compile Include="ViewModels\SimpleNoteViewModel.cs" />
     <Compile Include="ViewModels\UserContentViewModel.cs" />
     <Compile Include="ViewModels\WeekViewModel.cs" />
-    <Compile Include="ViewModels\YearViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

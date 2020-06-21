@@ -5,12 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:Shell.ViewModels"
         xmlns:pages="clr-namespace:Shell.Controls.Pages"
-        xmlns:controls="clr-namespace:Shell.Controls"
         mc:Ignorable="d"
-        Title="Title" Height="450" Width="800">
+        Title="Title" Height="650" Width="1100">
     <TabControl SelectedIndex="{Binding SelectedTabItemId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-        <TabItem Visibility="Visible"
-                 Header="Back">
+        <TabItem Visibility="Collapsed">
             <pages:LoginPage DataContext="{Binding LoginPageContext, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </TabItem>
         <TabItem Visibility="Collapsed">
@@ -18,10 +16,6 @@
         </TabItem>
         <TabItem Visibility="Collapsed">
             <pages:UserContent DataContext="{Binding UserContentContext, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        </TabItem>
-        <TabItem Visibility="Visible" 
-                 Header="Development mode">
-            <controls:NoteCollection/>
         </TabItem>
     </TabControl>
     <Window.DataContext>
